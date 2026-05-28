@@ -366,6 +366,136 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
   border-radius:8px;padding:2px 8px;font-size:.46rem;font-weight:700;color:#fff;font-family:'Nunito',sans-serif;
   text-decoration:none;margin-top:4px;}
 .prod-link-tag:hover{opacity:.85;}
+/* Product Detail Popup */
+.detail-overlay{position:fixed;inset:0;background:rgba(80,50,120,.45);z-index:699;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;backdrop-filter:blur(4px);}
+.detail-overlay.open{opacity:1;visibility:visible;}
+.detail-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-60%);
+  background:#fff;border-radius:24px;width:min(400px,94vw);max-height:90vh;overflow-y:auto;
+  box-shadow:0 24px 64px rgba(180,130,200,.35);z-index:700;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s,transform .35s;}
+.detail-modal.open{opacity:1;visibility:visible;transform:translate(-50%,-50%);}
+.detail-img{width:100%;height:220px;object-fit:cover;border-radius:24px 24px 0 0;}
+.detail-img-emoji{width:100%;height:180px;display:flex;align-items:center;justify-content:center;
+  font-size:5rem;border-radius:24px 24px 0 0;}
+.detail-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.9);border:none;border-radius:50%;
+  width:32px;height:32px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10;}
+.detail-body{padding:18px 18px 22px;}
+.detail-cat{font-size:.55rem;font-weight:800;color:var(--lav-d);font-family:'Nunito',sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.detail-name{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.detail-stars{font-size:.85rem;margin-bottom:8px;}
+.detail-desc{font-size:.72rem;color:var(--dim);font-family:'Quicksand',sans-serif;line-height:1.65;margin-bottom:14px;background:var(--off);border-radius:12px;padding:10px 12px;}
+.detail-price-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.detail-price{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--pink-d);}
+.detail-orig{font-size:.72rem;color:var(--dim);text-decoration:line-through;font-family:'Quicksand',sans-serif;}
+.detail-btns{display:flex;flex-direction:column;gap:9px;}
+.detail-btn-cart{background:linear-gradient(135deg,var(--pink-d),var(--lav-d));border:none;border-radius:13px;
+  padding:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer;
+  box-shadow:0 5px 16px rgba(200,130,220,.3);transition:transform .2s;}
+.detail-btn-cart:hover{transform:translateY(-2px);}
+.detail-btn-wa{background:linear-gradient(135deg,#25d366,#128c4e);border:none;border-radius:13px;
+  padding:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer;
+  box-shadow:0 5px 16px rgba(37,211,102,.3);transition:transform .2s;}
+.detail-btn-wa:hover{transform:translateY(-2px);}
+.detail-btn-link{background:linear-gradient(135deg,var(--sky),var(--sky-d));border:none;border-radius:13px;
+  padding:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer;
+  box-shadow:0 5px 16px rgba(100,180,230,.3);transition:transform .2s;text-decoration:none;text-align:center;display:block;}
+.detail-btn-link:hover{transform:translateY(-2px);}
+.detail-qty-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.detail-qty-label{font-size:.65rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;}
+.detail-qty-ctrl{display:flex;align-items:center;gap:8px;background:var(--off);border-radius:12px;padding:4px 10px;border:2px solid var(--border);}
+.detail-qty-btn{background:none;border:none;font-size:1rem;cursor:pointer;color:var(--lav-d);font-weight:900;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+.detail-qty-num{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--text);min-width:20px;text-align:center;}
+.detail-share-btn{background:var(--off);border:2px solid var(--border);border-radius:13px;padding:10px;
+  color:var(--dim);font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:border-color .2s;}
+.detail-share-btn:hover{border-color:var(--lav-d);}
+
+/* Promo Banner */
+.promo-banner{margin:0 12px 16px;border-radius:18px;overflow:hidden;position:relative;}
+.promo-banner-inner{background:linear-gradient(135deg,#ff6b9d,#c44dff,#4d79ff);padding:16px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.promo-banner-text h3{font-family:'Fredoka One',cursive;font-size:.95rem;color:#fff;margin-bottom:3px;}
+.promo-banner-text p{font-size:.6rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-serif;}
+.promo-banner-emoji{font-size:2.2rem;}
+.promo-banner-close{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.2);border:none;border-radius:50%;
+  width:22px;height:22px;color:#fff;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;}
+
+/* Status Toko */
+.toko-status{display:inline-flex;align-items:center;gap:5px;background:#fff;border-radius:20px;padding:4px 12px;
+  font-size:.58rem;font-weight:700;font-family:'Nunito',sans-serif;box-shadow:0 2px 8px var(--shadow);margin-bottom:10px;}
+.toko-status.open{color:#1a8a3a;border:2px solid #aee8b0;}
+.toko-status.closed{color:#cc3333;border:2px solid #ffb3b3;}
+.toko-dot{width:7px;height:7px;border-radius:50%;animation:pulse 1.5s ease-in-out infinite;}
+.toko-status.open .toko-dot{background:#25d366;}
+.toko-status.closed .toko-dot{background:#ff5555;animation:none;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+
+/* Sorting */
+.sort-wrap{display:flex;align-items:center;gap:8px;padding:0 12px 12px;overflow-x:auto;scrollbar-width:none;}
+.sort-wrap::-webkit-scrollbar{display:none;}
+.sort-chip{background:#fff;border:2px solid var(--border);border-radius:20px;padding:5px 13px;
+  font-size:.58rem;font-weight:700;color:var(--dim);font-family:'Nunito',sans-serif;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.sort-chip.active,.sort-chip:hover{background:linear-gradient(135deg,var(--lav),var(--pink));border-color:var(--lav-d);color:#fff;}
+.sort-label{font-size:.58rem;font-weight:700;color:var(--dim);font-family:'Nunito',sans-serif;white-space:nowrap;flex-shrink:0;}
+
+/* Cat badge count */
+.cat-count{background:rgba(255,255,255,.4);border-radius:10px;padding:1px 6px;font-size:.5rem;margin-left:3px;}
+
+/* Discount section */
+.disc-section{background:linear-gradient(135deg,#fff5f7,#fff0fa);border-radius:20px;margin:0 12px 18px;padding:16px 14px;
+  border:2px solid rgba(255,133,161,.2);}
+
+/* Testimonial */
+.testi-section{margin:0 12px 18px;}
+.testi-card{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:0 4px 14px var(--shadow);
+  border-left:4px solid var(--pink-d);}
+.testi-text{font-size:.7rem;color:var(--text);font-family:'Quicksand',sans-serif;line-height:1.6;margin-bottom:8px;font-style:italic;}
+.testi-bottom{display:flex;align-items:center;justify-content:space-between;}
+.testi-name{font-size:.6rem;font-weight:700;color:var(--lav-d);font-family:'Nunito',sans-serif;}
+.testi-stars{font-size:.7rem;}
+.testi-empty{text-align:center;padding:20px;color:var(--dim);font-size:.7rem;font-family:'Nunito',sans-serif;}
+
+/* About */
+.about-section{background:linear-gradient(135deg,var(--lav),var(--pink));margin:0 12px 18px;border-radius:20px;padding:20px 18px;text-align:center;}
+.about-section h3{font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fff;margin-bottom:8px;}
+.about-section p{font-size:.68rem;color:rgba(255,255,255,.9);font-family:'Quicksand',sans-serif;line-height:1.7;margin-bottom:12px;}
+.about-wa-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:none;border-radius:20px;
+  padding:9px 18px;color:#25d366;font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.1);transition:transform .2s;text-decoration:none;}
+.about-wa-btn:hover{transform:translateY(-2px);}
+
+/* Scroll to top */
+.scroll-top{position:fixed;bottom:82px;right:18px;z-index:300;background:linear-gradient(135deg,var(--lav-d),var(--pink-d));
+  border:none;border-radius:50%;width:40px;height:40px;color:#fff;font-size:1rem;cursor:pointer;
+  box-shadow:0 4px 14px rgba(180,130,200,.4);transition:opacity .3s,transform .2s;opacity:0;pointer-events:none;}
+.scroll-top.show{opacity:1;pointer-events:auto;}
+.scroll-top:hover{transform:translateY(-3px);}
+
+/* Admin testi section */
+.testi-admin-card{background:#fff;border-radius:20px;padding:18px 16px;margin-bottom:18px;box-shadow:0 4px 18px var(--shadow);}
+.testi-admin-card h3{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--lav-d);margin-bottom:15px;}
+.testi-list-admin{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.testi-row{background:var(--off);border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.testi-row-text{font-size:.65rem;color:var(--text);font-family:'Quicksand',sans-serif;line-height:1.5;flex:1;}
+.testi-row-name{font-size:.58rem;color:var(--lav-d);font-family:'Nunito',sans-serif;font-weight:700;margin-top:3px;}
+.btn-del-testi{background:linear-gradient(135deg,#ffb3b3,#ff8080);border:none;border-radius:8px;padding:5px 9px;
+  color:#fff;font-size:.6rem;font-weight:800;cursor:pointer;white-space:nowrap;}
+
+/* Admin banner settings */
+.banner-admin-card{background:linear-gradient(135deg,#fff5ff,#ffe8ff);border:2px solid rgba(200,130,220,.2);border-radius:20px;padding:18px 16px;margin-bottom:18px;}
+.banner-admin-card h3{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--lav-d);margin-bottom:6px;}
+.banner-admin-card p{font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-bottom:12px;}
+
+/* Admin jam operasional */
+.jam-admin-card{background:linear-gradient(135deg,#f5fff8,#e8ffee);border:2px solid #aee8b0;border-radius:20px;padding:18px 16px;margin-bottom:18px;}
+.jam-admin-card h3{font-family:'Fredoka One',cursive;font-size:1rem;color:#1a8a3a;margin-bottom:6px;}
+.jam-admin-card p{font-size:.6rem;color:#3a7a4a;font-family:'Nunito',sans-serif;margin-bottom:12px;}
+.jam-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+.jam-row label{font-size:.6rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;min-width:60px;}
+.jam-row input{flex:1;background:#fff;border:2px solid #aee8b0;border-radius:10px;padding:7px 10px;font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--text);outline:none;}
+.btn-save-jam{background:linear-gradient(135deg,#25d366,#128c4e);border:none;border-radius:11px;padding:9px 16px;
+  color:#fff;font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:800;cursor:pointer;margin-top:4px;
+  box-shadow:0 4px 12px rgba(37,211,102,.3);transition:transform .2s;}
+.btn-save-jam:hover{transform:translateY(-2px);}
 </style>
 </head>
 <body>
@@ -400,7 +530,20 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
 
 <!-- STORE PAGE -->
 <div id="page">
+  <!-- Promo Banner -->
+  <div class="promo-banner" id="promoBanner" style="display:none">
+    <div class="promo-banner-inner">
+      <div class="promo-banner-text">
+        <h3 id="promoBannerTitle">🎉 Promo Spesial!</h3>
+        <p id="promoBannerDesc">Dapatkan penawaran terbaik dari WNJ Little World</p>
+      </div>
+      <div class="promo-banner-emoji" id="promoBannerEmoji">🎁</div>
+    </div>
+    <button class="promo-banner-close" onclick="document.getElementById('promoBanner').style.display='none'">✕</button>
+  </div>
+
   <div class="hero">
+    <div id="tokoStatusHero"></div>
     <span class="hero-emoji">🎓</span>
     <h2>Belajar Lebih Seru<br>Bareng WNJ! 🌈</h2>
     <p>Produk digital edukasi kreatif untuk si kecil yang cerdas ✨</p>
@@ -413,11 +556,33 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
   </div>
   <div class="categories" id="catList"></div>
 
+  <!-- Sorting -->
+  <div style="padding:0 12px 4px;display:flex;align-items:center;gap:8px;">
+    <span class="sort-label">Urutkan:</span>
+    <div class="sort-wrap" style="padding:0;flex:1;">
+      <div class="sort-chip active" onclick="setSort('default',this)">Terbaru</div>
+      <div class="sort-chip" onclick="setSort('cheapest',this)">Termurah</div>
+      <div class="sort-chip" onclick="setSort('expensive',this)">Termahal</div>
+      <div class="sort-chip" onclick="setSort('discount',this)">Diskon Terbesar</div>
+    </div>
+  </div>
+
   <div class="section-header">
     <span class="section-title">⭐ Semua Produk</span>
     <div class="section-line"></div>
   </div>
   <div class="product-grid" id="productGrid"></div>
+
+  <!-- Diskon Section -->
+  <div id="discSection" style="display:none">
+    <div class="section-header">
+      <span class="section-title">🏷️ Lagi Diskon!</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="disc-section">
+      <div class="product-grid" id="discGrid" style="margin:0;padding:0;"></div>
+    </div>
+  </div>
 
   <div class="promo-full">
     <h3>🎉 Paket Bundling Hemat!</h3>
@@ -431,11 +596,35 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
   </div>
   <div class="product-grid" id="bestGrid"></div>
 
+  <!-- Testimonial -->
+  <div class="section-header">
+    <span class="section-title">💬 Testimoni</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="testi-section" id="testiSection"></div>
+
+  <!-- About -->
+  <div class="about-section">
+    <h3>🌏 Tentang WNJ Little World</h3>
+    <p id="aboutText">Kami hadir untuk membantu si kecil belajar dengan cara yang menyenangkan melalui produk digital edukasi berkualitas. Dibuat dengan penuh cinta 💕</p>
+    <a class="about-wa-btn" href="#" onclick="openWaChat();return false;">💬 Hubungi Kami</a>
+  </div>
+
   <footer>
     <p class="fl">WNJ Little W🌏rld</p>
     <p>Digital Education Series 💕</p>
     <p style="margin-top:5px;font-size:.56rem;opacity:.7">© 2025 WNJ Little World. All rights reserved.</p>
   </footer>
+</div>
+
+<!-- Scroll to Top -->
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️</button>
+
+<!-- PRODUCT DETAIL -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
+<div class="detail-modal" id="detailModal">
+  <button class="detail-close" onclick="closeDetail()">✕</button>
+  <div id="detailContent"></div>
 </div>
 
 <!-- WA FLOAT BUTTON -->
@@ -498,6 +687,72 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
         <button class="btn-save-wa" onclick="saveWaNumber()">💾 Simpan</button>
       </div>
       <div class="wa-preview" id="waPreview"></div>
+    </div>
+
+    <!-- Banner Promo -->
+    <div class="banner-admin-card">
+      <h3>📢 Banner Promo</h3>
+      <p>Banner muncul di bagian atas toko. Kosongkan judul untuk menyembunyikan banner.</p>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Judul Banner</label>
+          <input class="form-input" id="bannerTitle" type="text" placeholder="🎉 Promo Spesial Minggu Ini!">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Deskripsi Banner</label>
+          <input class="form-input" id="bannerDesc" type="text" placeholder="Dapatkan diskon 30% untuk semua worksheet!">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Emoji Banner</label>
+          <input class="form-input" id="bannerEmoji" type="text" placeholder="🎁" maxlength="4">
+        </div>
+      </div>
+      <button class="btn-add-product" style="margin-top:10px;" onclick="saveBanner()">💾 Simpan Banner</button>
+    </div>
+
+    <!-- Jam Operasional -->
+    <div class="jam-admin-card">
+      <h3>🕐 Jam Operasional & Status Toko</h3>
+      <p>Tampil di halaman utama toko. Format jam: HH:MM (24 jam)</p>
+      <div class="jam-row"><label>Buka:</label><input type="time" id="jamBuka" value="08:00"></div>
+      <div class="jam-row"><label>Tutup:</label><input type="time" id="jamTutup" value="21:00"></div>
+      <div class="jam-row"><label>Keterangan:</label><input type="text" id="jamKet" placeholder="Senin–Sabtu" style="background:#fff;border:2px solid #aee8b0;border-radius:10px;padding:7px 10px;font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--text);outline:none;flex:1;"></div>
+      <button class="btn-save-jam" onclick="saveJam()">💾 Simpan Jam Operasional</button>
+    </div>
+
+    <!-- Tentang Toko -->
+    <div class="admin-card">
+      <h3>🌏 Tentang Toko</h3>
+      <div class="form-group full">
+        <label class="form-label">Deskripsi Toko</label>
+        <textarea class="form-textarea" id="aboutTextAdmin" placeholder="Ceritakan tentang toko WNJ Little World..."></textarea>
+      </div>
+      <button class="btn-add-product" style="margin-top:10px;" onclick="saveAbout()">💾 Simpan</button>
+    </div>
+
+    <!-- Testimoni -->
+    <div class="testi-admin-card">
+      <h3>⭐ Kelola Testimoni</h3>
+      <div class="testi-list-admin" id="testiAdminList"></div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Isi Testimoni *</label>
+          <textarea class="form-textarea" id="testiText" placeholder="Produknya bagus banget, anak saya suka!"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama Pembeli *</label>
+          <input class="form-input" id="testiName" type="text" placeholder="Bunda Aisyah">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rating</label>
+          <select class="form-select" id="testiStars">
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-add-product" style="margin-top:10px;" onclick="addTesti()">➕ Tambah Testimoni</button>
     </div>
 
     <!-- Form Tambah -->
@@ -762,31 +1017,51 @@ function showToast(msg){
 
 function getCategories(){return['Semua',...new Set(products.map(p=>p.cat))];}
 function renderCats(){
-  document.getElementById('catList').innerHTML=getCategories().map(c=>
-    `<div class="cat-chip${c===activeFilter?' active':''}" onclick="filterCat('${c}',this)">${c}</div>`
-  ).join('');
+  const cats=getCategories();
+  document.getElementById('catList').innerHTML=cats.map(c=>{
+    const count=c==='Semua'?products.length:products.filter(p=>p.cat===c).length;
+    return `<div class="cat-chip${c===activeFilter?' active':''}" onclick="filterCat('${c}',this)">${c}<span class="cat-count">${count}</span></div>`;
+  }).join('');
 }
 function filteredProducts(){
   let list=activeFilter==='Semua'?products:products.filter(p=>p.cat===activeFilter);
   if(searchQ)list=list.filter(p=>p.name.toLowerCase().includes(searchQ)||p.cat.toLowerCase().includes(searchQ));
-  return list;
+  return sortedProducts(list);
+}
+function sortedProducts(list){
+  const arr=[...list];
+  if(currentSort==='cheapest') return arr.sort((a,b)=>a.price-b.price);
+  if(currentSort==='expensive') return arr.sort((a,b)=>b.price-a.price);
+  if(currentSort==='discount') return arr.sort((a,b)=>{
+    const da=a.orig&&a.orig>a.price?Math.round((1-a.price/a.orig)*100):0;
+    const db=b.orig&&b.orig>b.price?Math.round((1-b.price/b.orig)*100):0;
+    return db-da;
+  });
+  return arr;
+}
+let currentSort='default';
+function setSort(type,el){
+  currentSort=type;
+  document.querySelectorAll('.sort-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts();
 }
 function productCard(p,i){
   const cc=COLORS[p.id%COLORS.length];
+  const discPct=p.orig&&p.orig>p.price?Math.round((1-p.price/p.orig)*100):0;
+  const discBadge=discPct>0?`<div style="position:absolute;top:8px;left:8px;background:linear-gradient(135deg,#ff5555,#ff2222);color:#fff;font-family:'Nunito',sans-serif;font-size:.58rem;font-weight:900;padding:3px 8px;border-radius:20px;box-shadow:0 2px 8px rgba(255,50,50,.4);z-index:2;">-${discPct}%</div>`:'';
   const thumbContent=p.img
-    ?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}`
-    :`${p.emoji}${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}`;
-  const linkBtn=p.link?`<a class="prod-link-tag" href="${p.link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 Lihat Produk</a>`:'';
-  return `<div class="product-card" style="animation-delay:${i*.07}s">
+    ?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}${discBadge}`
+    :`${p.emoji}${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}${discBadge}`;
+  return `<div class="product-card" style="animation-delay:${i*.07}s;cursor:pointer;" onclick="openDetail(${p.id})">
     <div class="product-thumb ${p.img?'':cc}">${thumbContent}</div>
     <div class="product-info">
       <div class="product-cat">${p.cat}</div>
       <div class="product-name">${p.name}</div>
       <div class="product-stars">${starStr(p.stars)}</div>
-      ${linkBtn}
       <div class="product-bottom">
         <div><div class="product-price">${fmtRp(p.price)}</div>${p.orig?`<div class="product-orig">${fmtRp(p.orig)}</div>`:''}</div>
-        <button class="add-btn" onclick="addToCart(${p.id})">+</button>
+        <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
       </div>
     </div></div>`;
 }
@@ -797,6 +1072,7 @@ function renderProducts(){
   const bests=products.filter(p=>p.best);
   const bg=document.getElementById('bestGrid');
   bg.innerHTML=bests.length?bests.map(productCard).join(''):`<div class="empty-state"><div class="em">🌟</div><p>Belum ada produk terlaris</p></div>`;
+  renderDiscSection();
 }
 function filterCat(cat,el){
   activeFilter=cat;
@@ -843,6 +1119,225 @@ function updateCart(){
 function changeQty(id,d){const item=cart.find(c=>c.id===id);if(!item)return;item.qty+=d;if(item.qty<=0)cart=cart.filter(c=>c.id!==id);updateCart();}
 function removeItem(id){cart=cart.filter(c=>c.id!==id);updateCart();}
 function toggleCart(){document.getElementById('cartOverlay').classList.toggle('open');document.getElementById('cartSidebar').classList.toggle('open');}
+
+/* SCROLL TOP */
+window.addEventListener('scroll',()=>{
+  const btn=document.getElementById('scrollTopBtn');
+  if(btn) btn.classList.toggle('show',window.scrollY>300);
+});
+
+/* DISCOUNT SECTION */
+function renderDiscSection(){
+  const disc=products.filter(p=>p.orig&&p.orig>p.price);
+  const el=document.getElementById('discSection');
+  const grid=document.getElementById('discGrid');
+  if(!el||!grid)return;
+  if(!disc.length){el.style.display='none';return;}
+  el.style.display='block';
+  grid.innerHTML=disc.map((p,i)=>productCard(p,i)).join('');
+}
+
+/* TOKO STATUS */
+function getTokoStatus(){
+  try{
+    const jam=JSON.parse(localStorage.getItem('wnj_jam')||'{}');
+    if(!jam.buka||!jam.tutup) return null;
+    const now=new Date();
+    const [bh,bm]=jam.buka.split(':').map(Number);
+    const [th,tm]=jam.tutup.split(':').map(Number);
+    const cur=now.getHours()*60+now.getMinutes();
+    return {isOpen:cur>=(bh*60+bm)&&cur<=(th*60+tm),buka:jam.buka,tutup:jam.tutup,ket:jam.ket||''};
+  }catch(e){return null;}
+}
+function renderTokoStatus(){
+  const el=document.getElementById('tokoStatusHero');if(!el)return;
+  const s=getTokoStatus();
+  if(!s){el.innerHTML='';return;}
+  el.innerHTML=`<div class="toko-status ${s.isOpen?'open':'closed'}" style="margin:0 auto 12px;">
+    <div class="toko-dot"></div>
+    <span>${s.isOpen?'🟢 Toko Buka':'🔴 Toko Tutup'} · ${s.buka}–${s.tutup}${s.ket?' · '+s.ket:''}</span>
+  </div>`;
+}
+function saveJam(){
+  const jam={buka:document.getElementById('jamBuka').value,tutup:document.getElementById('jamTutup').value,ket:document.getElementById('jamKet').value.trim()};
+  localStorage.setItem('wnj_jam',JSON.stringify(jam));
+  renderTokoStatus();showToast('✅ Jam operasional disimpan!');
+}
+function loadJamInput(){
+  try{
+    const jam=JSON.parse(localStorage.getItem('wnj_jam')||'{}');
+    if(jam.buka){document.getElementById('jamBuka').value=jam.buka;}
+    if(jam.tutup){document.getElementById('jamTutup').value=jam.tutup;}
+    if(jam.ket){document.getElementById('jamKet').value=jam.ket;}
+  }catch(e){}
+}
+
+/* BANNER */
+function saveBanner(){
+  const title=document.getElementById('bannerTitle').value.trim();
+  const desc=document.getElementById('bannerDesc').value.trim();
+  const emoji=document.getElementById('bannerEmoji').value.trim()||'🎁';
+  localStorage.setItem('wnj_banner',JSON.stringify({title,desc,emoji}));
+  renderBanner();showToast('✅ Banner disimpan!');
+}
+function renderBanner(){
+  try{
+    const b=JSON.parse(localStorage.getItem('wnj_banner')||'{}');
+    const el=document.getElementById('promoBanner');if(!el)return;
+    if(b.title){
+      document.getElementById('promoBannerTitle').textContent=b.title;
+      document.getElementById('promoBannerDesc').textContent=b.desc||'';
+      document.getElementById('promoBannerEmoji').textContent=b.emoji||'🎁';
+      el.style.display='block';
+    } else {el.style.display='none';}
+  }catch(e){}
+}
+function loadBannerInput(){
+  try{
+    const b=JSON.parse(localStorage.getItem('wnj_banner')||'{}');
+    if(b.title) document.getElementById('bannerTitle').value=b.title;
+    if(b.desc) document.getElementById('bannerDesc').value=b.desc;
+    if(b.emoji) document.getElementById('bannerEmoji').value=b.emoji;
+  }catch(e){}
+}
+
+/* ABOUT */
+function saveAbout(){
+  const text=document.getElementById('aboutTextAdmin').value.trim();
+  localStorage.setItem('wnj_about',text);
+  renderAbout();showToast('✅ Deskripsi toko disimpan!');
+}
+function renderAbout(){
+  const text=localStorage.getItem('wnj_about');
+  const el=document.getElementById('aboutText');
+  if(el&&text) el.textContent=text;
+}
+function loadAboutInput(){
+  const text=localStorage.getItem('wnj_about');
+  const el=document.getElementById('aboutTextAdmin');
+  if(el&&text) el.value=text;
+}
+
+/* TESTIMONIAL */
+function loadTestis(){try{return JSON.parse(localStorage.getItem('wnj_testis')||'[]');}catch(e){return [];}}
+function saveTestis(arr){try{localStorage.setItem('wnj_testis',JSON.stringify(arr));}catch(e){}}
+function addTesti(){
+  const text=document.getElementById('testiText').value.trim();
+  const name=document.getElementById('testiName').value.trim();
+  const stars=Number(document.getElementById('testiStars').value);
+  if(!text||!name){showToast('❌ Isi testimoni & nama dulu!');return;}
+  const arr=loadTestis();
+  arr.push({id:Date.now(),text,name,stars});
+  saveTestis(arr);
+  document.getElementById('testiText').value='';
+  document.getElementById('testiName').value='';
+  renderTestis();renderTestiAdmin();
+  showToast('✅ Testimoni ditambahkan!');
+}
+function deleteTesti(id){
+  const arr=loadTestis().filter(t=>t.id!==id);
+  saveTestis(arr);renderTestis();renderTestiAdmin();
+  showToast('🗑️ Testimoni dihapus!');
+}
+function renderTestis(){
+  const el=document.getElementById('testiSection');if(!el)return;
+  const arr=loadTestis();
+  if(!arr.length){el.innerHTML=`<div class="testi-empty">Belum ada testimoni. Tambahkan di Admin Panel! ⭐</div>`;return;}
+  el.innerHTML=arr.map(t=>`
+    <div class="testi-card">
+      <div class="testi-text">"${t.text}"</div>
+      <div class="testi-bottom">
+        <div class="testi-name">— ${t.name}</div>
+        <div class="testi-stars">${'⭐'.repeat(t.stars)}</div>
+      </div>
+    </div>`).join('');
+}
+function renderTestiAdmin(){
+  const el=document.getElementById('testiAdminList');if(!el)return;
+  const arr=loadTestis();
+  if(!arr.length){el.innerHTML=`<div style="font-size:.65rem;color:var(--dim);font-family:'Nunito',sans-serif;">Belum ada testimoni.</div>`;return;}
+  el.innerHTML=arr.map(t=>`
+    <div class="testi-row">
+      <div><div class="testi-row-text">"${t.text}"</div><div class="testi-row-name">— ${t.name} ${'⭐'.repeat(t.stars)}</div></div>
+      <button class="btn-del-testi" onclick="deleteTesti(${t.id})">🗑️</button>
+    </div>`).join('');
+}
+
+/* SHARE */
+function shareProduct(p){
+  const text=`${p.name}\n💰 ${fmtRp(p.price)}${p.orig?' (coret '+fmtRp(p.orig)+')':''}\n\n${p.desc||''}\n\nCek di: ${window.location.href}`;
+  if(navigator.share){navigator.share({title:p.name,text});}
+  else{navigator.clipboard.writeText(text).then(()=>showToast('📋 Link disalin!'));}
+}
+
+/* BUY NOW WA */
+function buyNowWA(id,qty){
+  const p=products.find(x=>x.id===id);if(!p)return;
+  qty=qty||1;
+  const msg=`Halo kak WNJ Little World! 👋\n\nSaya mau order:\n• ${p.name} x${qty} = ${fmtRp(p.price*qty)}\n\nMohon konfirmasi stok & cara pembayarannya ya kak 🙏`;
+  window.open(getWaLink(msg),'_blank');
+}
+
+/* PRODUCT DETAIL */
+let detailQty=1;
+function openDetail(id){
+  const p=products.find(x=>x.id===id);if(!p)return;
+  detailQty=1;
+  const cc=COLORS[p.id%COLORS.length];
+  const discPct=p.orig&&p.orig>p.price?Math.round((1-p.price/p.orig)*100):0;
+  const discBadge=discPct>0?`<div style="position:absolute;top:12px;left:12px;background:linear-gradient(135deg,#ff5555,#ff2222);color:#fff;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:900;padding:4px 12px;border-radius:20px;box-shadow:0 3px 10px rgba(255,50,50,.4);">-${discPct}% OFF</div>`:'';
+  const imgHtml=p.img?`<img class="detail-img" src="${p.img}">`:`<div class="detail-img-emoji ${cc}">${p.emoji||'📦'}</div>`;
+  const badgeHtml=p.badge?`<div class="product-badge ${badgeCls[p.badge]}" style="position:static;display:inline-block;margin-bottom:6px;">${p.badge.toUpperCase()}</div>`:'';
+  const descHtml=p.desc?`<div class="detail-desc">📝 ${p.desc}</div>`:'';
+  const linkHtml=p.link?`<a class="detail-btn-link" href="${p.link}" target="_blank" rel="noopener">🔗 Lihat Preview Produk</a>`:'';
+  document.getElementById('detailContent').innerHTML=`
+    <div style="position:relative">${imgHtml}${discBadge}</div>
+    <div class="detail-body">
+      ${badgeHtml}
+      <div class="detail-cat">${p.cat}</div>
+      <div class="detail-name">${p.name}</div>
+      <div class="detail-stars">${starStr(p.stars)}</div>
+      ${descHtml}
+      <div class="detail-price-row">
+        <div class="detail-price" id="detailPriceShow">${fmtRp(p.price)}</div>
+        ${p.orig?`<div class="detail-orig">${fmtRp(p.orig)}</div>`:''}
+      </div>
+      <div class="detail-qty-row">
+        <span class="detail-qty-label">Jumlah:</span>
+        <div class="detail-qty-ctrl">
+          <button class="detail-qty-btn" onclick="changeDetailQty(${p.id},-1,${p.price})">−</button>
+          <span class="detail-qty-num" id="detailQtyNum">1</span>
+          <button class="detail-qty-btn" onclick="changeDetailQty(${p.id},1,${p.price})">+</button>
+        </div>
+      </div>
+      <div class="detail-btns">
+        <button class="detail-btn-cart" onclick="addToCartQty(${p.id},detailQty);closeDetail()">🛒 Tambah ke Keranjang</button>
+        <button class="detail-btn-wa" onclick="buyNowWA(${p.id},detailQty)">💬 Beli Langsung via WA</button>
+        ${linkHtml}
+        <button class="detail-share-btn" onclick="shareProduct(products.find(x=>x.id===${p.id}))">📤 Bagikan Produk</button>
+      </div>
+    </div>`;
+  document.getElementById('detailOverlay').classList.add('open');
+  document.getElementById('detailModal').classList.add('open');
+}
+function changeDetailQty(id,d,price){
+  detailQty=Math.max(1,detailQty+d);
+  document.getElementById('detailQtyNum').textContent=detailQty;
+  document.getElementById('detailPriceShow').textContent=fmtRp(price*detailQty);
+}
+function addToCartQty(id,qty){
+  const p=products.find(x=>x.id===id);if(!p)return;
+  const ex=cart.find(c=>c.id===id);
+  if(ex)ex.qty+=qty;else cart.push({...p,qty});
+  updateCart();
+  showToast('🛒 '+p.name+' x'+qty+' ditambahkan!');
+  const el=document.getElementById('cartCount');
+  el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
+}
+function closeDetail(){
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.getElementById('detailModal').classList.remove('open');
+}
 
 /* WA */
 function getWaLink(msg){
@@ -901,7 +1396,9 @@ function doLogin(){
 }
 function openAdmin(){
   document.getElementById('adminPanel').classList.add('open');
-  renderAdminStats();renderAdminList();renderEmojiPicker();loadWaInput();
+  renderAdminStats();renderAdminList();renderEmojiPicker();
+  loadWaInput();loadJamInput();loadBannerInput();loadAboutInput();
+  renderTestiAdmin();
 }
 function closeAdmin(){document.getElementById('adminPanel').classList.remove('open');renderProducts();renderCats();}
 function doLogout(){closeAdmin();showToast('👋 Logout berhasil!');}
@@ -1144,6 +1641,7 @@ async function init(){
   showToast('⏳ Memuat produk...');
   products=await dbGetProducts();
   renderCats();renderProducts();
+  renderTokoStatus();renderBanner();renderAbout();renderTestis();
 }
 init();
 window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('hidden'),2600);});
