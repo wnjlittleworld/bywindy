@@ -794,6 +794,7 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
         <div class="form-group">
           <label class="form-label">Rating Bintang</label>
           <select class="form-select" id="fStars">
+            <option value="0">— Sembunyikan Rating</option>
             <option value="5">⭐⭐⭐⭐⭐</option>
             <option value="4">⭐⭐⭐⭐</option>
             <option value="3">⭐⭐⭐</option>
@@ -888,6 +889,7 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
     <div class="form-group">
       <label class="form-label">Rating</label>
       <select class="form-select" id="eStars">
+        <option value="0">— Sembunyikan Rating</option>
         <option value="5">⭐⭐⭐⭐⭐</option>
         <option value="4">⭐⭐⭐⭐</option>
         <option value="3">⭐⭐⭐</option>
@@ -1006,7 +1008,7 @@ let activeFilter='Semua';
 let searchQ='';
 
 function fmtRp(n){return 'Rp'+Number(n).toLocaleString('id-ID');}
-function starStr(n){return '⭐'.repeat(Number(n));}
+function starStr(n){return Number(n)>0?'⭐'.repeat(Number(n)):'';}
 const badgeCls={new:'badge-new',best:'badge-best',sale:'badge-sale',hot:'badge-hot'};
 let toastTimer;
 function showToast(msg){
@@ -1496,7 +1498,7 @@ function clearAddForm(){
   document.getElementById('fCatCustom').style.display='none';
   document.getElementById('fCat').value='';
   document.getElementById('fBadge').value='';
-  document.getElementById('fStars').value='5';
+  document.getElementById('fStars').value='0';
   document.getElementById('fBest').value='0';
   document.getElementById('fEmoji').value=EMOJIS[0];
   document.getElementById('fImgData').value='';
