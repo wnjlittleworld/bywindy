@@ -496,6 +496,102 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
   color:#fff;font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:800;cursor:pointer;margin-top:4px;
   box-shadow:0 4px 12px rgba(37,211,102,.3);transition:transform .2s;}
 .btn-save-jam:hover{transform:translateY(-2px);}
+
+/* KUPON */
+.coupon-wrap{padding:0 12px 16px;}
+.coupon-box{background:#fff;border-radius:16px;border:2px dashed var(--lav-d);padding:12px 14px;display:flex;gap:8px;align-items:center;box-shadow:0 3px 12px var(--shadow);}
+.coupon-input{flex:1;background:var(--off);border:2px solid var(--border);border-radius:11px;padding:9px 13px;font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--text);outline:none;text-transform:uppercase;letter-spacing:.08em;transition:border-color .3s;}
+.coupon-input:focus{border-color:var(--lav-d);}
+.coupon-input::placeholder{text-transform:none;letter-spacing:0;}
+.coupon-btn{background:linear-gradient(135deg,var(--pink-d),var(--lav-d));border:none;border-radius:11px;padding:9px 16px;color:#fff;font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(200,130,220,.3);transition:transform .2s;}
+.coupon-btn:hover{transform:scale(1.05);}
+.coupon-result{margin-top:8px;font-size:.65rem;font-family:'Nunito',sans-serif;font-weight:700;text-align:center;display:none;}
+.coupon-result.ok{color:#1a8a3a;display:block;}
+.coupon-result.err{color:var(--pink-dd);display:block;}
+.coupon-admin-card{background:linear-gradient(135deg,#fff8e8,#fff3d4);border:2px solid #ffd97a;border-radius:20px;padding:18px 16px;margin-bottom:18px;}
+.coupon-admin-card h3{font-family:'Fredoka One',cursive;font-size:1rem;color:#b07800;margin-bottom:6px;}
+.coupon-admin-card p{font-size:.6rem;color:#8a6000;font-family:'Nunito',sans-serif;margin-bottom:12px;}
+.coupon-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.coupon-row{background:#fff;border-radius:12px;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 2px 8px rgba(200,160,0,.1);}
+.coupon-row-code{font-family:'Fredoka One',cursive;font-size:.88rem;color:#b07800;letter-spacing:.05em;}
+.coupon-row-info{font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;}
+.coupon-row-del{background:linear-gradient(135deg,#ffb3b3,#ff8080);border:none;border-radius:8px;padding:5px 9px;color:#fff;font-size:.58rem;font-weight:800;cursor:pointer;}
+.btn-add-coupon{background:linear-gradient(135deg,#ffd93d,#ffb300);border:none;border-radius:13px;padding:10px 20px;color:#fff;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:800;cursor:pointer;margin-top:10px;box-shadow:0 4px 14px rgba(255,180,0,.3);transition:transform .2s;}
+.btn-add-coupon:hover{transform:translateY(-2px);}
+
+/* SHARE */
+.share-modal-overlay{position:fixed;inset:0;background:rgba(80,50,120,.4);backdrop-filter:blur(4px);z-index:750;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;}
+.share-modal-overlay.open{opacity:1;visibility:visible;}
+.share-modal{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;padding:24px 20px 32px;z-index:751;transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.46,.45,.94);}
+.share-modal.open{transform:translateY(0);}
+.share-modal-title{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--text);margin-bottom:16px;text-align:center;}
+.share-options{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.share-opt{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:10px 6px;border-radius:14px;transition:background .2s;}
+.share-opt:hover{background:var(--off);}
+.share-opt-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.share-opt-label{font-size:.55rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;}
+.share-wa-icon{background:linear-gradient(135deg,#25d366,#128c4e);}
+.share-ig-icon{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+.share-copy-icon{background:linear-gradient(135deg,var(--lav),var(--lav-d));}
+.share-native-icon{background:linear-gradient(135deg,var(--sky),var(--sky-d));}
+.share-cancel{width:100%;margin-top:14px;background:var(--off);border:2px solid var(--border);border-radius:14px;padding:11px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;color:var(--dim);cursor:pointer;}
+
+/* STATISTIK */
+.stats-admin-card{background:linear-gradient(135deg,#f0f4ff,#e8eeff);border:2px solid rgba(100,130,255,.2);border-radius:20px;padding:18px 16px;margin-bottom:18px;}
+.stats-admin-card h3{font-family:'Fredoka One',cursive;font-size:1rem;color:#4455cc;margin-bottom:14px;}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.stat-box{background:#fff;border-radius:14px;padding:14px 12px;text-align:center;box-shadow:0 3px 10px rgba(100,130,255,.1);}
+.stat-box-num{font-family:'Fredoka One',cursive;font-size:1.5rem;color:#4455cc;line-height:1;}
+.stat-box-label{font-size:.52rem;font-weight:700;color:var(--dim);font-family:'Nunito',sans-serif;text-transform:uppercase;letter-spacing:.08em;margin-top:3px;}
+.stat-box-sub{font-size:.48rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:2px;}
+.btn-reset-stats{background:var(--off);border:2px solid var(--border);border-radius:11px;padding:7px 14px;font-family:'Nunito',sans-serif;font-size:.62rem;font-weight:700;color:var(--dim);cursor:pointer;}
+.btn-reset-stats:hover{border-color:var(--pink-d);color:var(--pink-dd);}
+
+/* NOTIFIKASI POPUP */
+.notif-popup{position:fixed;top:120px;left:50%;transform:translateX(-50%) translateY(-20px);
+  background:#fff;border-radius:20px;padding:14px 18px;width:min(320px,90vw);
+  box-shadow:0 12px 40px rgba(180,130,200,.3);z-index:600;border:2px solid var(--lav);
+  opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s,transform .4s;
+  display:flex;align-items:center;gap:12px;position:fixed;}
+.notif-popup.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.notif-popup-emoji{font-size:2rem;flex-shrink:0;animation:bounce 1.5s infinite;}
+.notif-popup-title{font-family:'Fredoka One',cursive;font-size:.88rem;color:var(--text);margin-bottom:2px;}
+.notif-popup-sub{font-size:.58rem;color:var(--dim);font-family:'Nunito',sans-serif;}
+.notif-popup-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--dim);font-size:.75rem;cursor:pointer;}
+.notif-admin-card{background:linear-gradient(135deg,#fff5f0,#fff0e8);border:2px solid rgba(255,150,80,.2);border-radius:20px;padding:18px 16px;margin-bottom:18px;}
+.notif-admin-card h3{font-family:'Fredoka One',cursive;font-size:1rem;color:#cc5500;margin-bottom:6px;}
+.notif-admin-card p{font-size:.6rem;color:#995500;font-family:'Nunito',sans-serif;margin-bottom:12px;}
+.notif-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.notif-row{background:#fff;border-radius:12px;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.notif-row-left{display:flex;align-items:center;gap:8px;flex:1;}
+.notif-row-emoji{font-size:1.3rem;}
+.notif-row-title{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--text);}
+.notif-row-sub{font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;}
+.notif-row-del{background:linear-gradient(135deg,#ffb3b3,#ff8080);border:none;border-radius:8px;padding:5px 9px;color:#fff;font-size:.58rem;font-weight:800;cursor:pointer;}
+.btn-add-notif{background:linear-gradient(135deg,#ff9944,#ff6600);border:none;border-radius:13px;padding:10px 20px;color:#fff;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:800;cursor:pointer;margin-top:10px;box-shadow:0 4px 14px rgba(255,120,0,.3);transition:transform .2s;}
+.btn-add-notif:hover{transform:translateY(-2px);}
+
+/* RATING PEMBELI */
+.rating-section{margin:0 12px 18px;}
+.rating-form-card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 16px var(--shadow);margin-bottom:12px;}
+.rating-form-title{font-family:'Fredoka One',cursive;font-size:.92rem;color:var(--lav-d);margin-bottom:12px;}
+.star-picker{display:flex;gap:6px;margin-bottom:10px;}
+.star-pick{font-size:1.4rem;cursor:pointer;opacity:.3;transition:all .2s;line-height:1;}
+.star-pick.active{opacity:1;transform:scale(1.2);}
+.rating-name-input,.rating-text-input{width:100%;background:var(--off);border:2px solid var(--border);border-radius:11px;padding:8px 12px;font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--text);outline:none;transition:border-color .3s;margin-bottom:8px;}
+.rating-text-input{resize:vertical;min-height:60px;}
+.rating-name-input:focus,.rating-text-input:focus{border-color:var(--lav-d);}
+.btn-submit-rating{width:100%;background:linear-gradient(135deg,var(--yellow-d),var(--peach-d));border:none;border-radius:13px;padding:11px;color:#fff;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer;box-shadow:0 5px 14px rgba(255,180,100,.35);transition:transform .2s;}
+.btn-submit-rating:hover{transform:translateY(-2px);}
+.rating-avg{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fffde4,#fff3b0);border-radius:14px;padding:12px 16px;margin-bottom:12px;border:2px solid rgba(255,210,0,.3);}
+.rating-avg-num{font-family:'Fredoka One',cursive;font-size:2rem;color:#cc9900;line-height:1;}
+.rating-avg-stars{font-size:.9rem;margin-bottom:2px;}
+.rating-avg-count{font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;}
+.rating-item{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px;box-shadow:0 3px 10px var(--shadow);border-left:3px solid var(--yellow-d);}
+.rating-item-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.rating-item-name{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--text);}
+.rating-item-stars{font-size:.7rem;}
+.rating-item-text{font-size:.68rem;color:var(--dim);font-family:'Quicksand',sans-serif;line-height:1.55;font-style:italic;}
 </style>
 </head>
 <body>
@@ -603,6 +699,48 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
   </div>
   <div class="testi-section" id="testiSection"></div>
 
+  <!-- Rating Pembeli -->
+  <div class="section-header">
+    <span class="section-title">⭐ Rating Pembeli</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="rating-section" id="ratingSection">
+    <div class="rating-avg" id="ratingAvg" style="display:none">
+      <div class="rating-avg-num" id="ratingAvgNum">0</div>
+      <div class="rating-avg-info">
+        <div class="rating-avg-stars" id="ratingAvgStars"></div>
+        <div class="rating-avg-count" id="ratingAvgCount"></div>
+      </div>
+    </div>
+    <div id="ratingList"></div>
+    <div class="rating-form-card">
+      <div class="rating-form-title">✍️ Tulis Rating Kamu!</div>
+      <div class="star-picker" id="starPicker">
+        <span class="star-pick" onclick="pickStar(1)">⭐</span>
+        <span class="star-pick" onclick="pickStar(2)">⭐</span>
+        <span class="star-pick" onclick="pickStar(3)">⭐</span>
+        <span class="star-pick" onclick="pickStar(4)">⭐</span>
+        <span class="star-pick" onclick="pickStar(5)">⭐</span>
+      </div>
+      <input class="rating-name-input" id="ratingName" type="text" placeholder="Nama kamu (misal: Bunda Sari)">
+      <textarea class="rating-text-input" id="ratingText" placeholder="Ceritakan pengalamanmu belanja di WNJ Little World..."></textarea>
+      <button class="btn-submit-rating" onclick="submitRating()">⭐ Kirim Rating</button>
+    </div>
+  </div>
+
+  <!-- Kupon Diskon -->
+  <div class="section-header">
+    <span class="section-title">🏷️ Punya Kupon?</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="coupon-wrap">
+    <div class="coupon-box">
+      <input class="coupon-input" id="couponInput" type="text" placeholder="Masukkan kode kupon...">
+      <button class="coupon-btn" onclick="applyCoupon()">Pakai!</button>
+    </div>
+    <div class="coupon-result" id="couponResult"></div>
+  </div>
+
   <!-- About -->
   <div class="about-section">
     <h3>🌏 Tentang WNJ Little World</h3>
@@ -629,6 +767,41 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
 
 <!-- WA FLOAT BUTTON -->
 <button class="wa-float" id="waFloat" onclick="openWaChat()" title="Chat WhatsApp">💬</button>
+
+<!-- NOTIF POPUP -->
+<div class="notif-popup" id="notifPopup">
+  <div class="notif-popup-emoji" id="notifPopupEmoji">🎉</div>
+  <div class="notif-popup-text">
+    <div class="notif-popup-title" id="notifPopupTitle">Produk Baru!</div>
+    <div class="notif-popup-sub" id="notifPopupSub">Cek koleksi terbaru WNJ 🌏</div>
+  </div>
+  <button class="notif-popup-close" onclick="closeNotif()">✕</button>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="share-modal-overlay" id="shareOverlay" onclick="closeShare()"></div>
+<div class="share-modal" id="shareModal">
+  <div class="share-modal-title">📤 Bagikan Produk</div>
+  <div class="share-options">
+    <div class="share-opt" onclick="shareViaWA()">
+      <div class="share-opt-icon share-wa-icon">💬</div>
+      <span class="share-opt-label">WhatsApp</span>
+    </div>
+    <div class="share-opt" onclick="shareViaIG()">
+      <div class="share-opt-icon share-ig-icon">📸</div>
+      <span class="share-opt-label">Instagram</span>
+    </div>
+    <div class="share-opt" onclick="shareCopyLink()">
+      <div class="share-opt-icon share-copy-icon">🔗</div>
+      <span class="share-opt-label">Salin Link</span>
+    </div>
+    <div class="share-opt" onclick="shareNative()">
+      <div class="share-opt-icon share-native-icon">↗️</div>
+      <span class="share-opt-label">Lainnya</span>
+    </div>
+  </div>
+  <button class="share-cancel" onclick="closeShare()">Batal</button>
+</div>
 
 <!-- CART -->
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
@@ -842,6 +1015,85 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
     <div class="admin-card">
       <h3>📦 Daftar Produk (<span id="prodCount">0</span>)</h3>
       <div class="prod-list" id="adminProdList"></div>
+    </div>
+
+    <!-- Kupon Diskon -->
+    <div class="coupon-admin-card">
+      <h3>🏷️ Kelola Kupon Diskon</h3>
+      <p>Buat kode kupon untuk pembeli. Kupon bisa berupa potongan persen atau nominal.</p>
+      <div class="coupon-list" id="couponAdminList"></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Kode Kupon *</label>
+          <input class="form-input" id="couponCode" type="text" placeholder="Contoh: WNJHEMAT10" style="text-transform:uppercase;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipe Diskon</label>
+          <select class="form-select" id="couponType">
+            <option value="persen">Persen (%)</option>
+            <option value="nominal">Nominal (Rp)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nilai Diskon *</label>
+          <input class="form-input" id="couponValue" type="number" placeholder="10" min="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Min. Belanja (Rp)</label>
+          <input class="form-input" id="couponMin" type="number" placeholder="0 = tidak ada minimum" min="0">
+        </div>
+      </div>
+      <button class="btn-add-coupon" onclick="addCoupon()">➕ Tambah Kupon</button>
+    </div>
+
+    <!-- Notifikasi Popup -->
+    <div class="notif-admin-card">
+      <h3>🔔 Kelola Notifikasi Popup</h3>
+      <p>Notifikasi muncul otomatis saat pengunjung buka toko. Maksimal tampil 1x per sesi.</p>
+      <div class="notif-list" id="notifAdminList"></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Emoji</label>
+          <input class="form-input" id="notifEmoji" type="text" placeholder="🎉" maxlength="4">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Judul *</label>
+          <input class="form-input" id="notifTitle" type="text" placeholder="Produk Baru Tersedia!">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Deskripsi</label>
+          <input class="form-input" id="notifSub" type="text" placeholder="Cek koleksi terbaru WNJ Little World 🌏">
+        </div>
+      </div>
+      <button class="btn-add-notif" onclick="addNotif()">➕ Tambah Notifikasi</button>
+    </div>
+
+    <!-- Statistik Pengunjung -->
+    <div class="stats-admin-card">
+      <h3>📊 Statistik Pengunjung</h3>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-num" id="statVisit">0</div>
+          <div class="stat-box-label">Total Kunjungan</div>
+          <div class="stat-box-sub">Semua waktu</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-num" id="statToday">0</div>
+          <div class="stat-box-label">Hari Ini</div>
+          <div class="stat-box-sub" id="statTodayDate">-</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-num" id="statCart">0</div>
+          <div class="stat-box-label">Klik Keranjang</div>
+          <div class="stat-box-sub">Semua waktu</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-num" id="statCoupon">0</div>
+          <div class="stat-box-label">Kupon Dipakai</div>
+          <div class="stat-box-sub">Semua waktu</div>
+        </div>
+      </div>
+      <button class="btn-reset-stats" onclick="resetStats()">🗑️ Reset Statistik</button>
     </div>
   </div>
 </div>
@@ -1104,8 +1356,8 @@ function addToCart(id){
   el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');
 }
 function updateCart(){
-  const total=cart.reduce((s,c)=>s+c.qty,0);
-  document.getElementById('cartCount').textContent=total;
+  const totalQty=cart.reduce((s,c)=>s+c.qty,0);
+  document.getElementById('cartCount').textContent=totalQty;
   const body=document.getElementById('cartBody'),footer=document.getElementById('cartFooter');
   if(!cart.length){
     body.innerHTML=`<div class="cart-empty"><span class="cart-empty-icon">🛒</span><p>Keranjangnya masih kosong~<br>Yuk tambah produk!</p></div>`;
@@ -1113,7 +1365,7 @@ function updateCart(){
   }
   footer.style.display='block';
   body.innerHTML=cart.map(item=>`<div class="cart-item">
-    <div class="cart-item-thumb ${COLORS[item.id%COLORS.length]}">${item.emoji}</div>
+    <div class="cart-item-thumb ${COLORS[item.id%COLORS.length]}">${item.img?`<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;border-radius:11px;">`:item.emoji}</div>
     <div class="cart-item-info">
       <div class="cart-item-name">${item.name}</div>
       <div class="cart-item-price">${fmtRp(item.price)}</div>
@@ -1124,11 +1376,22 @@ function updateCart(){
       </div>
       <button class="remove-item" onclick="removeItem(${item.id})">🗑 Hapus</button>
     </div></div>`).join('');
-  document.getElementById('cartTotal').textContent=fmtRp(cart.reduce((s,c)=>s+c.price*c.qty,0));
+  const subtotal=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  let disc=0;
+  if(activeCoupon){
+    disc=activeCoupon.type==='persen'?Math.round(subtotal*activeCoupon.value/100):activeCoupon.value;
+    disc=Math.min(disc,subtotal);
+  }
+  const totalPrice=subtotal-disc;
+  document.getElementById('cartTotal').textContent=fmtRp(totalPrice)+(disc>0?` (-${fmtRp(disc)} 🏷️)`:'');
 }
 function changeQty(id,d){const item=cart.find(c=>c.id===id);if(!item)return;item.qty+=d;if(item.qty<=0)cart=cart.filter(c=>c.id!==id);updateCart();}
 function removeItem(id){cart=cart.filter(c=>c.id!==id);updateCart();}
-function toggleCart(){document.getElementById('cartOverlay').classList.toggle('open');document.getElementById('cartSidebar').classList.toggle('open');}
+function toggleCart(){
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartSidebar').classList.toggle('open');
+  trackStat('cart');
+}
 
 /* SCROLL TOP */
 window.addEventListener('scroll',()=>{
@@ -1324,7 +1587,7 @@ function openDetail(id){
         <button class="detail-btn-cart" onclick="addToCartQty(${p.id},detailQty);closeDetail()">🛒 Tambah ke Keranjang</button>
         <button class="detail-btn-wa" onclick="buyNowWA(${p.id},detailQty)">💬 Beli Langsung via WA</button>
         ${linkHtml}
-        <button class="detail-share-btn" onclick="shareProduct(products.find(x=>x.id===${p.id}))">📤 Bagikan Produk</button>
+        <button class="detail-share-btn" onclick="openShare(products.find(x=>x.id===${p.id}));closeDetail()">📤 Bagikan Produk</button>
       </div>
     </div>`;
   document.getElementById('detailOverlay').classList.add('open');
@@ -1408,7 +1671,7 @@ function openAdmin(){
   document.getElementById('adminPanel').classList.add('open');
   renderAdminStats();renderAdminList();renderEmojiPicker();
   loadWaInput();loadJamInput();loadBannerInput();loadAboutInput();
-  renderTestiAdmin();
+  renderTestiAdmin();renderCouponAdmin();renderNotifAdmin();renderStats();
 }
 function closeAdmin(){document.getElementById('adminPanel').classList.remove('open');renderProducts();renderCats();}
 function doLogout(){closeAdmin();showToast('👋 Logout berhasil!');}
@@ -1645,6 +1908,243 @@ async function confirmDelete(){
   deletingId=null;
 }
 
+/* ── KUPON DISKON ── */
+function loadCoupons(){try{return JSON.parse(localStorage.getItem('wnj_coupons')||'[]');}catch(e){return[];}}
+function saveCoupons(arr){try{localStorage.setItem('wnj_coupons',JSON.stringify(arr));}catch(e){}}
+let activeCoupon=null;
+
+function applyCoupon(){
+  const code=document.getElementById('couponInput').value.trim().toUpperCase();
+  const res=document.getElementById('couponResult');
+  if(!code){res.className='coupon-result err';res.textContent='❌ Masukkan kode kupon dulu!';return;}
+  const coupons=loadCoupons();
+  const found=coupons.find(c=>c.code===code);
+  if(!found){res.className='coupon-result err';res.textContent='❌ Kode kupon tidak valid!';return;}
+  const cartTotal=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  if(found.min&&cartTotal<found.min){
+    res.className='coupon-result err';
+    res.textContent=`❌ Min. belanja ${fmtRp(found.min)} untuk pakai kupon ini!`;return;
+  }
+  activeCoupon=found;
+  const disc=found.type==='persen'?Math.round(cartTotal*found.value/100):found.value;
+  res.className='coupon-result ok';
+  res.textContent=`✅ Kupon berhasil! Hemat ${fmtRp(disc)} ${found.type==='persen'?'('+found.value+'%)':''}`;
+  updateCart();
+  trackStat('coupon');
+  showToast('🏷️ Kupon '+code+' berhasil dipakai!');
+}
+
+function addCoupon(){
+  const code=document.getElementById('couponCode').value.trim().toUpperCase();
+  const type=document.getElementById('couponType').value;
+  const value=Number(document.getElementById('couponValue').value);
+  const min=Number(document.getElementById('couponMin').value)||0;
+  if(!code){showToast('❌ Kode kupon wajib diisi!');return;}
+  if(!value||value<=0){showToast('❌ Nilai diskon harus lebih dari 0!');return;}
+  const coupons=loadCoupons();
+  if(coupons.find(c=>c.code===code)){showToast('❌ Kode kupon sudah ada!');return;}
+  coupons.push({id:Date.now(),code,type,value,min});
+  saveCoupons(coupons);
+  document.getElementById('couponCode').value='';
+  document.getElementById('couponValue').value='';
+  document.getElementById('couponMin').value='';
+  renderCouponAdmin();
+  showToast('✅ Kupon '+code+' berhasil ditambahkan!');
+}
+function deleteCoupon(id){
+  saveCoupons(loadCoupons().filter(c=>c.id!==id));
+  renderCouponAdmin();showToast('🗑️ Kupon dihapus!');
+}
+function renderCouponAdmin(){
+  const wrap=document.getElementById('couponAdminList');if(!wrap)return;
+  const coupons=loadCoupons();
+  if(!coupons.length){wrap.innerHTML=`<div style="font-size:.65rem;color:var(--dim);font-family:'Nunito',sans-serif;">Belum ada kupon.</div>`;return;}
+  wrap.innerHTML=coupons.map(c=>`
+    <div class="coupon-row">
+      <div>
+        <div class="coupon-row-code">${c.code}</div>
+        <div class="coupon-row-info">Diskon ${c.value}${c.type==='persen'?'%':' Rp'} ${c.min?'| Min. '+fmtRp(c.min):''}</div>
+      </div>
+      <button class="coupon-row-del" onclick="deleteCoupon(${c.id})">🗑</button>
+    </div>`).join('');
+}
+
+/* ── SHARE PRODUK ── */
+let sharingProduct=null;
+function openShare(p){
+  sharingProduct=p;
+  document.getElementById('shareOverlay').classList.add('open');
+  document.getElementById('shareModal').classList.add('open');
+}
+function closeShare(){
+  document.getElementById('shareOverlay').classList.remove('open');
+  document.getElementById('shareModal').classList.remove('open');
+}
+function getShareText(p){
+  return `✨ ${p.name}\n💰 ${fmtRp(p.price)}${p.orig?' (coret '+fmtRp(p.orig)+')':''}\n${p.desc?'\n'+p.desc+'\n':''}\n🌏 WNJ Little World — Digital Education Series\n${window.location.href}`;
+}
+function shareViaWA(){
+  if(!sharingProduct)return;
+  const text=getShareText(sharingProduct);
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+  closeShare();
+}
+function shareViaIG(){
+  if(!sharingProduct)return;
+  navigator.clipboard.writeText(getShareText(sharingProduct)).then(()=>{
+    showToast('📋 Teks disalin! Paste di caption Instagram kamu 📸');
+    closeShare();
+  });
+}
+function shareCopyLink(){
+  if(!sharingProduct)return;
+  navigator.clipboard.writeText(getShareText(sharingProduct)).then(()=>{
+    showToast('🔗 Link & info produk berhasil disalin!');
+    closeShare();
+  });
+}
+function shareNative(){
+  if(!sharingProduct)return;
+  const text=getShareText(sharingProduct);
+  if(navigator.share){navigator.share({title:sharingProduct.name,text});closeShare();}
+  else{shareCopyLink();}
+}
+
+/* ── STATISTIK PENGUNJUNG ── */
+function loadStats(){try{return JSON.parse(localStorage.getItem('wnj_stats')||'{}')}catch(e){return{};}}
+function saveStats(s){try{localStorage.setItem('wnj_stats',JSON.stringify(s));}catch(e){}}
+function trackStat(type){
+  const s=loadStats();
+  const today=new Date().toISOString().split('T')[0];
+  if(type==='visit'){
+    s.total=(s.total||0)+1;
+    if(s.lastDate!==today){s.today=0;s.lastDate=today;}
+    s.today=(s.today||0)+1;
+  } else if(type==='cart'){
+    s.cart=(s.cart||0)+1;
+  } else if(type==='coupon'){
+    s.coupon=(s.coupon||0)+1;
+  }
+  saveStats(s);
+}
+function renderStats(){
+  const s=loadStats();
+  const today=new Date().toISOString().split('T')[0];
+  const todayCount=s.lastDate===today?(s.today||0):0;
+  const el=id=>document.getElementById(id);
+  if(el('statVisit'))el('statVisit').textContent=s.total||0;
+  if(el('statToday'))el('statToday').textContent=todayCount;
+  if(el('statTodayDate'))el('statTodayDate').textContent=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+  if(el('statCart'))el('statCart').textContent=s.cart||0;
+  if(el('statCoupon'))el('statCoupon').textContent=s.coupon||0;
+}
+function resetStats(){
+  if(!confirm('Reset semua statistik? Tidak bisa dibatalkan!'))return;
+  localStorage.removeItem('wnj_stats');
+  renderStats();showToast('🗑️ Statistik direset!');
+}
+
+/* ── NOTIFIKASI POPUP ── */
+function loadNotifs(){try{return JSON.parse(localStorage.getItem('wnj_notifs')||'[]');}catch(e){return[];}}
+function saveNotifs(arr){try{localStorage.setItem('wnj_notifs',JSON.stringify(arr));}catch(e){}}
+function showNotifPopup(){
+  const notifs=loadNotifs();
+  if(!notifs.length)return;
+  const shown=sessionStorage.getItem('wnj_notif_shown');
+  if(shown)return;
+  sessionStorage.setItem('wnj_notif_shown','1');
+  const n=notifs[0];
+  document.getElementById('notifPopupEmoji').textContent=n.emoji||'🎉';
+  document.getElementById('notifPopupTitle').textContent=n.title||'Halo!';
+  document.getElementById('notifPopupSub').textContent=n.sub||'Selamat datang di WNJ Little World 🌏';
+  setTimeout(()=>{
+    document.getElementById('notifPopup').classList.add('show');
+    setTimeout(()=>closeNotif(),6000);
+  },2000);
+}
+function closeNotif(){document.getElementById('notifPopup').classList.remove('show');}
+function addNotif(){
+  const emoji=document.getElementById('notifEmoji').value.trim()||'🎉';
+  const title=document.getElementById('notifTitle').value.trim();
+  const sub=document.getElementById('notifSub').value.trim();
+  if(!title){showToast('❌ Judul notifikasi wajib diisi!');return;}
+  const notifs=loadNotifs();
+  notifs.unshift({id:Date.now(),emoji,title,sub});
+  saveNotifs(notifs);
+  document.getElementById('notifEmoji').value='';
+  document.getElementById('notifTitle').value='';
+  document.getElementById('notifSub').value='';
+  renderNotifAdmin();showToast('✅ Notifikasi ditambahkan!');
+}
+function deleteNotif(id){
+  saveNotifs(loadNotifs().filter(n=>n.id!==id));
+  renderNotifAdmin();showToast('🗑️ Notifikasi dihapus!');
+}
+function renderNotifAdmin(){
+  const wrap=document.getElementById('notifAdminList');if(!wrap)return;
+  const notifs=loadNotifs();
+  if(!notifs.length){wrap.innerHTML=`<div style="font-size:.65rem;color:var(--dim);font-family:'Nunito',sans-serif;">Belum ada notifikasi.</div>`;return;}
+  wrap.innerHTML=notifs.map(n=>`
+    <div class="notif-row">
+      <div class="notif-row-left">
+        <div class="notif-row-emoji">${n.emoji}</div>
+        <div><div class="notif-row-title">${n.title}</div><div class="notif-row-sub">${n.sub||''}</div></div>
+      </div>
+      <button class="notif-row-del" onclick="deleteNotif(${n.id})">🗑</button>
+    </div>`).join('');
+}
+
+/* ── RATING PEMBELI ── */
+let selectedStars=0;
+function pickStar(n){
+  selectedStars=n;
+  document.querySelectorAll('.star-pick').forEach((el,i)=>{
+    el.classList.toggle('active',i<n);
+  });
+}
+function loadRatings(){try{return JSON.parse(localStorage.getItem('wnj_ratings')||'[]');}catch(e){return[];}}
+function saveRatings(arr){try{localStorage.setItem('wnj_ratings',JSON.stringify(arr));}catch(e){}}
+function submitRating(){
+  const name=document.getElementById('ratingName').value.trim();
+  const text=document.getElementById('ratingText').value.trim();
+  if(!selectedStars){showToast('❌ Pilih bintang dulu!');return;}
+  if(!name){showToast('❌ Nama wajib diisi!');return;}
+  if(!text){showToast('❌ Tulis ulasanmu dulu!');return;}
+  const ratings=loadRatings();
+  ratings.unshift({id:Date.now(),name,text,stars:selectedStars,date:new Date().toLocaleDateString('id-ID')});
+  saveRatings(ratings);
+  document.getElementById('ratingName').value='';
+  document.getElementById('ratingText').value='';
+  selectedStars=0;
+  document.querySelectorAll('.star-pick').forEach(el=>el.classList.remove('active'));
+  renderRatings();
+  showToast('⭐ Rating berhasil dikirim! Terima kasih 💕');
+}
+function renderRatings(){
+  const ratings=loadRatings();
+  const avgEl=document.getElementById('ratingAvg');
+  const listEl=document.getElementById('ratingList');
+  if(!listEl)return;
+  if(ratings.length){
+    const avg=(ratings.reduce((s,r)=>s+r.stars,0)/ratings.length).toFixed(1);
+    avgEl.style.display='flex';
+    document.getElementById('ratingAvgNum').textContent=avg;
+    document.getElementById('ratingAvgStars').textContent='⭐'.repeat(Math.round(avg));
+    document.getElementById('ratingAvgCount').textContent=ratings.length+' ulasan pembeli';
+    listEl.innerHTML=ratings.map(r=>`
+      <div class="rating-item">
+        <div class="rating-item-top">
+          <div class="rating-item-name">${r.name}</div>
+          <div class="rating-item-stars">${'⭐'.repeat(r.stars)}</div>
+        </div>
+        <div class="rating-item-text">"${r.text}"</div>
+      </div>`).join('');
+  } else {
+    avgEl.style.display='none';
+    listEl.innerHTML=`<div style="text-align:center;padding:16px 0;font-size:.7rem;color:var(--dim);font-family:'Nunito',sans-serif;">Belum ada rating. Jadilah yang pertama! ⭐</div>`;
+  }
+}
+
 /* SECRET CLICK */
 let secretClicks=0;
 let secretTimer=null;
@@ -1673,6 +2173,9 @@ async function init(){
   products=await dbGetProducts();
   renderCats();renderProducts();
   renderTokoStatus();renderBanner();renderAbout();renderTestis();
+  renderRatings();
+  trackStat('visit');
+  showNotifPopup();
 }
 init();
 window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('hidden'),2600);});
