@@ -818,6 +818,10 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
             <button class="btn-remove-img" onclick="removeImg(event,'uploadArea','uploadPreview','fImgData')">✕ Hapus Foto</button>
           </div>
           <input type="hidden" id="fImgData">
+          <div style="text-align:center;font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin:6px 0;">— atau —</div>
+          <label class="form-label">🔗 URL Foto (Google Drive, ImgBB, dll)</label>
+          <input class="form-input" id="fImgUrl" type="url" placeholder="https://drive.google.com/uc?id=..." oninput="previewImgUrl('fImgUrl','uploadArea','uploadPreview','fImgData')">
+          <div style="font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:4px;">💡 Untuk Google Drive: klik kanan foto → Bagikan → salin link → ubah <b>/view</b> jadi <b>/uc?export=view</b></div>
         </div>
           <div class="emoji-picker" id="emojiPicker"></div>
           <input class="form-input" id="fEmoji" type="text" placeholder="Atau ketik/paste emoji sendiri 📚" style="margin-top:8px;">
@@ -917,6 +921,10 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
         <button class="btn-remove-img" onclick="removeImg(event,'editUploadArea','editUploadPreview','eImgData')">✕ Hapus Foto</button>
       </div>
       <input type="hidden" id="eImgData">
+      <div style="text-align:center;font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin:6px 0;">— atau —</div>
+      <label class="form-label">🔗 URL Foto (Google Drive, ImgBB, dll)</label>
+      <input class="form-input" id="eImgUrl" type="url" placeholder="https://drive.google.com/uc?id=..." oninput="previewImgUrl('eImgUrl','editUploadArea','editUploadPreview','eImgData')">
+      <div style="font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:4px;">💡 Untuk Google Drive: ubah link <b>/view</b> jadi <b>/uc?export=view</b></div>
     </div>
   </div>
   <div class="form-group full" style="margin-top:11px;">
@@ -1442,6 +1450,20 @@ function previewImg(input, areaId, previewId, dataId){
   };
   reader.readAsDataURL(file);
 }
+function previewImgUrl(inputId, areaId, previewId, dataId){
+  const url=document.getElementById(inputId).value.trim();
+  if(!url)return;
+  const area=document.getElementById(areaId);
+  const preview=document.getElementById(previewId);
+  const data=document.getElementById(dataId);
+  preview.src=url;
+  preview.style.display='block';
+  area.querySelector('.upload-icon').style.display='none';
+  area.querySelector('.upload-label').style.display='none';
+  area.querySelector('.upload-hint').style.display='none';
+  area.querySelector('.btn-remove-img').style.display='block';
+  data.value=url;
+}
 function removeImg(e, areaId, previewId, dataId){
   e.stopPropagation();
   document.getElementById(dataId).value='';
@@ -1494,7 +1516,7 @@ async function addProduct(){
   }
 }
 function clearAddForm(){
-  ['fName','fPrice','fOrig','fDesc','fLink','fCatCustom'].forEach(id=>document.getElementById(id).value='');
+  ['fName','fPrice','fOrig','fDesc','fLink','fCatCustom','fImgUrl'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('fCatCustom').style.display='none';
   document.getElementById('fCat').value='';
   document.getElementById('fBadge').value='';
@@ -1557,14 +1579,21 @@ function openEdit(id){
   document.getElementById('eLink').value=p.link||'';
   // load image
   const eImgData=document.getElementById('eImgData');
+  const eImgUrl=document.getElementById('eImgUrl');
   const ePrev=document.getElementById('editUploadPreview');
   const eArea=document.getElementById('editUploadArea');
-  if(p.img){
+  if(p.img&&p.img.startsWith('http')){
+    eImgUrl.value=p.img;
+    eImgData.value=p.img;
+    ePrev.src=p.img;ePrev.style.display='block';
+    eArea.classList.add('has-img');
+  } else if(p.img){
+    eImgUrl.value='';
     eImgData.value=p.img;
     ePrev.src=p.img;ePrev.style.display='block';
     eArea.classList.add('has-img');
   } else {
-    eImgData.value='';
+    eImgData.value='';eImgUrl.value='';
     ePrev.src='';ePrev.style.display='none';
     eArea.classList.remove('has-img');
   }
