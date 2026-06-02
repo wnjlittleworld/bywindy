@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WNJ Little W🌏rld — Digital Education Series</title>
+<meta name="description" content="Produk digital edukasi kreatif untuk si kecil yang cerdas ✨">
+<meta name="theme-color" content="#a78edf">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="WNJ Little World">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -366,48 +373,142 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
   border-radius:8px;padding:2px 8px;font-size:.46rem;font-weight:700;color:#fff;font-family:'Nunito',sans-serif;
   text-decoration:none;margin-top:4px;}
 .prod-link-tag:hover{opacity:.85;}
-/* Product Detail Popup */
+/* ── DETAIL PRODUK (SLIDE FROM BOTTOM) ── */
 .detail-overlay{position:fixed;inset:0;background:rgba(80,50,120,.45);z-index:699;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;backdrop-filter:blur(4px);}
 .detail-overlay.open{opacity:1;visibility:visible;}
-.detail-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-60%);
-  background:#fff;border-radius:24px;width:min(400px,94vw);max-height:90vh;overflow-y:auto;
-  box-shadow:0 24px 64px rgba(180,130,200,.35);z-index:700;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s,transform .35s;}
-.detail-modal.open{opacity:1;visibility:visible;transform:translate(-50%,-50%);}
-.detail-img{width:100%;height:220px;object-fit:cover;border-radius:24px 24px 0 0;}
-.detail-img-emoji{width:100%;height:180px;display:flex;align-items:center;justify-content:center;
-  font-size:5rem;border-radius:24px 24px 0 0;}
-.detail-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.9);border:none;border-radius:50%;
-  width:32px;height:32px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:10;}
-.detail-body{padding:18px 18px 22px;}
-.detail-cat{font-size:.55rem;font-weight:800;color:var(--lav-d);font-family:'Nunito',sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
-.detail-name{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--text);margin-bottom:6px;line-height:1.3;}
-.detail-stars{font-size:.85rem;margin-bottom:8px;}
-.detail-desc{font-size:.72rem;color:var(--dim);font-family:'Quicksand',sans-serif;line-height:1.65;margin-bottom:14px;background:var(--off);border-radius:12px;padding:10px 12px;}
-.detail-price-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-.detail-price{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--pink-d);}
+.detail-modal{position:fixed;bottom:0;left:0;right:0;
+  background:#fff;border-radius:28px 28px 0 0;max-height:92vh;overflow-y:auto;
+  box-shadow:0 -8px 40px rgba(180,130,200,.3);z-index:700;
+  transform:translateY(100%);transition:transform .42s cubic-bezier(.25,.46,.45,.94);
+  visibility:hidden;}
+.detail-modal.open{transform:translateY(0);visibility:visible;}
+/* drag handle */
+.detail-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:12px auto 0;cursor:grab;}
+.detail-header-img{width:100%;height:240px;object-fit:cover;display:block;}
+.detail-header-emoji{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:6rem;position:relative;}
+.detail-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.92);border:none;border-radius:50%;
+  width:34px;height:34px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);z-index:10;}
+.detail-body{padding:18px 18px 30px;}
+.detail-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.detail-cat-badge{background:linear-gradient(135deg,var(--lav),var(--pink));color:#fff;border-radius:20px;
+  padding:3px 12px;font-size:.5rem;font-weight:800;font-family:'Nunito',sans-serif;text-transform:uppercase;letter-spacing:.1em;}
+.detail-share-top{background:var(--off);border:2px solid var(--border);border-radius:50%;width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;flex-shrink:0;transition:border-color .2s;}
+.detail-share-top:hover{border-color:var(--lav-d);}
+.detail-name{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--text);line-height:1.3;margin-bottom:6px;}
+.detail-rating-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.detail-stars{font-size:.8rem;}
+.detail-rating-count{font-size:.58rem;color:var(--dim);font-family:'Nunito',sans-serif;}
+.detail-desc{font-size:.72rem;color:var(--dim);font-family:'Quicksand',sans-serif;line-height:1.7;
+  background:var(--off);border-radius:14px;padding:12px 14px;margin-bottom:16px;border-left:3px solid var(--lav);}
+.detail-price-box{background:linear-gradient(135deg,#fff0f5,#f8f0ff);border-radius:16px;padding:14px 16px;
+  margin-bottom:16px;border:2px solid rgba(200,140,220,.15);}
+.detail-price-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.detail-price{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--pink-d);line-height:1;}
 .detail-orig{font-size:.72rem;color:var(--dim);text-decoration:line-through;font-family:'Quicksand',sans-serif;}
-.detail-btns{display:flex;flex-direction:column;gap:9px;}
-.detail-btn-cart{background:linear-gradient(135deg,var(--pink-d),var(--lav-d));border:none;border-radius:13px;
-  padding:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer;
-  box-shadow:0 5px 16px rgba(200,130,220,.3);transition:transform .2s;}
+.detail-disc-badge{background:linear-gradient(135deg,#ff5555,#ff2222);color:#fff;border-radius:8px;
+  padding:2px 8px;font-size:.52rem;font-weight:900;font-family:'Nunito',sans-serif;}
+.detail-savings{font-size:.58rem;color:#1a8a3a;font-family:'Nunito',sans-serif;font-weight:700;}
+.detail-qty-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.detail-qty-label{font-size:.68rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;}
+.detail-qty-ctrl{display:flex;align-items:center;gap:10px;background:var(--off);border-radius:14px;padding:6px 12px;border:2px solid var(--border);}
+.detail-qty-btn{background:linear-gradient(135deg,var(--pink-d),var(--lav-d));border:none;border-radius:8px;color:#fff;
+  font-size:1rem;cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:900;}
+.detail-qty-num{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--text);min-width:22px;text-align:center;}
+.detail-btns{display:flex;flex-direction:column;gap:10px;}
+.detail-btn-cart{background:linear-gradient(135deg,var(--pink-d),var(--lav-d));border:none;border-radius:16px;
+  padding:14px;color:#fff;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 20px rgba(200,130,220,.35);transition:transform .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
 .detail-btn-cart:hover{transform:translateY(-2px);}
-.detail-btn-wa{background:linear-gradient(135deg,#25d366,#128c4e);border:none;border-radius:13px;
-  padding:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer;
-  box-shadow:0 5px 16px rgba(37,211,102,.3);transition:transform .2s;}
+.detail-btn-checkout{background:linear-gradient(135deg,#ff9944,#ff6600);border:none;border-radius:16px;
+  padding:14px;color:#fff;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 20px rgba(255,120,0,.35);transition:transform .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.detail-btn-checkout:hover{transform:translateY(-2px);}
+.detail-btn-wa{background:linear-gradient(135deg,#25d366,#128c4e);border:none;border-radius:16px;
+  padding:14px;color:#fff;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 20px rgba(37,211,102,.35);transition:transform .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
 .detail-btn-wa:hover{transform:translateY(-2px);}
-.detail-btn-link{background:linear-gradient(135deg,var(--sky),var(--sky-d));border:none;border-radius:13px;
+.detail-btn-link{background:linear-gradient(135deg,var(--sky),var(--sky-d));border:none;border-radius:16px;
   padding:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer;
-  box-shadow:0 5px 16px rgba(100,180,230,.3);transition:transform .2s;text-decoration:none;text-align:center;display:block;}
+  box-shadow:0 5px 16px rgba(100,180,230,.3);transition:transform .2s;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;}
 .detail-btn-link:hover{transform:translateY(-2px);}
-.detail-qty-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.detail-qty-label{font-size:.65rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;}
-.detail-qty-ctrl{display:flex;align-items:center;gap:8px;background:var(--off);border-radius:12px;padding:4px 10px;border:2px solid var(--border);}
-.detail-qty-btn{background:none;border:none;font-size:1rem;cursor:pointer;color:var(--lav-d);font-weight:900;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
-.detail-qty-num{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--text);min-width:20px;text-align:center;}
-.detail-share-btn{background:var(--off);border:2px solid var(--border);border-radius:13px;padding:10px;
-  color:var(--dim);font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:border-color .2s;}
+.detail-share-btn{background:var(--off);border:2px solid var(--border);border-radius:16px;padding:11px;
+  color:var(--dim);font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:border-color .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
 .detail-share-btn:hover{border-color:var(--lav-d);}
+.detail-divider{height:1px;background:var(--border);margin:14px 0;}
+
+/* ── CHECKOUT ── */
+.checkout-overlay{position:fixed;inset:0;background:rgba(80,50,120,.45);backdrop-filter:blur(4px);z-index:750;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;}
+.checkout-overlay.open{opacity:1;visibility:visible;}
+.checkout-modal{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:28px 28px 0 0;max-height:94vh;overflow-y:auto;
+  z-index:751;transform:translateY(100%);transition:transform .42s cubic-bezier(.25,.46,.45,.94);visibility:hidden;}
+.checkout-modal.open{transform:translateY(0);visibility:visible;}
+.checkout-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:12px auto 6px;}
+.checkout-header{padding:14px 18px 10px;border-bottom:2px solid var(--border);}
+.checkout-title{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--lav-d);}
+.checkout-body{padding:16px 18px 30px;}
+/* Steps */
+.checkout-steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:22px;}
+.checkout-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;}
+.checkout-step-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.68rem;font-weight:900;font-family:'Nunito',sans-serif;transition:all .3s;}
+.checkout-step.done .checkout-step-circle{background:linear-gradient(135deg,var(--mint-d),var(--sky-d));color:#fff;}
+.checkout-step.active .checkout-step-circle{background:linear-gradient(135deg,var(--pink-d),var(--lav-d));color:#fff;box-shadow:0 3px 10px rgba(200,130,220,.4);}
+.checkout-step.pending .checkout-step-circle{background:var(--off);color:var(--dim);border:2px solid var(--border);}
+.checkout-step-label{font-size:.48rem;font-weight:700;color:var(--dim);font-family:'Nunito',sans-serif;text-transform:uppercase;letter-spacing:.06em;}
+.checkout-step.active .checkout-step-label{color:var(--lav-d);}
+.checkout-step-line{height:2px;flex:1;background:var(--border);margin-bottom:14px;border-radius:2px;}
+.checkout-step-line.done{background:linear-gradient(90deg,var(--mint-d),var(--sky-d));}
+/* Form */
+.checkout-section-title{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--text);margin-bottom:12px;}
+.checkout-field{margin-bottom:12px;}
+.checkout-field label{display:block;font-size:.6rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;letter-spacing:.06em;margin-bottom:5px;}
+.checkout-input{width:100%;background:var(--off);border:2px solid var(--border);border-radius:12px;padding:10px 14px;
+  font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--text);outline:none;transition:border-color .3s;}
+.checkout-input:focus{border-color:var(--lav-d);}
+.checkout-select{width:100%;background:var(--off);border:2px solid var(--border);border-radius:12px;padding:10px 14px;
+  font-family:'Quicksand',sans-serif;font-size:.8rem;color:var(--text);outline:none;cursor:pointer;}
+/* Order summary */
+.checkout-order-item{display:flex;align-items:center;gap:10px;background:var(--off);border-radius:13px;padding:10px 12px;margin-bottom:8px;}
+.checkout-order-thumb{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;overflow:hidden;}
+.checkout-order-thumb img{width:100%;height:100%;object-fit:cover;}
+.checkout-order-info{flex:1;}
+.checkout-order-name{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--text);}
+.checkout-order-qty{font-size:.58rem;color:var(--dim);font-family:'Nunito',sans-serif;}
+.checkout-order-price{font-family:'Fredoka One',cursive;font-size:.88rem;color:var(--pink-d);}
+.checkout-summary-box{background:linear-gradient(135deg,#fff0f5,#f8f0ff);border-radius:14px;padding:14px 16px;margin:14px 0;border:2px solid rgba(200,140,220,.15);}
+.checkout-summary-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.checkout-summary-label{font-size:.65rem;color:var(--dim);font-family:'Nunito',sans-serif;}
+.checkout-summary-val{font-size:.7rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;}
+.checkout-summary-total{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:2px solid var(--border);margin-top:4px;}
+.checkout-summary-total-label{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--text);}
+.checkout-summary-total-val{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--pink-d);}
+/* Coupon in checkout */
+.checkout-coupon-row{display:flex;gap:8px;margin-bottom:4px;}
+.checkout-coupon-input{flex:1;background:#fff;border:2px solid var(--border);border-radius:11px;padding:9px 12px;
+  font-family:'Quicksand',sans-serif;font-size:.78rem;color:var(--text);outline:none;text-transform:uppercase;}
+.checkout-coupon-btn{background:linear-gradient(135deg,var(--pink-d),var(--lav-d));border:none;border-radius:11px;padding:9px 14px;
+  color:#fff;font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:800;cursor:pointer;white-space:nowrap;}
+.checkout-coupon-result{font-size:.62rem;font-family:'Nunito',sans-serif;font-weight:700;min-height:18px;margin-bottom:8px;}
+.checkout-coupon-result.ok{color:#1a8a3a;}
+.checkout-coupon-result.err{color:var(--pink-dd);}
+/* Buttons */
+.checkout-btn-next{width:100%;background:linear-gradient(135deg,var(--pink-d),var(--lav-d));border:none;border-radius:16px;
+  padding:14px;color:#fff;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 20px rgba(200,130,220,.35);transition:transform .2s;margin-top:14px;}
+.checkout-btn-next:hover{transform:translateY(-2px);}
+.checkout-btn-wa-final{width:100%;background:linear-gradient(135deg,#25d366,#128c4e);border:none;border-radius:16px;
+  padding:14px;color:#fff;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;
+  box-shadow:0 6px 20px rgba(37,211,102,.35);transition:transform .2s;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.checkout-btn-wa-final:hover{transform:translateY(-2px);}
+.checkout-btn-back{width:100%;background:var(--off);border:2px solid var(--border);border-radius:16px;padding:12px;
+  color:var(--dim);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;margin-top:8px;}
+/* Success */
+.checkout-success{text-align:center;padding:30px 20px;}
+.checkout-success-icon{font-size:4rem;margin-bottom:12px;display:block;animation:bounce 1s ease;}
+.checkout-success-title{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--lav-d);margin-bottom:8px;}
+.checkout-success-sub{font-size:.72rem;color:var(--dim);font-family:'Nunito',sans-serif;line-height:1.6;margin-bottom:20px;}
 
 /* Promo Banner */
 .promo-banner{margin:0 12px 16px;border-radius:18px;overflow:hidden;position:relative;}
@@ -458,6 +559,24 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
 .about-section{background:linear-gradient(135deg,var(--lav),var(--pink));margin:0 12px 18px;border-radius:20px;padding:20px 18px;text-align:center;}
 .about-section h3{font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fff;margin-bottom:8px;}
 .about-section p{font-size:.68rem;color:rgba(255,255,255,.9);font-family:'Quicksand',sans-serif;line-height:1.7;margin-bottom:12px;}
+.social-links{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.social-btn{display:flex;align-items:center;gap:12px;border:none;border-radius:16px;padding:12px 16px;
+  cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s;width:100%;}
+.social-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.15);}
+.social-btn-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.social-btn-info{flex:1;text-align:left;}
+.social-btn-name{font-family:'Fredoka One',cursive;font-size:.88rem;color:#fff;line-height:1.2;}
+.social-btn-handle{font-size:.58rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-serif;}
+.social-btn-arrow{font-size:.8rem;color:rgba(255,255,255,.7);}
+.btn-tiktok{background:linear-gradient(135deg,#010101,#69C9D0);}
+.btn-instagram{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+.btn-lynk{background:linear-gradient(135deg,#6c63ff,#a78edf);}
+.btn-gumroad{background:linear-gradient(135deg,#ff90e8,#ff6ec7);}
+.btn-whatsapp{background:linear-gradient(135deg,#25d366,#128c4e);}
+.footer-social{display:flex;justify-content:center;gap:10px;margin:14px 0 8px;flex-wrap:wrap;}
+.footer-social-btn{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;text-decoration:none;transition:transform .2s,box-shadow .2s;}
 .about-wa-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:none;border-radius:20px;
   padding:9px 18px;color:#25d366;font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:800;cursor:pointer;
   box-shadow:0 4px 12px rgba(0,0,0,.1);transition:transform .2s;text-decoration:none;}
@@ -570,6 +689,65 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
 .notif-row-del{background:linear-gradient(135deg,#ffb3b3,#ff8080);border:none;border-radius:8px;padding:5px 9px;color:#fff;font-size:.58rem;font-weight:800;cursor:pointer;}
 .btn-add-notif{background:linear-gradient(135deg,#ff9944,#ff6600);border:none;border-radius:13px;padding:10px 20px;color:#fff;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:800;cursor:pointer;margin-top:10px;box-shadow:0 4px 14px rgba(255,120,0,.3);transition:transform .2s;}
 .btn-add-notif:hover{transform:translateY(-2px);}
+
+/* ── STOK TERBATAS ── */
+.stock-badge{position:absolute;bottom:8px;right:8px;background:linear-gradient(135deg,#ff6b6b,#ee5a24);
+  color:#fff;border-radius:10px;padding:3px 8px;font-size:.46rem;font-weight:900;
+  font-family:'Nunito',sans-serif;letter-spacing:.05em;z-index:2;
+  animation:stockPulse 2s ease-in-out infinite;}
+@keyframes stockPulse{0%,100%{opacity:1}50%{opacity:.7}}
+.stock-badge.habis{background:linear-gradient(135deg,#636e72,#2d3436);}
+.product-card.habis .add-btn{background:#ccc;cursor:not-allowed;box-shadow:none;pointer-events:none;}
+.sold-out-overlay{position:absolute;inset:0;background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;z-index:3;}
+.sold-out-text{font-family:'Fredoka One',cursive;font-size:.9rem;color:#636e72;background:#fff;border-radius:20px;padding:4px 14px;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+
+/* ── LIVE CHAT BUBBLE ── */
+.chat-bubble-wrap{position:fixed;bottom:22px;right:18px;z-index:400;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.chat-bubble-btn{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c4e);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.6rem;
+  box-shadow:0 6px 20px rgba(37,211,102,.45);transition:transform .2s;position:relative;}
+.chat-bubble-btn:hover{transform:scale(1.1);}
+.chat-bubble-btn::before{content:'';position:absolute;inset:-5px;border-radius:50%;
+  background:rgba(37,211,102,.2);animation:chatPing 2s ease-in-out infinite;}
+@keyframes chatPing{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.3);opacity:0}}
+.chat-notif-dot{position:absolute;top:2px;right:2px;width:13px;height:13px;background:#ff4444;
+  border-radius:50%;border:2px solid #fff;}
+.chat-popup{background:#fff;border-radius:20px;width:min(280px,85vw);
+  box-shadow:0 12px 40px rgba(0,0,0,.15);overflow:hidden;
+  animation:slideUpChat .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes slideUpChat{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.chat-popup-header{background:linear-gradient(135deg,#25d366,#128c4e);padding:14px 16px;
+  display:flex;align-items:center;gap:10px;}
+.chat-popup-avatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.chat-popup-name{font-family:'Fredoka One',cursive;font-size:.9rem;color:#fff;}
+.chat-popup-status{font-size:.55rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-serif;
+  display:flex;align-items:center;gap:4px;margin-top:2px;}
+.chat-popup-status::before{content:'';width:7px;height:7px;background:#a8ff78;border-radius:50%;display:inline-block;}
+.chat-popup-body{padding:14px 16px;}
+.chat-bubble-msg{background:#f0f0f0;border-radius:0 14px 14px 14px;padding:10px 12px;
+  font-size:.72rem;color:#333;font-family:'Quicksand',sans-serif;line-height:1.55;margin-bottom:4px;max-width:90%;}
+.chat-bubble-time{font-size:.5rem;color:#aaa;font-family:'Nunito',sans-serif;margin-bottom:12px;}
+.chat-quick-replies{display:flex;flex-direction:column;gap:6px;}
+.chat-quick-btn{background:#f0fff4;border:1.5px solid #aee8b0;border-radius:20px;padding:8px 14px;
+  font-family:'Nunito',sans-serif;font-size:.65rem;font-weight:700;color:#1a8a3a;cursor:pointer;text-align:left;transition:all .2s;}
+.chat-quick-btn:hover{background:linear-gradient(135deg,#25d366,#128c4e);color:#fff;border-color:transparent;}
+.chat-close-btn{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.2);border:none;border-radius:50%;
+  width:24px;height:24px;color:#fff;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center;}
+
+/* ── TEMA WARNA ── */
+.theme-admin-card{background:linear-gradient(135deg,#f8f0ff,#fff0f8);border:2px solid rgba(200,140,220,.2);border-radius:20px;padding:18px 16px;margin-bottom:18px;}
+.theme-admin-card h3{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--lav-d);margin-bottom:6px;}
+.theme-admin-card p{font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-bottom:14px;}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.theme-opt{border-radius:14px;padding:10px 6px;text-align:center;cursor:pointer;border:3px solid transparent;transition:all .25s;background:#fff;box-shadow:0 2px 8px var(--shadow);}
+.theme-opt:hover,.theme-opt.selected{border-color:var(--lav-d);transform:scale(1.04);}
+.theme-preview{width:100%;height:32px;border-radius:9px;margin-bottom:6px;}
+.theme-opt-name{font-size:.56rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;}
+.btn-apply-theme{background:linear-gradient(135deg,var(--pink-d),var(--lav-d));border:none;border-radius:13px;
+  padding:10px 22px;color:#fff;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:800;
+  cursor:pointer;box-shadow:0 5px 16px rgba(200,130,220,.3);transition:transform .2s;}
+.btn-apply-theme:hover{transform:translateY(-2px);}
 
 /* RATING PEMBELI */
 .rating-section{margin:0 12px 18px;}
@@ -746,11 +924,52 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
     <h3>🌏 Tentang WNJ Little World</h3>
     <p id="aboutText">Kami hadir untuk membantu si kecil belajar dengan cara yang menyenangkan melalui produk digital edukasi berkualitas. Dibuat dengan penuh cinta 💕</p>
     <a class="about-wa-btn" href="#" onclick="openWaChat();return false;">💬 Hubungi Kami</a>
+    <div class="social-links">
+      <a class="social-btn btn-tiktok" href="https://tiktok.com/@wnjlittleworld" target="_blank" rel="noopener">
+        <div class="social-btn-icon">🎵</div>
+        <div class="social-btn-info">
+          <div class="social-btn-name">TikTok</div>
+          <div class="social-btn-handle">@wnjlittleworld</div>
+        </div>
+        <span class="social-btn-arrow">→</span>
+      </a>
+      <a class="social-btn btn-instagram" href="https://instagram.com/wnjlittleworld" target="_blank" rel="noopener">
+        <div class="social-btn-icon">📸</div>
+        <div class="social-btn-info">
+          <div class="social-btn-name">Instagram</div>
+          <div class="social-btn-handle">@WNJ LiTTLE WORLD</div>
+        </div>
+        <span class="social-btn-arrow">→</span>
+      </a>
+      <a class="social-btn btn-lynk" href="https://lynk.id/wnjlittleworld" target="_blank" rel="noopener">
+        <div class="social-btn-icon">🔗</div>
+        <div class="social-btn-info">
+          <div class="social-btn-name">Lynk</div>
+          <div class="social-btn-handle">lynk.id/wnjlittleworld</div>
+        </div>
+        <span class="social-btn-arrow">→</span>
+      </a>
+      <a class="social-btn btn-gumroad" href="https://littleworld1.gumroad.com/" target="_blank" rel="noopener">
+        <div class="social-btn-icon">🛍️</div>
+        <div class="social-btn-info">
+          <div class="social-btn-name">Gumroad</div>
+          <div class="social-btn-handle">littleworld1.gumroad.com</div>
+        </div>
+        <span class="social-btn-arrow">→</span>
+      </a>
+    </div>
   </div>
 
   <footer>
     <p class="fl">WNJ Little W🌏rld</p>
     <p>Digital Education Series 💕</p>
+    <div class="footer-social">
+      <a class="footer-social-btn btn-tiktok" href="https://tiktok.com/@wnjlittleworld" target="_blank" rel="noopener" title="TikTok">🎵</a>
+      <a class="footer-social-btn btn-instagram" href="https://instagram.com/wnjlittleworld" target="_blank" rel="noopener" title="Instagram">📸</a>
+      <a class="footer-social-btn btn-lynk" href="https://lynk.id/wnjlittleworld" target="_blank" rel="noopener" title="Lynk">🔗</a>
+      <a class="footer-social-btn btn-gumroad" href="https://littleworld1.gumroad.com/" target="_blank" rel="noopener" title="Gumroad">🛍️</a>
+      <a class="footer-social-btn btn-whatsapp" href="#" onclick="openWaChat();return false;" title="WhatsApp">💬</a>
+    </div>
     <p style="margin-top:5px;font-size:.56rem;opacity:.7">© 2025 WNJ Little World. All rights reserved.</p>
   </footer>
 </div>
@@ -761,12 +980,51 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
 <!-- PRODUCT DETAIL -->
 <div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
 <div class="detail-modal" id="detailModal">
-  <button class="detail-close" onclick="closeDetail()">✕</button>
-  <div id="detailContent"></div>
+  <div class="detail-handle"></div>
+  <div style="position:relative;">
+    <button class="detail-close" onclick="closeDetail()">✕</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="checkout-overlay" id="checkoutOverlay" onclick="closeCheckout()"></div>
+<div class="checkout-modal" id="checkoutModal">
+  <div class="checkout-handle"></div>
+  <div class="checkout-header">
+    <div class="checkout-title">💳 Checkout</div>
+  </div>
+  <div class="checkout-body" id="checkoutBody"></div>
 </div>
 
 <!-- WA FLOAT BUTTON -->
-<button class="wa-float" id="waFloat" onclick="openWaChat()" title="Chat WhatsApp">💬</button>
+<!-- LIVE CHAT BUBBLE -->
+<div class="chat-bubble-wrap" id="chatBubbleWrap">
+  <div class="chat-popup" id="chatPopup" style="display:none">
+    <div class="chat-popup-header" style="position:relative">
+      <div class="chat-popup-avatar">🌏</div>
+      <div>
+        <div class="chat-popup-name" id="chatPopupName">WNJ Little World</div>
+        <div class="chat-popup-status">Online sekarang</div>
+      </div>
+      <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-popup-body">
+      <div class="chat-bubble-msg" id="chatPopupMsg">Halo! 👋 Ada yang bisa kami bantu?<br>Klik pilihan di bawah ya!</div>
+      <div class="chat-bubble-time">Sekarang</div>
+      <div class="chat-quick-replies" id="chatQuickReplies">
+        <button class="chat-quick-btn" onclick="chatSend('Halo! Saya mau tanya tentang produk 📚')">📚 Tanya tentang produk</button>
+        <button class="chat-quick-btn" onclick="chatSend('Halo! Saya mau order produk WNJ 🛒')">🛒 Mau order produk</button>
+        <button class="chat-quick-btn" onclick="chatSend('Halo! Saya mau tanya cara pembayaran 💳')">💳 Cara pembayaran</button>
+        <button class="chat-quick-btn" onclick="chatSend('Halo! Saya mau tanya cara download produk 📥')">📥 Cara download produk</button>
+      </div>
+    </div>
+  </div>
+  <button class="chat-bubble-btn" onclick="toggleChat()" id="chatBubbleBtn">
+    💬
+    <div class="chat-notif-dot" id="chatDot"></div>
+  </button>
+</div>
 
 <!-- NOTIF POPUP -->
 <div class="notif-popup" id="notifPopup">
@@ -818,7 +1076,7 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
       <span class="cart-total-label">Total Belanja</span>
       <span class="cart-total-price" id="cartTotal">Rp0</span>
     </div>
-    <button class="checkout-btn" onclick="checkoutWA()">🛒 Checkout via WhatsApp 💬</button>
+    <button class="checkout-btn" onclick="openCheckoutCart()">💳 Checkout Sekarang</button>
   </div>
 </div>
 
@@ -980,6 +1238,16 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
             <option value="1">Ya</option>
           </select>
         </div>
+        <div class="form-group">
+          <label class="form-label">📦 Status Stok</label>
+          <select class="form-select" id="fStok">
+            <option value="-1">Tidak Terbatas</option>
+            <option value="5">Sisa 5 (Terbatas)</option>
+            <option value="3">Sisa 3 (Hampir Habis)</option>
+            <option value="1">Sisa 1 (Terakhir!)</option>
+            <option value="0">Habis</option>
+          </select>
+        </div>
         <div class="form-group full">
           <label class="form-label">📸 Foto Produk</label>
           <div class="upload-area" id="uploadArea" onclick="document.getElementById('fImg').click()">
@@ -1001,7 +1269,7 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
         </div>
         <div class="form-group full">
           <label class="form-label">Deskripsi Singkat</label>
-          <textarea class="form-textarea" id="fDesc" placeholder="Deskripsi produk (opsional)..."></textarea>
+          <textarea class="form-textarea" id="fDesc" style="min-height:140px;" placeholder="Paste deskripsi produk di sini...&#10;&#10;Contoh:&#10;📚 Nama: Flashcard Hewan Darat&#10;🦁 35 Kartu Interaktif&#10;👧 Usia 4–12 Tahun&#10;&#10;Ajak si kecil bertualangan! 🌿&#10;&#10;✨ Fitur:&#10;• 35 hewan darat&#10;• Fakta unik di setiap kartu"></textarea>
         </div>
         <div class="form-group full">
           <label class="form-label">🔗 Link Produk (Google Drive, Shopee, dll)</label>
@@ -1095,6 +1363,14 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
       </div>
       <button class="btn-reset-stats" onclick="resetStats()">🗑️ Reset Statistik</button>
     </div>
+
+    <!-- Tema Warna -->
+    <div class="theme-admin-card">
+      <h3>🎨 Tema Warna Toko</h3>
+      <p>Pilih tema warna yang sesuai dengan brand WNJ Little World kamu!</p>
+      <div class="theme-grid" id="themeGrid"></div>
+      <button class="btn-apply-theme" onclick="applySelectedTheme()">✨ Terapkan Tema</button>
+    </div>
   </div>
 </div>
 
@@ -1158,9 +1434,19 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
         <option value="1">Ya</option>
       </select>
     </div>
+    <div class="form-group">
+      <label class="form-label">📦 Status Stok</label>
+      <select class="form-select" id="eStok">
+        <option value="-1">Tidak Terbatas</option>
+        <option value="5">Sisa 5 (Terbatas)</option>
+        <option value="3">Sisa 3 (Hampir Habis)</option>
+        <option value="1">Sisa 1 (Terakhir!)</option>
+        <option value="0">Habis</option>
+      </select>
+    </div>
     <div class="form-group full">
       <label class="form-label">Deskripsi Singkat</label>
-      <textarea class="form-textarea" id="eDesc" placeholder="Deskripsi produk (opsional)..."></textarea>
+      <textarea class="form-textarea" id="eDesc" style="min-height:140px;" placeholder="Paste deskripsi produk di sini...&#10;&#10;Contoh:&#10;📚 Nama: Flashcard Hewan Darat&#10;🦁 35 Kartu Interaktif&#10;👧 Usia 4–12 Tahun&#10;&#10;✨ Fitur:&#10;• 35 hewan darat">
     </div>
     <div class="form-group full">
       <label class="form-label">📸 Foto Produk</label>
@@ -1311,11 +1597,14 @@ function setSort(type,el){
 function productCard(p,i){
   const cc=COLORS[p.id%COLORS.length];
   const discPct=p.orig&&p.orig>p.price?Math.round((1-p.price/p.orig)*100):0;
-  const discBadge=discPct>0?`<div style="position:absolute;top:8px;left:8px;background:linear-gradient(135deg,#ff5555,#ff2222);color:#fff;font-family:'Nunito',sans-serif;font-size:.58rem;font-weight:900;padding:3px 8px;border-radius:20px;box-shadow:0 2px 8px rgba(255,50,50,.4);z-index:2;">-${discPct}%</div>`:'';
+  const discBadge=discPct>0?`<div style="position:absolute;top:8px;left:8px;background:linear-gradient(135deg,#ff5555,#ff2222);color:#fff;font-family:'Nunito',sans-serif;font-size:.58rem;font-weight:900;padding:3px 8px;border-radius:20px;z-index:2;">-${discPct}%</div>`:'';
+  const stockBadge=p.stok===0?`<div class="stock-badge habis">Habis</div>`
+    :p.stok>0&&p.stok<=5?`<div class="stock-badge">Sisa ${p.stok}!</div>`:'';
+  const soldOut=p.stok===0?`<div class="sold-out-overlay"><div class="sold-out-text">🚫 Habis</div></div>`:'';
   const thumbContent=p.img
-    ?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}${discBadge}`
-    :`${p.emoji}${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}${discBadge}`;
-  return `<div class="product-card" style="animation-delay:${i*.07}s;cursor:pointer;" onclick="openDetail(${p.id})">
+    ?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;">${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}${discBadge}${stockBadge}${soldOut}`
+    :`${p.emoji}${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}${discBadge}${stockBadge}${soldOut}`;
+  return `<div class="product-card${p.stok===0?' habis':''}" style="animation-delay:${i*.07}s;cursor:pointer;" onclick="${p.stok===0?'showToast(\'❌ Stok habis!\')':('openDetail('+p.id+')')}">
     <div class="product-thumb ${p.img?'':cc}">${thumbContent}</div>
     <div class="product-info">
       <div class="product-cat">${p.cat}</div>
@@ -1323,7 +1612,7 @@ function productCard(p,i){
       <div class="product-stars">${starStr(p.stars)}</div>
       <div class="product-bottom">
         <div><div class="product-price">${fmtRp(p.price)}</div>${p.orig?`<div class="product-orig">${fmtRp(p.orig)}</div>`:''}</div>
-        <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
+        <button class="add-btn" onclick="event.stopPropagation();${p.stok===0?'showToast(\'❌ Stok habis!\')':('addToCart('+p.id+')')}">+</button>
       </div>
     </div></div>`;
 }
@@ -1446,12 +1735,26 @@ function loadJamInput(){
 }
 
 /* BANNER */
-function saveBanner(){
+async function saveBanner(){
   const title=document.getElementById('bannerTitle').value.trim();
   const desc=document.getElementById('bannerDesc').value.trim();
   const emoji=document.getElementById('bannerEmoji').value.trim()||'🎁';
-  localStorage.setItem('wnj_banner',JSON.stringify({title,desc,emoji}));
+  const data={title,desc,emoji};
+  // save to localStorage immediately
+  localStorage.setItem('wnj_banner',JSON.stringify(data));
+  // also try Supabase
+  await dbSaveSettings('banner',data);
   renderBanner();showToast('✅ Banner disimpan!');
+}
+async function loadBannerRemote(){
+  // try Supabase first
+  const remote=await dbGetSettings('banner');
+  if(remote&&remote.title){
+    localStorage.setItem('wnj_banner',JSON.stringify(remote));
+    return remote;
+  }
+  // fallback localStorage
+  try{return JSON.parse(localStorage.getItem('wnj_banner')||'{}');}catch(e){return {};}
 }
 function renderBanner(){
   try{
@@ -1465,13 +1768,12 @@ function renderBanner(){
     } else {el.style.display='none';}
   }catch(e){}
 }
-function loadBannerInput(){
-  try{
-    const b=JSON.parse(localStorage.getItem('wnj_banner')||'{}');
-    if(b.title) document.getElementById('bannerTitle').value=b.title;
-    if(b.desc) document.getElementById('bannerDesc').value=b.desc;
-    if(b.emoji) document.getElementById('bannerEmoji').value=b.emoji;
-  }catch(e){}
+async function loadBannerInput(){
+  const b=await loadBannerRemote();
+  if(b.title) document.getElementById('bannerTitle').value=b.title;
+  if(b.desc) document.getElementById('bannerDesc').value=b.desc;
+  if(b.emoji) document.getElementById('bannerEmoji').value=b.emoji;
+  renderBanner();
 }
 
 /* ABOUT */
@@ -1492,29 +1794,82 @@ function loadAboutInput(){
 }
 
 /* TESTIMONIAL */
-function loadTestis(){try{return JSON.parse(localStorage.getItem('wnj_testis')||'[]');}catch(e){return [];}}
-function saveTestis(arr){try{localStorage.setItem('wnj_testis',JSON.stringify(arr));}catch(e){}}
-function addTesti(){
+/* ── SUPABASE: TESTIMONI & BANNER ── */
+async function dbGetSettings(key){
+  try{
+    const r=await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${encodeURIComponent(key)}&select=*`,{headers:SUPA_HEADERS});
+    const data=await r.json();
+    return data&&data[0]?JSON.parse(data[0].value):null;
+  }catch(e){return null;}
+}
+async function dbSaveSettings(key,value){
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/settings`,{
+      method:'POST',
+      headers:{...SUPA_HEADERS,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({key,value:JSON.stringify(value)})
+    });
+    return true;
+  }catch(e){
+    try{localStorage.setItem('wnj_'+key,JSON.stringify(value));}catch(e2){}
+    return false;
+  }
+}
+async function dbGetTestisRemote(){
+  try{
+    const r=await fetch(`${SUPA_URL}/rest/v1/testimoni?select=*&order=id.desc`,{headers:SUPA_HEADERS});
+    const data=await r.json();
+    if(Array.isArray(data)&&data.length) return data;
+    return loadTestisLocal();
+  }catch(e){return loadTestisLocal();}
+}
+async function dbAddTestiRemote(t){
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/testimoni`,{
+      method:'POST',
+      headers:{...SUPA_HEADERS,'Prefer':'return=representation'},
+      body:JSON.stringify({name:t.name,text:t.text,stars:t.stars})
+    });
+    return true;
+  }catch(e){
+    const arr=loadTestisLocal();arr.unshift({...t,id:Date.now()});saveTestisLocal(arr);return true;
+  }
+}
+async function dbDelTestiRemote(id){
+  try{await fetch(`${SUPA_URL}/rest/v1/testimoni?id=eq.${id}`,{method:'DELETE',headers:SUPA_HEADERS});}catch(e){}
+  saveTestisLocal(loadTestisLocal().filter(t=>t.id!==id));
+}
+function loadTestisLocal(){try{return JSON.parse(localStorage.getItem('wnj_testis')||'[]');}catch(e){return[];}}
+function saveTestisLocal(arr){try{localStorage.setItem('wnj_testis',JSON.stringify(arr));}catch(e){}}
+// keep old names for compatibility
+function loadTestis(){return loadTestisLocal();}
+function saveTestis(arr){saveTestisLocal(arr);}
+
+async function addTesti(){
   const text=document.getElementById('testiText').value.trim();
   const name=document.getElementById('testiName').value.trim();
   const stars=Number(document.getElementById('testiStars').value);
   if(!text||!name){showToast('❌ Isi testimoni & nama dulu!');return;}
-  const arr=loadTestis();
-  arr.push({id:Date.now(),text,name,stars});
-  saveTestis(arr);
+  showToast('⏳ Menyimpan testimoni...');
+  await dbAddTestiRemote({name,text,stars});
   document.getElementById('testiText').value='';
   document.getElementById('testiName').value='';
-  renderTestis();renderTestiAdmin();
-  showToast('✅ Testimoni ditambahkan!');
+  await refreshTestis();
+  showToast('✅ Testimoni berhasil disimpan!');
 }
-function deleteTesti(id){
-  const arr=loadTestis().filter(t=>t.id!==id);
-  saveTestis(arr);renderTestis();renderTestiAdmin();
+async function deleteTesti(id){
+  showToast('⏳ Menghapus...');
+  await dbDelTestiRemote(id);
+  await refreshTestis();
   showToast('🗑️ Testimoni dihapus!');
 }
-function renderTestis(){
+async function refreshTestis(){
+  const arr=await dbGetTestisRemote();
+  renderTestisWith(arr);
+  renderTestiAdminWith(arr);
+}
+function renderTestisWith(arr){
   const el=document.getElementById('testiSection');if(!el)return;
-  const arr=loadTestis();
   if(!arr.length){el.innerHTML=`<div class="testi-empty">Belum ada testimoni. Tambahkan di Admin Panel! ⭐</div>`;return;}
   el.innerHTML=arr.map(t=>`
     <div class="testi-card">
@@ -1525,15 +1880,22 @@ function renderTestis(){
       </div>
     </div>`).join('');
 }
-function renderTestiAdmin(){
+function renderTestiAdminWith(arr){
   const el=document.getElementById('testiAdminList');if(!el)return;
-  const arr=loadTestis();
   if(!arr.length){el.innerHTML=`<div style="font-size:.65rem;color:var(--dim);font-family:'Nunito',sans-serif;">Belum ada testimoni.</div>`;return;}
   el.innerHTML=arr.map(t=>`
     <div class="testi-row">
       <div><div class="testi-row-text">"${t.text}"</div><div class="testi-row-name">— ${t.name} ${'⭐'.repeat(t.stars)}</div></div>
       <button class="btn-del-testi" onclick="deleteTesti(${t.id})">🗑️</button>
     </div>`).join('');
+}
+async function renderTestis(){
+  const arr=await dbGetTestisRemote();
+  renderTestisWith(arr);
+}
+async function renderTestiAdmin(){
+  const arr=await dbGetTestisRemote();
+  renderTestiAdminWith(arr);
 }
 
 /* SHARE */
@@ -1558,22 +1920,34 @@ function openDetail(id){
   detailQty=1;
   const cc=COLORS[p.id%COLORS.length];
   const discPct=p.orig&&p.orig>p.price?Math.round((1-p.price/p.orig)*100):0;
-  const discBadge=discPct>0?`<div style="position:absolute;top:12px;left:12px;background:linear-gradient(135deg,#ff5555,#ff2222);color:#fff;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:900;padding:4px 12px;border-radius:20px;box-shadow:0 3px 10px rgba(255,50,50,.4);">-${discPct}% OFF</div>`:'';
-  const imgHtml=p.img?`<img class="detail-img" src="${p.img}">`:`<div class="detail-img-emoji ${cc}">${p.emoji||'📦'}</div>`;
-  const badgeHtml=p.badge?`<div class="product-badge ${badgeCls[p.badge]}" style="position:static;display:inline-block;margin-bottom:6px;">${p.badge.toUpperCase()}</div>`:'';
-  const descHtml=p.desc?`<div class="detail-desc">📝 ${p.desc}</div>`:'';
-  const linkHtml=p.link?`<a class="detail-btn-link" href="${p.link}" target="_blank" rel="noopener">🔗 Lihat Preview Produk</a>`:'';
+  const savings=p.orig&&p.orig>p.price?p.orig-p.price:0;
+  const imgHtml=p.img
+    ?`<div style="position:relative"><img class="detail-header-img" src="${p.img}">${discPct>0?`<div style="position:absolute;top:12px;left:12px;background:linear-gradient(135deg,#ff5555,#ff2222);color:#fff;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:900;padding:4px 12px;border-radius:20px;">-${discPct}% OFF</div>`:''}</div>`
+    :`<div class="detail-header-emoji ${cc}" style="position:relative">${p.emoji||'📦'}${discPct>0?`<div style="position:absolute;top:12px;left:12px;background:linear-gradient(135deg,#ff5555,#ff2222);color:#fff;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:900;padding:4px 12px;border-radius:20px;">-${discPct}% OFF</div>`:''}${p.badge?`<div class="product-badge ${badgeCls[p.badge]}" style="top:12px;right:12px;left:auto;">${p.badge.toUpperCase()}</div>`:''}</div>`;
+  const descHtml=p.desc?`<div class="detail-desc">${p.desc.replace(/\n/g,'<br>')}</div>`:'';
+  const linkHtml=p.link?`<a class="detail-btn-link" href="${p.link}" target="_blank" rel="noopener">🔗 Preview Produk</a>`:'';
+  const ratings=loadRatings();
+  const avgR=ratings.length?(ratings.reduce((s,r)=>s+r.stars,0)/ratings.length).toFixed(1):p.stars;
   document.getElementById('detailContent').innerHTML=`
-    <div style="position:relative">${imgHtml}${discBadge}</div>
+    ${imgHtml}
     <div class="detail-body">
-      ${badgeHtml}
-      <div class="detail-cat">${p.cat}</div>
+      <div class="detail-top-row">
+        <span class="detail-cat-badge">${p.cat}</span>
+        <button class="detail-share-top" onclick="openShare(products.find(x=>x.id===${p.id}))" title="Bagikan">📤</button>
+      </div>
       <div class="detail-name">${p.name}</div>
-      <div class="detail-stars">${starStr(p.stars)}</div>
+      <div class="detail-rating-row">
+        <div class="detail-stars">${'⭐'.repeat(Math.round(avgR))}</div>
+        <div class="detail-rating-count">${avgR} · ${ratings.length} ulasan</div>
+      </div>
       ${descHtml}
-      <div class="detail-price-row">
-        <div class="detail-price" id="detailPriceShow">${fmtRp(p.price)}</div>
-        ${p.orig?`<div class="detail-orig">${fmtRp(p.orig)}</div>`:''}
+      <div class="detail-price-box">
+        <div class="detail-price-row">
+          <div class="detail-price" id="detailPriceShow">${fmtRp(p.price)}</div>
+          ${p.orig?`<div class="detail-orig">${fmtRp(p.orig)}</div>`:''}
+          ${discPct>0?`<div class="detail-disc-badge">-${discPct}%</div>`:''}
+        </div>
+        ${savings>0?`<div class="detail-savings">✅ Hemat ${fmtRp(savings)}!</div>`:''}
       </div>
       <div class="detail-qty-row">
         <span class="detail-qty-label">Jumlah:</span>
@@ -1585,9 +1959,9 @@ function openDetail(id){
       </div>
       <div class="detail-btns">
         <button class="detail-btn-cart" onclick="addToCartQty(${p.id},detailQty);closeDetail()">🛒 Tambah ke Keranjang</button>
-        <button class="detail-btn-wa" onclick="buyNowWA(${p.id},detailQty)">💬 Beli Langsung via WA</button>
+        <button class="detail-btn-checkout" onclick="closeDetail();openCheckoutSingle(${p.id},detailQty)">💳 Beli Sekarang</button>
+        <button class="detail-btn-wa" onclick="buyNowWA(${p.id},detailQty)">💬 Tanya via WhatsApp</button>
         ${linkHtml}
-        <button class="detail-share-btn" onclick="openShare(products.find(x=>x.id===${p.id}));closeDetail()">📤 Bagikan Produk</button>
       </div>
     </div>`;
   document.getElementById('detailOverlay').classList.add('open');
@@ -1610,6 +1984,172 @@ function addToCartQty(id,qty){
 function closeDetail(){
   document.getElementById('detailOverlay').classList.remove('open');
   document.getElementById('detailModal').classList.remove('open');
+}
+
+/* ── CHECKOUT ── */
+let checkoutItems=[];
+let checkoutStep=1;
+let checkoutCoupon=null;
+
+function openCheckoutSingle(id,qty){
+  const p=products.find(x=>x.id===id);if(!p)return;
+  checkoutItems=[{...p,qty:qty||1}];
+  checkoutStep=1;checkoutCoupon=null;
+  renderCheckout();
+  document.getElementById('checkoutOverlay').classList.add('open');
+  document.getElementById('checkoutModal').classList.add('open');
+}
+function openCheckoutCart(){
+  if(!cart.length){showToast('❌ Keranjang masih kosong!');return;}
+  checkoutItems=cart.map(c=>({...c}));
+  checkoutStep=1;checkoutCoupon=activeCoupon;
+  renderCheckout();
+  document.getElementById('checkoutOverlay').classList.add('open');
+  document.getElementById('checkoutModal').classList.add('open');
+  toggleCart();
+}
+function closeCheckout(){
+  document.getElementById('checkoutOverlay').classList.remove('open');
+  document.getElementById('checkoutModal').classList.remove('open');
+}
+function renderCheckout(){
+  const body=document.getElementById('checkoutBody');
+  const subtotal=checkoutItems.reduce((s,i)=>s+i.price*i.qty,0);
+  let disc=0;
+  if(checkoutCoupon){
+    disc=checkoutCoupon.type==='persen'?Math.round(subtotal*checkoutCoupon.value/100):checkoutCoupon.value;
+    disc=Math.min(disc,subtotal);
+  }
+  const total=subtotal-disc;
+
+  const stepsHtml=`
+    <div class="checkout-steps">
+      <div class="checkout-step ${checkoutStep>=1?'active':'pending'}">
+        <div class="checkout-step-circle">${checkoutStep>1?'✓':'1'}</div>
+        <div class="checkout-step-label">Data</div>
+      </div>
+      <div class="checkout-step-line ${checkoutStep>1?'done':''}"></div>
+      <div class="checkout-step ${checkoutStep===2?'active':checkoutStep>2?'done':'pending'}">
+        <div class="checkout-step-circle">${checkoutStep>2?'✓':'2'}</div>
+        <div class="checkout-step-label">Ringkasan</div>
+      </div>
+      <div class="checkout-step-line ${checkoutStep>2?'done':''}"></div>
+      <div class="checkout-step ${checkoutStep===3?'active':'pending'}">
+        <div class="checkout-step-circle">3</div>
+        <div class="checkout-step-label">Selesai</div>
+      </div>
+    </div>`;
+
+  if(checkoutStep===1){
+    body.innerHTML=stepsHtml+`
+      <div class="checkout-section-title">📋 Data Pemesan</div>
+      <div class="checkout-field">
+        <label>Nama Lengkap *</label>
+        <input class="checkout-input" id="coName" type="text" placeholder="Contoh: Bunda Sari" value="${localStorage.getItem('co_name')||''}">
+      </div>
+      <div class="checkout-field">
+        <label>Nomor WhatsApp *</label>
+        <input class="checkout-input" id="coWa" type="tel" placeholder="08xxxxxxxxxx" value="${localStorage.getItem('co_wa')||''}">
+      </div>
+      <div class="checkout-field">
+        <label>Email (opsional)</label>
+        <input class="checkout-input" id="coEmail" type="email" placeholder="email@kamu.com" value="${localStorage.getItem('co_email')||''}">
+      </div>
+      <div class="checkout-field">
+        <label>Catatan / Permintaan Khusus</label>
+        <input class="checkout-input" id="coNote" type="text" placeholder="Contoh: tolong kirim yang masih baru ya">
+      </div>
+      <button class="checkout-btn-next" onclick="checkoutNext1()">Lanjut ke Ringkasan →</button>`;
+  } else if(checkoutStep===2){
+    const itemsHtml=checkoutItems.map(i=>`
+      <div class="checkout-order-item">
+        <div class="checkout-order-thumb ${COLORS[i.id%COLORS.length]}">${i.img?`<img src="${i.img}">`:i.emoji}</div>
+        <div class="checkout-order-info">
+          <div class="checkout-order-name">${i.name}</div>
+          <div class="checkout-order-qty">x${i.qty}</div>
+        </div>
+        <div class="checkout-order-price">${fmtRp(i.price*i.qty)}</div>
+      </div>`).join('');
+    body.innerHTML=stepsHtml+`
+      <div class="checkout-section-title">🛒 Ringkasan Pesanan</div>
+      ${itemsHtml}
+      <div class="checkout-section-title" style="margin-top:14px">🏷️ Punya Kupon?</div>
+      <div class="checkout-coupon-row">
+        <input class="checkout-coupon-input" id="coCoupon" type="text" placeholder="Kode kupon..." value="${checkoutCoupon?checkoutCoupon.code:''}">
+        <button class="checkout-coupon-btn" onclick="applyCheckoutCoupon()">Pakai</button>
+      </div>
+      <div class="checkout-coupon-result" id="coCouponResult">${checkoutCoupon?'✅ Kupon '+checkoutCoupon.code+' aktif!':''}</div>
+      <div class="checkout-summary-box">
+        <div class="checkout-summary-row">
+          <span class="checkout-summary-label">Subtotal (${checkoutItems.reduce((s,i)=>s+i.qty,0)} item)</span>
+          <span class="checkout-summary-val">${fmtRp(subtotal)}</span>
+        </div>
+        ${disc>0?`<div class="checkout-summary-row"><span class="checkout-summary-label">Diskon Kupon 🏷️</span><span class="checkout-summary-val" style="color:#1a8a3a">-${fmtRp(disc)}</span></div>`:''}
+        <div class="checkout-summary-row"><span class="checkout-summary-label">Pengiriman</span><span class="checkout-summary-val">Produk Digital ✨</span></div>
+        <div class="checkout-summary-total">
+          <span class="checkout-summary-total-label">Total</span>
+          <span class="checkout-summary-total-val">${fmtRp(total)}</span>
+        </div>
+      </div>
+      <button class="checkout-btn-next" onclick="checkoutNext2()">Konfirmasi & Lanjut →</button>
+      <button class="checkout-btn-back" onclick="checkoutStep=1;renderCheckout()">← Kembali</button>`;
+  } else if(checkoutStep===3){
+    const name=localStorage.getItem('co_name')||'Kak';
+    const wa=localStorage.getItem('co_wa')||'';
+    const note=localStorage.getItem('co_note')||'';
+    const itemsText=checkoutItems.map(i=>`• ${i.name} x${i.qty} = ${fmtRp(i.price*i.qty)}`).join('\n');
+    const discText=disc>0?`\nDiskon: -${fmtRp(disc)}`:'';
+    const waMsg=`Halo kak WNJ Little World! 👋\n\nSaya mau order:\n${itemsText}${discText}\n\n💰 *Total: ${fmtRp(total)}*${note?'\n\n📝 Catatan: '+note:''}\n\nNama: ${name}\nNo. WA: ${wa}\n\nMohon konfirmasi & info pembayarannya ya kak 🙏✨`;
+    body.innerHTML=stepsHtml+`
+      <div class="checkout-success">
+        <span class="checkout-success-icon">🎉</span>
+        <div class="checkout-success-title">Pesanan Siap!</div>
+        <div class="checkout-success-sub">
+          Klik tombol di bawah untuk mengirim detail pesananmu ke WhatsApp WNJ Little World.<br>
+          Tim kami akan segera membalas & mengkonfirmasi pesananmu! 💕
+        </div>
+        <div class="checkout-summary-box" style="text-align:left">
+          <div class="checkout-summary-row"><span class="checkout-summary-label">Nama</span><span class="checkout-summary-val">${name}</span></div>
+          <div class="checkout-summary-row"><span class="checkout-summary-label">Total</span><span class="checkout-summary-val" style="color:var(--pink-d)">${fmtRp(total)}</span></div>
+          <div class="checkout-summary-row"><span class="checkout-summary-label">Item</span><span class="checkout-summary-val">${checkoutItems.reduce((s,i)=>s+i.qty,0)} produk</span></div>
+        </div>
+        <button class="checkout-btn-wa-final" onclick="sendCheckoutWA('${encodeURIComponent(waMsg)}')">
+          💬 Kirim ke WhatsApp WNJ
+        </button>
+        <button class="checkout-btn-back" onclick="closeCheckout()">Tutup</button>
+      </div>`;
+  }
+}
+function checkoutNext1(){
+  const name=document.getElementById('coName').value.trim();
+  const wa=document.getElementById('coWa').value.trim();
+  if(!name){showToast('❌ Nama wajib diisi!');return;}
+  if(!wa){showToast('❌ Nomor WhatsApp wajib diisi!');return;}
+  localStorage.setItem('co_name',name);
+  localStorage.setItem('co_wa',wa);
+  localStorage.setItem('co_email',document.getElementById('coEmail').value.trim());
+  localStorage.setItem('co_note',document.getElementById('coNote').value.trim());
+  checkoutStep=2;renderCheckout();
+}
+function checkoutNext2(){checkoutStep=3;renderCheckout();}
+function applyCheckoutCoupon(){
+  const code=document.getElementById('coCoupon').value.trim().toUpperCase();
+  const res=document.getElementById('coCouponResult');
+  const coupons=loadCoupons();
+  const found=coupons.find(c=>c.code===code);
+  if(!found){res.className='checkout-coupon-result err';res.textContent='❌ Kode tidak valid!';return;}
+  const subtotal=checkoutItems.reduce((s,i)=>s+i.price*i.qty,0);
+  if(found.min&&subtotal<found.min){res.className='checkout-coupon-result err';res.textContent=`❌ Min. belanja ${fmtRp(found.min)}`;return;}
+  checkoutCoupon=found;
+  res.className='checkout-coupon-result ok';
+  res.textContent='✅ Kupon '+code+' aktif!';
+  renderCheckout();
+}
+function sendCheckoutWA(encodedMsg){
+  const waNum=localStorage.getItem('wnj_wa')||'6281234567890';
+  window.open(`https://wa.me/${waNum}?text=${encodedMsg}`,'_blank');
+  cart=[];activeCoupon=null;updateCart();
+  showToast('🎉 Pesanan dikirim! Terima kasih bestie!');
 }
 
 /* WA */
@@ -1672,6 +2212,7 @@ function openAdmin(){
   renderAdminStats();renderAdminList();renderEmojiPicker();
   loadWaInput();loadJamInput();loadBannerInput();loadAboutInput();
   renderTestiAdmin();renderCouponAdmin();renderNotifAdmin();renderStats();
+  renderThemeGrid();
 }
 function closeAdmin(){document.getElementById('adminPanel').classList.remove('open');renderProducts();renderCats();}
 function doLogout(){closeAdmin();showToast('👋 Logout berhasil!');}
@@ -1761,6 +2302,7 @@ async function addProduct(){
   const badge=document.getElementById('fBadge').value||null;
   const stars=Number(document.getElementById('fStars').value);
   const best=document.getElementById('fBest').value==='1';
+  const stok=Number(document.getElementById('fStok').value);
   const desc=document.getElementById('fDesc').value.trim();
   const img=document.getElementById('fImgData').value||null;
   const link=document.getElementById('fLink').value.trim()||'';
@@ -1768,7 +2310,7 @@ async function addProduct(){
   if(!cat){showToast('❌ Pilih kategori dulu!');return;}
   if(!price||price<=0){showToast('❌ Harga harus lebih dari 0!');return;}
   showToast('⏳ Menyimpan produk...');
-  const newP={id:null,name,cat,price,orig,emoji,badge,stars,best,desc,img,link};
+  const newP={id:null,name,cat,price,orig,emoji,badge,stars,best,desc,img,link,stok};
   const saved=await dbAddProduct(newP);
   if(saved){
     products.push(saved);
@@ -1785,6 +2327,7 @@ function clearAddForm(){
   document.getElementById('fBadge').value='';
   document.getElementById('fStars').value='0';
   document.getElementById('fBest').value='0';
+  document.getElementById('fStok').value='-1';
   document.getElementById('fEmoji').value=EMOJIS[0];
   document.getElementById('fImgData').value='';
   const prev=document.getElementById('uploadPreview');
@@ -1839,6 +2382,7 @@ function openEdit(id){
   document.getElementById('eStars').value=p.stars;
   document.getElementById('eDesc').value=p.desc||'';
   document.getElementById('eBest').value=p.best?'1':'0';
+  document.getElementById('eStok').value=p.stok!==undefined?p.stok:-1;
   document.getElementById('eLink').value=p.link||'';
   // load image
   const eImgData=document.getElementById('eImgData');
@@ -1876,6 +2420,7 @@ async function saveEdit(){
   p.stars=Number(document.getElementById('eStars').value);
   p.desc=document.getElementById('eDesc').value.trim();
   p.best=document.getElementById('eBest').value==='1';
+  p.stok=Number(document.getElementById('eStok').value);
   const newImg=document.getElementById('eImgData').value;
   p.img=newImg||null;
   p.link=document.getElementById('eLink').value.trim()||'';
@@ -2145,6 +2690,72 @@ function renderRatings(){
   }
 }
 
+/* ── LIVE CHAT BUBBLE ── */
+let chatOpen=false;
+let chatDotShown=true;
+function toggleChat(){
+  chatOpen=!chatOpen;
+  const popup=document.getElementById('chatPopup');
+  const dot=document.getElementById('chatDot');
+  popup.style.display=chatOpen?'block':'none';
+  if(chatOpen&&dot){dot.style.display='none';chatDotShown=false;}
+}
+function chatSend(msg){
+  const waNum=localStorage.getItem('wnj_wa')||'6281234567890';
+  window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`,'_blank');
+  toggleChat();
+}
+function updateChatInfo(){
+  const name=localStorage.getItem('wnj_wa_name')||'WNJ Little World';
+  const el=document.getElementById('chatPopupName');
+  if(el)el.textContent=name;
+}
+
+/* ── TEMA WARNA ── */
+const THEMES={
+  pastel:{name:'Pastel Dream',colors:{'--pink':'#FFB3C6','--pink-d':'#ff85a1','--lav':'#C9B8F0','--lav-d':'#a78edf','--mint':'#B5EAD7','--mint-d':'#6dcfaa'},preview:'linear-gradient(135deg,#FFB3C6,#C9B8F0,#B5EAD7)'},
+  sunset:{name:'Sunset Glow',colors:{'--pink':'#FFD1A9','--pink-d':'#ff9966','--lav':'#FFC3A0','--lav-d':'#ff6b6b','--mint':'#FFEAA7','--mint-d':'#fdcb6e'},preview:'linear-gradient(135deg,#FFD1A9,#ff9966,#FFEAA7)'},
+  ocean:{name:'Ocean Breeze',colors:{'--pink':'#A8E6CF','--pink-d':'#3dc987','--lav':'#88D8E8','--lav-d':'#00b4d8','--mint':'#B8F0E8','--mint-d':'#48cae4'},preview:'linear-gradient(135deg,#A8E6CF,#88D8E8,#B8F0E8)'},
+  berry:{name:'Berry Pop',colors:{'--pink':'#E8A0BF','--pink-d':'#c9406f','--lav':'#D4A0E8','--lav-d':'#9b30d4','--mint':'#B8A0E8','--mint-d':'#6a30d4'},preview:'linear-gradient(135deg,#E8A0BF,#D4A0E8,#B8A0E8)'},
+  peach:{name:'Peachy Keen',colors:{'--pink':'#FFDDD2','--pink-d':'#ff8c69','--lav':'#FFC8A0','--lav-d':'#ff7043','--mint':'#FFF1C1','--mint-d':'#ffca28'},preview:'linear-gradient(135deg,#FFDDD2,#FFC8A0,#FFF1C1)'},
+  mint:{name:'Fresh Mint',colors:{'--pink':'#B8F0D8','--pink-d':'#26a69a','--lav':'#A0E8D0','--lav-d':'#00897b','--mint':'#C8FFF0','--mint-d':'#4db6ac'},preview:'linear-gradient(135deg,#B8F0D8,#A0E8D0,#C8FFF0)'},
+};
+let selectedTheme='pastel';
+
+function renderThemeGrid(){
+  const grid=document.getElementById('themeGrid');
+  if(!grid)return;
+  const saved=localStorage.getItem('wnj_theme')||'pastel';
+  selectedTheme=saved;
+  grid.innerHTML=Object.entries(THEMES).map(([key,t])=>`
+    <div class="theme-opt${key===saved?' selected':''}" onclick="selectTheme('${key}',this)">
+      <div class="theme-preview" style="background:${t.preview}"></div>
+      <div class="theme-opt-name">${t.name}</div>
+    </div>`).join('');
+}
+function selectTheme(key,el){
+  selectedTheme=key;
+  document.querySelectorAll('.theme-opt').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function applySelectedTheme(){
+  const t=THEMES[selectedTheme];if(!t)return;
+  const root=document.documentElement;
+  Object.entries(t.colors).forEach(([k,v])=>root.style.setProperty(k,v));
+  localStorage.setItem('wnj_theme',selectedTheme);
+  // update theme-color meta
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=t.colors['--lav-d'];
+  showToast('🎨 Tema '+t.name+' diterapkan!');
+}
+function loadSavedTheme(){
+  const saved=localStorage.getItem('wnj_theme');
+  if(!saved||!THEMES[saved])return;
+  const t=THEMES[saved];
+  const root=document.documentElement;
+  Object.entries(t.colors).forEach(([k,v])=>root.style.setProperty(k,v));
+}
+
 /* SECRET CLICK */
 let secretClicks=0;
 let secretTimer=null;
@@ -2169,16 +2780,77 @@ function secretClick(){
 
 /* INIT */
 async function init(){
+  loadSavedTheme();
   showToast('⏳ Memuat produk...');
   products=await dbGetProducts();
   renderCats();renderProducts();
-  renderTokoStatus();renderBanner();renderAbout();renderTestis();
+  renderTokoStatus();renderAbout();
+  // load banner from Supabase
+  await loadBannerRemote();renderBanner();
+  // load testimoni from Supabase
+  await renderTestis();
   renderRatings();
+  updateChatInfo();
   trackStat('visit');
   showNotifPopup();
 }
 init();
 window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('hidden'),2600);});
+</script>
+<script>
+// Register Service Worker (PWA)
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(reg=>console.log('SW registered ✅',reg.scope))
+      .catch(err=>console.log('SW error:',err));
+  });
+}
+// PWA Install Prompt
+let deferredPrompt;
+let installBtn=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  showInstallBanner();
+});
+function showInstallBanner(){
+  if(sessionStorage.getItem('wnj_install_dismissed'))return;
+  const banner=document.createElement('div');
+  banner.id='installBanner';
+  banner.style.cssText=`position:fixed;bottom:80px;left:12px;right:12px;background:linear-gradient(135deg,#a78edf,#ff85a1);
+    color:#fff;border-radius:18px;padding:14px 16px;z-index:800;display:flex;align-items:center;gap:12px;
+    box-shadow:0 8px 24px rgba(160,100,200,.4);animation:fadeUp .4s ease;font-family:'Nunito',sans-serif;`;
+  banner.innerHTML=`
+    <div style="font-size:2rem;flex-shrink:0">🌏</div>
+    <div style="flex:1">
+      <div style="font-family:'Fredoka One',cursive;font-size:.9rem;margin-bottom:2px;">Install WNJ Little World!</div>
+      <div style="font-size:.6rem;opacity:.9;">Simpan di homescreen HP kamu ✨</div>
+    </div>
+    <button onclick="installPWA()" style="background:#fff;color:#a78edf;border:none;border-radius:12px;padding:8px 14px;
+      font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:900;cursor:pointer;white-space:nowrap;">Install</button>
+    <button onclick="dismissInstall()" style="background:rgba(255,255,255,.2);border:none;border-radius:50%;
+      width:26px;height:26px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0;">✕</button>`;
+  document.body.appendChild(banner);
+}
+function installPWA(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r=>{
+    if(r.outcome==='accepted') showToast('🎉 WNJ Little World berhasil diinstall!');
+    deferredPrompt=null;
+    dismissInstall();
+  });
+}
+function dismissInstall(){
+  sessionStorage.setItem('wnj_install_dismissed','1');
+  const b=document.getElementById('installBanner');
+  if(b)b.remove();
+}
+window.addEventListener('appinstalled',()=>{
+  showToast('🎉 Berhasil diinstall di homescreen!');
+  dismissInstall();
+});
 </script>
 </body>
 </html>
