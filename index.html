@@ -2790,30 +2790,17 @@ function secretClick(){
 /* INIT */
 async function init(){
   loadSavedTheme();
-  showToast('⏳ Memuat produk...');
-  try{
-    const timeout=new Promise((_,r)=>setTimeout(()=>r('timeout'),8000));
-    products=await Promise.race([dbGetProducts(),timeout]);
-  }catch(e){
-    products=[];
-    showToast('⚠️ Gagal memuat, coba refresh!');
-  }
   renderCats();renderProducts();
   renderTokoStatus();renderAbout();
-  try{await loadBannerRemote();renderBanner();}catch(e){renderBanner();}
+  renderBanner();renderRatings();
+  updateChatInfo();trackStat('visit');showNotifPopup();
+  try{const data=await dbGetProducts();if(data&&data.length){products=data;renderCats();renderProducts();}}catch(e){}
+  try{await loadBannerRemote();renderBanner();}catch(e){}
   try{await renderTestis();}catch(e){}
-  renderRatings();
-  updateChatInfo();
-  trackStat('visit');
-  showNotifPopup();
 }
 window.addEventListener('load',()=>{
-  // Loader hilang dulu dalam 2.5 detik APAPUN yang terjadi
-  setTimeout(()=>{
-    document.getElementById('loader').classList.add('hidden');
-  },2500);
-  // Load data di background setelah loader hilang
-  setTimeout(()=>{ init(); },2600);
+  setTimeout(()=>document.getElementById('loader').classList.add('hidden'),2500);
+  setTimeout(()=>init(),100);
 });
 </script>
 <script>
