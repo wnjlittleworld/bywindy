@@ -943,8 +943,8 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
     <div class="jam-admin-card">
       <h3>🕐 Jam Operasional & Status Toko</h3>
       <p>Tampil di halaman utama toko. Format jam: HH:MM (24 jam)</p>
-      <div class="jam-row"><label>Buka:</label><input type="time" id="jamBuka" value="08:00"></div>
-      <div class="jam-row"><label>Tutup:</label><input type="time" id="jamTutup" value="21:00"></div>
+      <div class="jam-row"><label>Buka:</label><input type="text" id="jamBuka" placeholder="08:00" style="background:#fff;border:2px solid #aee8b0;border-radius:10px;padding:7px 10px;font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--text);outline:none;flex:1;"></div>
+      <div class="jam-row"><label>Tutup:</label><input type="text" id="jamTutup" placeholder="21:00" style="background:#fff;border:2px solid #aee8b0;border-radius:10px;padding:7px 10px;font-family:'Quicksand',sans-serif;font-size:.85rem;color:var(--text);outline:none;flex:1;"></div>
       <div class="jam-row"><label>Keterangan:</label><input type="text" id="jamKet" placeholder="Senin–Sabtu" style="background:#fff;border:2px solid #aee8b0;border-radius:10px;padding:7px 10px;font-family:'Quicksand',sans-serif;font-size:.75rem;color:var(--text);outline:none;flex:1;"></div>
       <button class="btn-save-jam" onclick="saveJam()">💾 Simpan Jam Operasional</button>
     </div>
@@ -1276,10 +1276,10 @@ async function dbSetSetting(key,value){
   try{
     await fetch(SUPA_URL+'/rest/v1/settings',{
       method:'POST',
-      headers:{...SUPA_HEADERS,'Prefer':'resolution=merge-duplicates'},
+      headers:{...SUPA_HEADERS,'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({key,value,updated_at:new Date().toISOString()})
     });
-  }catch(e){}
+  }catch(e){console.error('dbSetSetting error:',e);}
 }
 async function dbGetSettings(){
   try{
@@ -1739,7 +1739,7 @@ async function loadBannerInput(){
 async function saveAbout(){
   const text=document.getElementById('aboutTextAdmin').value.trim();
   await dbSetSetting('about',text);
-  renderAbout();showToast('✅ Deskripsi toko disimpan!');
+  await renderAbout();showToast('✅ Deskripsi toko disimpan!');
 }
 async function renderAbout(){
   const text=await dbGetSetting('about')||localStorage.getItem('wnj_about');
