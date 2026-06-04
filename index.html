@@ -1268,9 +1268,10 @@ async function dbDeleteProduct(id){
 async function dbGetSetting(key){
   try{
     const r=await fetch(SUPA_URL+`/rest/v1/settings?key=eq.${key}&select=value`,{headers:SUPA_HEADERS});
+    if(!r.ok)return null;
     const d=await r.json();
-    return d[0]?d[0].value:null;
-  }catch(e){return null;}
+    return d&&d.length>0?d[0].value:null;
+  }catch(e){console.error('dbGetSetting error:',e);return null;}
 }
 async function dbSetSetting(key,value){
   try{
@@ -1688,9 +1689,10 @@ async function loadJamInput(){
 }
 async function renderTokoStatus(){
   try{
-    const raw=await dbGetSetting('jam')||localStorage.getItem('wnj_jam')||'{}';
-    const jam=JSON.parse(raw);
+    const val=await dbGetSetting('jam');
     const el=document.getElementById('tokoStatusHero');if(!el)return;
+    if(!val){el.innerHTML='';return;}
+    const jam=JSON.parse(val);
     if(!jam.buka||!jam.tutup){el.innerHTML='';return;}
     const now=new Date();
     const [bh,bm]=jam.buka.split(':').map(Number);
@@ -1701,7 +1703,7 @@ async function renderTokoStatus(){
       <div class="toko-dot"></div>
       <span>${isOpen?'🟢 Toko Buka':'🔴 Toko Tutup'} · ${jam.buka}–${jam.tutup}${jam.ket?' · '+jam.ket:''}</span>
     </div>`;
-  }catch(e){}
+  }catch(e){console.error('renderTokoStatus:',e);}
 }
 
 /* BANNER */
@@ -1714,21 +1716,23 @@ async function saveBanner(){
 }
 async function renderBanner(){
   try{
-    const raw=await dbGetSetting('banner')||localStorage.getItem('wnj_banner')||'{}';
-    const b=JSON.parse(raw);
+    const val=await dbGetSetting('banner');
     const el=document.getElementById('promoBanner');if(!el)return;
-    if(b.title){
+    if(!val){el.style.display='none';return;}
+    const b=JSON.parse(val);
+    if(b&&b.title){
       document.getElementById('promoBannerTitle').textContent=b.title;
       document.getElementById('promoBannerDesc').textContent=b.desc||'';
       document.getElementById('promoBannerEmoji').textContent=b.emoji||'🎁';
       el.style.display='block';
     } else {el.style.display='none';}
-  }catch(e){}
+  }catch(e){console.error('renderBanner:',e);}
 }
 async function loadBannerInput(){
   try{
-    const raw=await dbGetSetting('banner')||localStorage.getItem('wnj_banner')||'{}';
-    const b=JSON.parse(raw);
+    const val=await dbGetSetting('banner');
+    if(!val)return;
+    const b=JSON.parse(val);
     if(b.title) document.getElementById('bannerTitle').value=b.title;
     if(b.desc) document.getElementById('bannerDesc').value=b.desc;
     if(b.emoji) document.getElementById('bannerEmoji').value=b.emoji;
@@ -1742,14 +1746,18 @@ async function saveAbout(){
   await renderAbout();showToast('✅ Deskripsi toko disimpan!');
 }
 async function renderAbout(){
-  const text=await dbGetSetting('about')||localStorage.getItem('wnj_about');
-  const el=document.getElementById('aboutText');
-  if(el&&text) el.textContent=text;
+  try{
+    const text=await dbGetSetting('about');
+    const el=document.getElementById('aboutText');
+    if(el&&text) el.textContent=text;
+  }catch(e){}
 }
 async function loadAboutInput(){
-  const text=await dbGetSetting('about')||localStorage.getItem('wnj_about');
-  const el=document.getElementById('aboutTextAdmin');
-  if(el&&text) el.value=text;
+  try{
+    const text=await dbGetSetting('about');
+    const el=document.getElementById('aboutTextAdmin');
+    if(el&&text) el.value=text;
+  }catch(e){}
 }
 
 /* TESTIMONIAL */
