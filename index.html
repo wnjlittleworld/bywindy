@@ -1672,19 +1672,10 @@ function getTokoStatus(){
     return {isOpen:cur>=(bh*60+bm)&&cur<=(th*60+tm),buka:jam.buka,tutup:jam.tutup,ket:jam.ket||''};
   }catch(e){return null;}
 }
-function renderTokoStatus(){
-  const el=document.getElementById('tokoStatusHero');if(!el)return;
-  const s=getTokoStatus();
-  if(!s){el.innerHTML='';return;}
-  el.innerHTML=`<div class="toko-status ${s.isOpen?'open':'closed'}" style="margin:0 auto 12px;">
-    <div class="toko-dot"></div>
-    <span>${s.isOpen?'🟢 Toko Buka':'🔴 Toko Tutup'} · ${s.buka}–${s.tutup}${s.ket?' · '+s.ket:''}</span>
-  </div>`;
-}
 async function saveJam(){
   const jam={buka:document.getElementById('jamBuka').value,tutup:document.getElementById('jamTutup').value,ket:document.getElementById('jamKet').value.trim()};
   await dbSetSetting('jam',JSON.stringify(jam));
-  renderTokoStatus();showToast('✅ Jam operasional disimpan!');
+  await renderTokoStatus();showToast('✅ Jam operasional disimpan!');
 }
 async function loadJamInput(){
   try{
@@ -1719,7 +1710,7 @@ async function saveBanner(){
   const desc=document.getElementById('bannerDesc').value.trim();
   const emoji=document.getElementById('bannerEmoji').value.trim()||'🎁';
   await dbSetSetting('banner',JSON.stringify({title,desc,emoji}));
-  renderBanner();showToast('✅ Banner disimpan!');
+  await renderBanner();showToast('✅ Banner disimpan!');
 }
 async function renderBanner(){
   try{
