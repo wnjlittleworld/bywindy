@@ -1267,26 +1267,36 @@ async function dbDeleteProduct(id){
 /* SUPABASE SETTINGS */
 async function dbGetSetting(key){
   try{
-    const r=await fetch(SUPA_URL+`/rest/v1/settings?key=eq.${key}&select=value`,{headers:SUPA_HEADERS});
+    const r=await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}&select=value`,{headers:SUPA_HEADERS});
     if(!r.ok)return null;
     const d=await r.json();
-    return d&&d.length>0?d[0].value:null;
-  }catch(e){console.error('dbGetSetting error:',e);return null;}
+    return Array.isArray(d)&&d.length>0?d[0].value:null;
+  }catch(e){return null;}
 }
 async function dbSetSetting(key,value){
   try{
-    await fetch(SUPA_URL+'/rest/v1/settings',{
+    const r=await fetch(`${SUPA_URL}/rest/v1/settings`,{
       method:'POST',
       headers:{...SUPA_HEADERS,'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({key,value,updated_at:new Date().toISOString()})
     });
-  }catch(e){console.error('dbSetSetting error:',e);}
+    if(!r.ok){
+      // Try PATCH if POST fails
+      await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}`,{
+        method:'PATCH',
+        headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
+        body:JSON.stringify({value,updated_at:new Date().toISOString()})
+      });
+    }
+  }catch(e){}
 }
-async function dbGetSettings(){
+async function dbGetAllSettings(){
   try{
-    const r=await fetch(SUPA_URL+'/rest/v1/settings?select=*',{headers:SUPA_HEADERS});
+    const r=await fetch(`${SUPA_URL}/rest/v1/settings?select=*`,{headers:SUPA_HEADERS});
+    if(!r.ok)return{};
     const d=await r.json();
-    const obj={};d.forEach(s=>obj[s.key]=s.value);
+    const obj={};
+    if(Array.isArray(d))d.forEach(s=>obj[s.key]=s.value);
     return obj;
   }catch(e){return{};}
 }
@@ -1294,8 +1304,10 @@ async function dbGetSettings(){
 /* SUPABASE TESTIMONIALS */
 async function dbGetTestis(){
   try{
-    const r=await fetch(SUPA_URL+'/rest/v1/testimonials?select=*&approved=eq.true&order=created_at.desc',{headers:SUPA_HEADERS});
-    return await r.json();
+    const r=await fetch(`${SUPA_URL}/rest/v1/testimonials?select=*&order=created_at.desc`,{headers:SUPA_HEADERS});
+    if(!r.ok)return[];
+    const d=await r.json();
+    return Array.isArray(d)?d:[];
   }catch(e){return[];}
 }
 async function dbAddTesti(name,text,stars){
@@ -1675,8 +1687,10 @@ function getTokoStatus(){
 }
 async function saveJam(){
   const jam={buka:document.getElementById('jamBuka').value,tutup:document.getElementById('jamTutup').value,ket:document.getElementById('jamKet').value.trim()};
-  await dbSetSetting('jam',JSON.stringify(jam));
-  await renderTokoStatus();showToast('✅ Jam operasional disimpan!');
+  const val=JSON.stringify(jam);
+  await dbSetSetting('jam',val);
+  applyJam(val);
+  showToast('✅ Jam operasional disimpan!');
 }
 async function loadJamInput(){
   try{
@@ -1711,8 +1725,10 @@ async function saveBanner(){
   const title=document.getElementById('bannerTitle').value.trim();
   const desc=document.getElementById('bannerDesc').value.trim();
   const emoji=document.getElementById('bannerEmoji').value.trim()||'🎁';
-  await dbSetSetting('banner',JSON.stringify({title,desc,emoji}));
-  await renderBanner();showToast('✅ Banner disimpan!');
+  const val=JSON.stringify({title,desc,emoji});
+  await dbSetSetting('banner',val);
+  applyBanner(val);
+  showToast('✅ Banner disimpan!');
 }
 async function renderBanner(){
   try{
@@ -2209,13 +2225,79 @@ function secretClick(){
 
 /* INIT */
 async function init(){
-  showToast('⏳ Memuat produk...');
-  products=await dbGetProducts();
+  showToast('⏳ Memuat...');
+  // Load products dan settings sekaligus
+  const [prods, settings] = await Promise.all([
+    dbGetProducts(),
+    dbGetAllSettings()
+  ]);
+  products = prods;
   renderCats();renderProducts();
-  await renderTokoStatus();await renderBanner();await renderAbout();await renderTestis();
-  await startCountdown();loadDark();loadTheme();initWaBubble();
+
+  // Apply settings
+  if(settings.banner) applyBanner(settings.banner);
+  if(settings.jam) applyJam(settings.jam);
+  if(settings.about) applyAbout(settings.about);
+  if(settings.countdown) applyCountdown(settings.countdown);
+
+  await renderTestis();
+  loadDark();loadTheme();initWaBubble();
   setTimeout(showNewProductPopup,3000);
 }
+
+function applyBanner(raw){
+  try{
+    const b=JSON.parse(raw);
+    const el=document.getElementById('promoBanner');if(!el)return;
+    if(b&&b.title){
+      document.getElementById('promoBannerTitle').textContent=b.title;
+      document.getElementById('promoBannerDesc').textContent=b.desc||'';
+      document.getElementById('promoBannerEmoji').textContent=b.emoji||'🎁';
+      el.style.display='block';
+    }
+  }catch(e){}
+}
+function applyJam(raw){
+  try{
+    const jam=JSON.parse(raw);
+    const el=document.getElementById('tokoStatusHero');if(!el)return;
+    if(!jam.buka||!jam.tutup){el.innerHTML='';return;}
+    const now=new Date();
+    const [bh,bm]=jam.buka.split(':').map(Number);
+    const [th,tm]=jam.tutup.split(':').map(Number);
+    const cur=now.getHours()*60+now.getMinutes();
+    const isOpen=cur>=(bh*60+bm)&&cur<=(th*60+tm);
+    el.innerHTML=`<div class="toko-status ${isOpen?'open':'closed'}" style="margin:0 auto 12px;">
+      <div class="toko-dot"></div>
+      <span>${isOpen?'🟢 Toko Buka':'🔴 Toko Tutup'} · ${jam.buka}–${jam.tutup}${jam.ket?' · '+jam.ket:''}</span>
+    </div>`;
+  }catch(e){}
+}
+function applyAbout(text){
+  const el=document.getElementById('aboutText');
+  if(el&&text) el.textContent=text;
+}
+function applyCountdown(raw){
+  try{
+    const cd=JSON.parse(raw);
+    if(!cd.date)return;
+    const end=new Date(cd.date).getTime();
+    if(Date.now()>=end)return;
+    const el=document.getElementById('countdownBanner');if(!el)return;
+    if(cd.title)document.getElementById('countdownTitle').textContent=cd.title;
+    el.style.display='block';
+    if(cdInterval)clearInterval(cdInterval);
+    cdInterval=setInterval(()=>{
+      const diff=end-Date.now();
+      if(diff<=0){el.style.display='none';clearInterval(cdInterval);return;}
+      document.getElementById('cdDays').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+      document.getElementById('cdHours').textContent=String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+      document.getElementById('cdMins').textContent=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+      document.getElementById('cdSecs').textContent=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+    },1000);
+  }catch(e){}
+}
+
 init();
 window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('hidden'),2600);});
 </script>
