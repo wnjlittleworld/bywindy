@@ -1294,12 +1294,19 @@ async function dbSetSetting(key,value){
 async function dbGetAllSettings(){
   try{
     const r=await fetch(`${SUPA_URL}/rest/v1/settings?select=*`,{headers:SUPA_HEADERS});
-    if(!r.ok)return{};
+    if(!r.ok){
+      console.error('Settings fetch failed:',r.status,r.statusText);
+      return{};
+    }
     const d=await r.json();
+    console.log('Settings loaded:',d);
     const obj={};
     if(Array.isArray(d))d.forEach(s=>obj[s.key]=s.value);
     return obj;
-  }catch(e){return{};}
+  }catch(e){
+    console.error('dbGetAllSettings error:',e);
+    return{};
+  }
 }
 
 /* SUPABASE TESTIMONIALS */
