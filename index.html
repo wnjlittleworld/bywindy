@@ -1220,7 +1220,7 @@ const ADMIN_PASS='wnj2025';
 
 /* SUPABASE CONFIG */
 const SUPA_URL='https://qoanlvyctussscpawsoh.supabase.co';
-const SUPA_KEY='sb_publishable_TglmWM8IhBwX46CjKBH2Tg_Uv6o21bB';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFvYW5sdnljdHVzc3NjcGF3c29oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4OTYxOTAsImV4cCI6MjA5NTQ3MjE5MH0.pEiEeDh4tG2QgRay4gf-lfy1wtwH744aR6J3raqGHMo';
 const SUPA_HEADERS={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
 
 async function dbGetProducts(){
@@ -1269,53 +1269,37 @@ async function dbDeleteProduct(id){
   }catch(e){}
 }
 
-/* SUPABASE SETTINGS */
+/* SETTINGS — Supabase utama + localStorage backup */
 async function dbGetSetting(key){
   try{
     const r=await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}&select=value`,{headers:SUPA_HEADERS});
-    if(r.ok){
-      const d=await r.json();
-      if(Array.isArray(d)&&d.length>0&&d[0].value!=null) return d[0].value;
-    }
+    if(r.ok){const d=await r.json();if(Array.isArray(d)&&d.length>0&&d[0].value!=null){
+      try{localStorage.setItem('wnj_setting_'+key,d[0].value);}catch(e){}
+      return d[0].value;
+    }}
   }catch(e){}
-  // Fallback ke localStorage
   try{return localStorage.getItem('wnj_setting_'+key);}catch(e){return null;}
 }
 async function dbSetSetting(key,value){
-  // Selalu simpan ke localStorage sebagai backup (supaya tidak hilang saat refresh)
   try{localStorage.setItem('wnj_setting_'+key,value);}catch(e){}
   try{
-    // Coba delete dulu baru insert (guaranteed upsert)
-    await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}`,{
-      method:'DELETE',headers:SUPA_HEADERS
-    });
-    await fetch(`${SUPA_URL}/rest/v1/settings`,{
-      method:'POST',
+    await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}`,{method:'DELETE',headers:SUPA_HEADERS});
+    await fetch(`${SUPA_URL}/rest/v1/settings`,{method:'POST',
       headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
-      body:JSON.stringify({key,value,updated_at:new Date().toISOString()})
-    });
+      body:JSON.stringify({key,value,updated_at:new Date().toISOString()})});
   }catch(e){}
 }
 async function dbGetAllSettings(){
   const obj={};
-  // Load dari localStorage dulu sebagai fallback
-  const SETTING_KEYS=['banner','jam','about','countdown'];
-  SETTING_KEYS.forEach(k=>{
+  ['banner','jam','about','countdown'].forEach(k=>{
     try{const v=localStorage.getItem('wnj_setting_'+k);if(v!=null)obj[k]=v;}catch(e){}
   });
-  // Coba Supabase (akan override localStorage jika berhasil)
   try{
     const r=await fetch(`${SUPA_URL}/rest/v1/settings?select=*`,{headers:SUPA_HEADERS});
-    if(r.ok){
-      const d=await r.json();
-      console.log('Settings loaded:',d);
-      if(Array.isArray(d)&&d.length>0) d.forEach(s=>obj[s.key]=s.value);
-    }else{
-      console.warn('Settings Supabase gagal, pakai localStorage:',r.status);
-    }
-  }catch(e){
-    console.warn('Settings Supabase tidak terjangkau, pakai localStorage.');
-  }
+    if(r.ok){const d=await r.json();if(Array.isArray(d)&&d.length>0){
+      d.forEach(s=>{obj[s.key]=s.value;try{localStorage.setItem('wnj_setting_'+s.key,s.value);}catch(e){}});
+    }}
+  }catch(e){}
   return obj;
 }
 
@@ -1778,7 +1762,7 @@ async function loadBannerInput(){
 async function saveAbout(){
   const text=document.getElementById('aboutTextAdmin').value.trim();
   await dbSetSetting('about',text);
-  await renderAbout();showToast('✅ Deskripsi toko disimpan!');
+  renderAbout();showToast('✅ Deskripsi toko disimpan!');
 }
 async function renderAbout(){
   try{
