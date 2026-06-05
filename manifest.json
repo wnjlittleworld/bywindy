@@ -1,14 +1,13 @@
 {
-  "name": "WNJ Little W🌏rld — Digital Education Series",
-  "short_name": "WNJ Little World",
-  "description": "Produk digital edukasi kreatif untuk si kecil yang cerdas ✨",
+  "name": "WNJ Little World",
+  "short_name": "WNJ Store",
+  "description": "Digital Education Series — Belajar lebih seru bareng WNJ!",
   "start_url": "./index.html",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#FFF9F5",
   "theme_color": "#a78edf",
-  "orientation": "portrait-primary",
   "lang": "id",
-  "categories": ["education", "shopping"],
   "icons": [
     {
       "src": "icon-192.png",
@@ -23,20 +22,6 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Belanja Sekarang",
-      "short_name": "Belanja",
-      "description": "Buka toko WNJ Little World",
-      "url": "./index.html#products",
-      "icons": [{"src": "icon-192.png", "sizes": "192x192"}]
-    }
-  ]
+  "screenshots": [],
+  "categories": ["shopping", "education"]
 }
