@@ -1229,7 +1229,8 @@ async function dbGetProducts(){
     const data=await r.json();
     return data.map(p=>({
       id:p.id,name:p.name,cat:p.cat,price:p.price,orig:p.orig,
-      emoji:p.emoji||'📦',badge:p.badge,stars:p.stars||5,
+      emoji:p.emoji||'📦',badge:p.badge,
+      stars:p.stars===null||p.stars===undefined?5:Number(p.stars),
       best:p.best||false,desc:p.description,img:p.img,link:p.link||''
     }));
   }catch(e){return [];}
@@ -1248,11 +1249,15 @@ async function dbAddProduct(p){
 }
 async function dbUpdateProduct(p){
   try{
+    const body={
+      name:p.name,cat:p.cat,price:p.price,
+      orig:p.orig||null,emoji:p.emoji,badge:p.badge||null,
+      stars:Number(p.stars),best:p.best,
+      description:p.desc||null,img:p.img||null,link:p.link||null
+    };
     await fetch(SUPA_URL+'/rest/v1/products?id=eq.'+p.id,{
       method:'PATCH',headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
-      body:JSON.stringify({name:p.name,cat:p.cat,price:p.price,orig:p.orig,
-        emoji:p.emoji,badge:p.badge,stars:p.stars,best:p.best,
-        description:p.desc,img:p.img,link:p.link})
+      body:JSON.stringify(body)
     });
   }catch(e){}
 }
@@ -1275,19 +1280,15 @@ async function dbGetSetting(key){
 }
 async function dbSetSetting(key,value){
   try{
-    const r=await fetch(`${SUPA_URL}/rest/v1/settings`,{
+    // Coba delete dulu baru insert (guaranteed upsert)
+    await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}`,{
+      method:'DELETE',headers:SUPA_HEADERS
+    });
+    await fetch(`${SUPA_URL}/rest/v1/settings`,{
       method:'POST',
-      headers:{...SUPA_HEADERS,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
       body:JSON.stringify({key,value,updated_at:new Date().toISOString()})
     });
-    if(!r.ok){
-      // Try PATCH if POST fails
-      await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}`,{
-        method:'PATCH',
-        headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
-        body:JSON.stringify({value,updated_at:new Date().toISOString()})
-      });
-    }
   }catch(e){}
 }
 async function dbGetAllSettings(){
