@@ -1273,12 +1273,17 @@ async function dbDeleteProduct(id){
 async function dbGetSetting(key){
   try{
     const r=await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}&select=value`,{headers:SUPA_HEADERS});
-    if(!r.ok)return null;
-    const d=await r.json();
-    return Array.isArray(d)&&d.length>0?d[0].value:null;
-  }catch(e){return null;}
+    if(r.ok){
+      const d=await r.json();
+      if(Array.isArray(d)&&d.length>0&&d[0].value!=null) return d[0].value;
+    }
+  }catch(e){}
+  // Fallback ke localStorage
+  try{return localStorage.getItem('wnj_setting_'+key);}catch(e){return null;}
 }
 async function dbSetSetting(key,value){
+  // Selalu simpan ke localStorage sebagai backup (supaya tidak hilang saat refresh)
+  try{localStorage.setItem('wnj_setting_'+key,value);}catch(e){}
   try{
     // Coba delete dulu baru insert (guaranteed upsert)
     await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}`,{
@@ -1292,21 +1297,26 @@ async function dbSetSetting(key,value){
   }catch(e){}
 }
 async function dbGetAllSettings(){
+  const obj={};
+  // Load dari localStorage dulu sebagai fallback
+  const SETTING_KEYS=['banner','jam','about','countdown'];
+  SETTING_KEYS.forEach(k=>{
+    try{const v=localStorage.getItem('wnj_setting_'+k);if(v!=null)obj[k]=v;}catch(e){}
+  });
+  // Coba Supabase (akan override localStorage jika berhasil)
   try{
     const r=await fetch(`${SUPA_URL}/rest/v1/settings?select=*`,{headers:SUPA_HEADERS});
-    if(!r.ok){
-      console.error('Settings fetch failed:',r.status,r.statusText);
-      return{};
+    if(r.ok){
+      const d=await r.json();
+      console.log('Settings loaded:',d);
+      if(Array.isArray(d)&&d.length>0) d.forEach(s=>obj[s.key]=s.value);
+    }else{
+      console.warn('Settings Supabase gagal, pakai localStorage:',r.status);
     }
-    const d=await r.json();
-    console.log('Settings loaded:',d);
-    const obj={};
-    if(Array.isArray(d))d.forEach(s=>obj[s.key]=s.value);
-    return obj;
   }catch(e){
-    console.error('dbGetAllSettings error:',e);
-    return{};
+    console.warn('Settings Supabase tidak terjangkau, pakai localStorage.');
   }
+  return obj;
 }
 
 /* SUPABASE TESTIMONIALS */
@@ -1443,7 +1453,7 @@ async function saveCountdown(){
 }
 async function startCountdown(){
   try{
-    const raw=await dbGetSetting('countdown')||localStorage.getItem('wnj_cd')||'{}';
+    const raw=await dbGetSetting('countdown')||'{}';
     const cd=JSON.parse(raw);
     const el=document.getElementById('countdownBanner');
     if(!cd.date||!el){if(el)el.style.display='none';return;}
@@ -1464,7 +1474,7 @@ async function startCountdown(){
 }
 async function loadCountdownInput(){
   try{
-    const raw=await dbGetSetting('countdown')||localStorage.getItem('wnj_cd')||'{}';
+    const raw=await dbGetSetting('countdown')||'{}';
     const cd=JSON.parse(raw);
     if(cd.title)document.getElementById('cdTitle').value=cd.title;
     if(cd.date)document.getElementById('cdDate').value=cd.date;
@@ -1684,7 +1694,8 @@ function renderDiscSection(){
 /* TOKO STATUS */
 function getTokoStatus(){
   try{
-    const jam=JSON.parse(localStorage.getItem('wnj_jam')||'{}');
+    const raw=localStorage.getItem('wnj_setting_jam')||localStorage.getItem('wnj_jam')||'{}';
+    const jam=JSON.parse(raw);
     if(!jam.buka||!jam.tutup) return null;
     const now=new Date();
     const [bh,bm]=jam.buka.split(':').map(Number);
@@ -1702,7 +1713,7 @@ async function saveJam(){
 }
 async function loadJamInput(){
   try{
-    const raw=await dbGetSetting('jam')||localStorage.getItem('wnj_jam')||'{}';
+    const raw=await dbGetSetting('jam')||'{}';
     const jam=JSON.parse(raw);
     if(jam.buka){document.getElementById('jamBuka').value=jam.buka;}
     if(jam.tutup){document.getElementById('jamTutup').value=jam.tutup;}
