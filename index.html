@@ -1627,11 +1627,12 @@ function submitCheckoutWA(){
     const totalAmt=checkoutMode==='cart'?fmtRp(cart.reduce((s,c)=>s+c.price*c.qty,0)):(p?fmtRp(p.price*checkoutQty):'-');
     emailjs.send('service_pd4awao','template_72eveyc',{
       buyer_name:name,
+      email:email,
       buyer_email:email,
       product_name:prodName,
       total_price:totalAmt,
       payment_method:payment
-    }).then(()=>showToast('📧 Email konfirmasi terkirim!')).catch(()=>{});
+    }).then(()=>showToast('📧 Email konfirmasi terkirim!')).catch(e=>{showToast('⚠️ Email gagal: '+e.text);});
   }
   const promoLine=promo?`🎁 *Kode Promo:* ${promo}\n`:'';
   const noteLine=note?`📝 *Catatan:* ${note}\n`:'';
