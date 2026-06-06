@@ -1344,10 +1344,10 @@ async function dbSetSetting(key,value){
     const r=await fetch(`${SUPA_URL}/rest/v1/settings`,{
       method:'POST',
       headers:{...SUPA_HEADERS,'Prefer':'resolution=merge-duplicates,return=representation'},
-      body:JSON.stringify({key,value,updated_at:new Date().toISOString()})
+      body:JSON.stringify({key,value})
     });
     const txt=await r.text();
-    alert('Supabase Status: '+r.status+'\nResponse: '+txt.substring(0,100)+'\nKey: '+key);
+    if(r.ok){showToast('✅ Tersimpan ke server!');}else{showToast('⚠️ Error: '+txt.substring(0,50));}
   }catch(e){
     showToast('❌ Gagal: '+e.message);
   }
