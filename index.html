@@ -651,6 +651,8 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
 .launching-skip{display:block;text-align:center;margin-top:12px;font-size:.75rem;color:#bbb;cursor:pointer;font-family:'Nunito',sans-serif;}
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;z-index:10001;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>emailjs.init("JG9K7W4Ik2l3GvUT0");</script>
 </head>
 <body>
 
@@ -873,12 +875,29 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
 
 <!-- BUYER NAME MODAL -->
 <div class="buyer-overlay" id="buyerOverlay" onclick="closeBuyerModal()"></div>
-<div class="buyer-modal" id="buyerModal">
+<div class="buyer-modal" id="buyerModal" style="max-height:90vh;overflow-y:auto;">
   <h3>📋 Detail Pemesanan</h3>
   <p>Isi data kamu supaya pesanan lebih mudah diproses ya! 😊</p>
   <input class="buyer-input" id="buyerNameInput" type="text" placeholder="👤 Nama (contoh: Bunda Aisyah)">
   <input class="buyer-input" id="buyerCityInput" type="text" placeholder="📍 Kota (contoh: Jakarta)">
+  <input class="buyer-input" id="buyerWaInput" type="tel" placeholder="📱 Nomor WhatsApp (contoh: 08123456789)">
   <input class="buyer-input" id="buyerEmailInput" type="email" placeholder="📧 Email (untuk pengiriman file)">
+  
+  <div style="margin:10px 0 6px;font-weight:700;color:#a78edf;font-size:.85rem;font-family:'Nunito',sans-serif;">💳 Metode Pembayaran</div>
+  <select class="buyer-input" id="buyerPaymentInput" onchange="showPaymentInfo(this.value)" style="cursor:pointer;">
+    <option value="">-- Pilih Metode Pembayaran --</option>
+    <option value="Transfer BNI">🏦 Transfer Bank BNI</option>
+    <option value="QRIS">📱 QRIS</option>
+    <option value="Dana">💙 Dana</option>
+    <option value="GoPay">🟢 GoPay</option>
+  </select>
+  
+  <div id="paymentInfoBox" style="display:none;background:#f8f5ff;border-radius:12px;padding:12px;margin:8px 0;font-family:'Nunito',sans-serif;font-size:.82rem;">
+    <div id="paymentInfoText"></div>
+  </div>
+
+  <input class="buyer-input" id="buyerPromoInput" type="text" placeholder="🎁 Kode Promo (opsional)">
+  <textarea class="buyer-input" id="buyerNoteInput" placeholder="📝 Catatan tambahan (opsional)" style="height:70px;resize:none;"></textarea>
   <button class="buyer-btn" onclick="submitCheckoutWA()">💬 Lanjut ke WhatsApp</button>
 </div>
 
@@ -1575,11 +1594,47 @@ function closeBuyerModal(){
   document.getElementById('buyerOverlay').classList.remove('open');
   document.getElementById('buyerModal').classList.remove('open');
 }
+function showPaymentInfo(method){
+  const box=document.getElementById('paymentInfoBox');
+  const txt=document.getElementById('paymentInfoText');
+  const info={
+    'Transfer BNI':'🏦 <b>Transfer Bank BNI</b><br>No. Rek: <b>2040939786</b><br>a.n <b>Winarni Subardi</b>',
+    'QRIS':'📱 <b>QRIS</b><br>QR Code akan dikirim via WhatsApp setelah konfirmasi pesanan',
+    'Dana':'💙 <b>Dana</b><br>No. Dana: <b>089630486382</b><br>a.n <b>Winarni Subardi</b>',
+    'GoPay':'🟢 <b>GoPay</b><br>No. GoPay: <b>089630486382</b><br>a.n <b>Winarni Subardi</b>'
+  };
+  if(method&&info[method]){
+    txt.innerHTML=info[method];
+    box.style.display='block';
+  } else {
+    box.style.display='none';
+  }
+}
 function submitCheckoutWA(){
   const name=document.getElementById('buyerNameInput').value.trim()||'Kak';
   const city=document.getElementById('buyerCityInput').value.trim()||'-';
+  const wa=document.getElementById('buyerWaInput').value.trim()||'-';
   const email=document.getElementById('buyerEmailInput').value.trim()||'-';
+  const payment=document.getElementById('buyerPaymentInput').value||'-';
+  const promo=document.getElementById('buyerPromoInput').value.trim();
+  const note=document.getElementById('buyerNoteInput').value.trim();
+  if(!payment||payment==='-'){showToast('⚠️ Pilih metode pembayaran dulu!');return;}
   closeBuyerModal();
+  // Kirim email otomatis via EmailJS
+  if(email&&email!=='-'){
+    const p=checkoutMode==='cart'?null:products.find(x=>x.id===checkoutProductId);
+    const prodName=checkoutMode==='cart'?cart.map(c=>c.name).join(', '):(p?p.name:'-');
+    const totalAmt=checkoutMode==='cart'?fmtRp(cart.reduce((s,c)=>s+c.price*c.qty,0)):(p?fmtRp(p.price*checkoutQty):'-');
+    emailjs.send('service_pd4awao','template_72eveyc',{
+      buyer_name:name,
+      buyer_email:email,
+      product_name:prodName,
+      total_price:totalAmt,
+      payment_method:payment
+    }).then(()=>showToast('📧 Email konfirmasi terkirim!')).catch(()=>{});
+  }
+  const promoLine=promo?`🎁 *Kode Promo:* ${promo}\n`:'';
+  const noteLine=note?`📝 *Catatan:* ${note}\n`:'';
   if(checkoutMode==='cart'){
     if(!cart.length){showToast('🛒 Keranjang masih kosong!');return;}
     const lines=cart.map((c,i)=>`${i+1}. ${c.name}\n   💰 ${fmtRp(c.price)} x${c.qty} = *${fmtRp(c.price*c.qty)}*`).join('\n');
@@ -1588,13 +1643,15 @@ function submitCheckoutWA(){
 `━━━━━━━━━━━━━━━━━━\n`+
 `👤 *Nama:* ${name}\n`+
 `📍 *Kota:* ${city}\n`+
+`📱 *WhatsApp:* ${wa}\n`+
 `📧 *Email:* ${email}\n`+
 `━━━━━━━━━━━━━━━━━━\n`+
 `📦 *Pesanan:*\n${lines}\n`+
 `━━━━━━━━━━━━━━━━━━\n`+
 `💵 *Total: ${fmtRp(total)}*\n`+
+`💳 *Pembayaran:* ${payment}\n`+
+promoLine+noteLine+
 `━━━━━━━━━━━━━━━━━━\n`+
-`🙏 Mohon konfirmasi stok & metode pembayaran ya kak!\n`+
 `Terima kasih sudah belanja di WNJ Little World 💕`;
     window.open(getWaLink(msg),'_blank');
   } else {
@@ -1603,13 +1660,15 @@ function submitCheckoutWA(){
 `━━━━━━━━━━━━━━━━━━\n`+
 `👤 *Nama:* ${name}\n`+
 `📍 *Kota:* ${city}\n`+
+`📱 *WhatsApp:* ${wa}\n`+
 `📧 *Email:* ${email}\n`+
 `━━━━━━━━━━━━━━━━━━\n`+
 `📦 *Pesanan:*\n1. ${p.name}\n   💰 ${fmtRp(p.price)} x${checkoutQty} = *${fmtRp(p.price*checkoutQty)}*\n`+
 `━━━━━━━━━━━━━━━━━━\n`+
 `💵 *Total: ${fmtRp(p.price*checkoutQty)}*\n`+
+`💳 *Pembayaran:* ${payment}\n`+
+promoLine+noteLine+
 `━━━━━━━━━━━━━━━━━━\n`+
-`🙏 Mohon konfirmasi stok & metode pembayaran ya kak!\n`+
 `Terima kasih sudah belanja di WNJ Little World 💕`;
     window.open(getWaLink(msg),'_blank');
   }
