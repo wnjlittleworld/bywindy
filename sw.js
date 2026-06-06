@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wnj-v1';
+const CACHE_NAME = 'wnj-v2';
 const ASSETS = [
   './',
   './index.html',
