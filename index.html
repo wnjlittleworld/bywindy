@@ -1347,11 +1347,7 @@ async function dbSetSetting(key,value){
       body:JSON.stringify({key,value,updated_at:new Date().toISOString()})
     });
     const txt=await r.text();
-    if(r.ok){
-      showToast('✅ Tersimpan ke server!');
-    }else{
-      showToast('⚠️ Error '+r.status+': '+txt.substring(0,60));
-    }
+    showToast('Status:'+r.status+' '+txt.substring(0,80));
   }catch(e){
     showToast('❌ Gagal: '+e.message);
   }
