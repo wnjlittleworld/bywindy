@@ -1347,7 +1347,7 @@ async function dbSetSetting(key,value){
       body:JSON.stringify({key,value,updated_at:new Date().toISOString()})
     });
     const txt=await r.text();
-    showToast('Status:'+r.status+' '+txt.substring(0,80));
+    alert('Supabase Status: '+r.status+'\nResponse: '+txt.substring(0,100)+'\nKey: '+key);
   }catch(e){
     showToast('❌ Gagal: '+e.message);
   }
