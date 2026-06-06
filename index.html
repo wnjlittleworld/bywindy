@@ -1341,18 +1341,19 @@ async function dbGetSetting(key){
 async function dbSetSetting(key,value){
   try{localStorage.setItem('wnj_setting_'+key,value);}catch(e){}
   try{
-    const d=await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}`,{method:'DELETE',headers:SUPA_HEADERS});
-    const r=await fetch(`${SUPA_URL}/rest/v1/settings`,{method:'POST',
-      headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
-      body:JSON.stringify({key,value,updated_at:new Date().toISOString()})});
+    const r=await fetch(`${SUPA_URL}/rest/v1/settings`,{
+      method:'POST',
+      headers:{...SUPA_HEADERS,'Prefer':'resolution=merge-duplicates,return=representation'},
+      body:JSON.stringify({key,value,updated_at:new Date().toISOString()})
+    });
+    const txt=await r.text();
     if(r.ok){
       showToast('✅ Tersimpan ke server!');
     }else{
-      const t=await r.text();
-      showToast('⚠️ Supabase error '+r.status+': '+t.substring(0,50));
+      showToast('⚠️ Error '+r.status+': '+txt.substring(0,60));
     }
   }catch(e){
-    showToast('❌ Koneksi gagal: '+e.message);
+    showToast('❌ Gagal: '+e.message);
   }
 }
 async function dbGetAllSettings(){
