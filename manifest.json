@@ -2,7 +2,8 @@
   "name": "WNJ Little World",
   "short_name": "WNJ Store",
   "description": "Digital Education Series — Belajar lebih seru bareng WNJ!",
-  "start_url": "./index.html",
+  "start_url": "/bywindy/index.html",
+  "scope": "/bywindy/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FFF9F5",
@@ -10,18 +11,17 @@
   "lang": "id",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/bywindy/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "/bywindy/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
   "categories": ["shopping", "education"]
 }
