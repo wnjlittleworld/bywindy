@@ -1088,9 +1088,9 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
           <label class="form-label">Kategori *</label>
           <select class="form-select" id="fCat" onchange="toggleCustomCat('fCatCustom',this)">
             <option value="">— Pilih Kategori —</option>
-            <option>Worksheet</option><option>Workbook</option><option>Webbook</option>
-            <option>E-Book</option><option>Storybook</option><option>Story Edukasi</option>
-            <option>Flashcard</option><option>Game Edukasi</option>
+            <option>Worksheet 🇮🇩</option><option>Worksheet 🇬🇧</option><option>Workbook 🇮🇩</option><option>Workbook 🇬🇧</option><option>Webbook 🇮🇩</option><option>Webbook 🇬🇧</option><option>E-Book 🇮🇩</option><option>E-Book 🇬🇧</option><option>Storybook 🇮🇩</option><option>Storybook 🇬🇧</option><option>Story Edukasi 🇮🇩</option><option>Story Edukasi 🇬🇧</option>
+            
+            <option>Flashcard 🇮🇩</option><option>Flashcard 🇬🇧</option><option>Game Edukasi 🇮🇩</option><option>Game Edukasi 🇬🇧</option>
             <option>Greetings Card</option><option>Printable Activity</option>
             <option value="Lainnya">Lainnya (isi sendiri)</option>
           </select>
@@ -1193,9 +1193,9 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
     <div class="form-group">
       <label class="form-label">Kategori</label>
       <select class="form-select" id="eCat" onchange="toggleCustomCat('eCatCustom',this)">
-        <option>Worksheet</option><option>Workbook</option><option>Webbook</option>
-        <option>E-Book</option><option>Storybook</option><option>Story Edukasi</option>
-        <option>Flashcard</option><option>Game Edukasi</option>
+        <option>Worksheet 🇮🇩</option><option>Worksheet 🇬🇧</option><option>Workbook 🇮🇩</option><option>Workbook 🇬🇧</option><option>Webbook 🇮🇩</option><option>Webbook 🇬🇧</option><option>E-Book 🇮🇩</option><option>E-Book 🇬🇧</option><option>Storybook 🇮🇩</option><option>Storybook 🇬🇧</option><option>Story Edukasi 🇮🇩</option><option>Story Edukasi 🇬🇧</option>
+        
+        <option>Flashcard 🇮🇩</option><option>Flashcard 🇬🇧</option><option>Game Edukasi 🇮🇩</option><option>Game Edukasi 🇬🇧</option>
         <option>Greetings Card</option><option>Printable Activity</option>
         <option value="Lainnya">Lainnya (isi sendiri)</option>
       </select>
@@ -2241,7 +2241,7 @@ function openEdit(id){
   document.getElementById('eId').value=id;
   document.getElementById('eName').value=p.name;
   // handle kategori — kalau tidak ada di daftar, set Lainnya + tampilkan input
-  const CATS=['Worksheet','Workbook','Webbook','E-Book','Storybook','Story Edukasi','Flashcard','Game Edukasi','Greetings Card','Printable Activity'];
+  const CATS=['Worksheet 🇮🇩','Worksheet 🇬🇧','Workbook 🇮🇩','Workbook 🇬🇧','Webbook 🇮🇩','Webbook 🇬🇧','E-Book 🇮🇩','E-Book 🇬🇧','Storybook 🇮🇩','Storybook 🇬🇧','Story Edukasi 🇮🇩','Story Edukasi 🇬🇧','Flashcard 🇮🇩','Flashcard 🇬🇧','Game Edukasi 🇮🇩','Game Edukasi 🇬🇧','Greetings Card 🇮🇩','Greetings Card 🇬🇧','Printable Activity 🇮🇩','Printable Activity 🇬🇧'];
   const eCatSel=document.getElementById('eCat');
   const eCatCustom=document.getElementById('eCatCustom');
   if(CATS.includes(p.cat)){
