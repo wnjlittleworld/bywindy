@@ -1130,14 +1130,14 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
         </div>
         <div class="form-group full">
           <label class="form-label">📸 Foto Produk</label>
-          <div class="upload-area" id="uploadArea" onclick="document.getElementById('fImg').click()">
-            <input type="file" id="fImg" accept="image/*" style="display:none" onchange="previewImg(this,'uploadArea','uploadPreview','fImgData')">
+          <label class="upload-area" id="uploadArea" for="fImg" style="cursor:pointer;display:block;">
+            <input type="file" id="fImg" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;" onchange="previewImg(this,'uploadArea','uploadPreview','fImgData')">
             <img class="upload-preview" id="uploadPreview" src="" style="display:none">
             <span class="upload-icon">🖼️</span>
             <div class="upload-label">Klik untuk upload foto</div>
             <div class="upload-hint">JPG, PNG, WebP — maks 5MB</div>
-            <button class="btn-remove-img" onclick="removeImg(event,'uploadArea','uploadPreview','fImgData')">✕ Hapus Foto</button>
-          </div>
+            <button type="button" class="btn-remove-img" onclick="removeImg(event,'uploadArea','uploadPreview','fImgData')">✕ Hapus Foto</button>
+          </label>
           <input type="hidden" id="fImgData">
           <div style="text-align:center;font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin:6px 0;">— atau —</div>
           <label class="form-label">🔗 URL Foto (Google Drive, ImgBB, dll)</label>
@@ -1253,14 +1253,14 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
     </div>
     <div class="form-group full">
       <label class="form-label">📸 Foto Produk</label>
-      <div class="upload-area" id="editUploadArea" onclick="document.getElementById('eImg').click()">
-        <input type="file" id="eImg" accept="image/*" style="display:none" onchange="previewImg(this,'editUploadArea','editUploadPreview','eImgData')">
+      <label class="upload-area" id="editUploadArea" for="eImg" style="cursor:pointer;display:block;">
+        <input type="file" id="eImg" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;" onchange="previewImg(this,'editUploadArea','editUploadPreview','eImgData')">
         <img class="upload-preview" id="editUploadPreview" src="" style="display:none">
         <span class="upload-icon">🖼️</span>
         <div class="upload-label">Klik untuk upload / ganti foto</div>
         <div class="upload-hint">JPG, PNG, WebP — maks 5MB</div>
-        <button class="btn-remove-img" onclick="removeImg(event,'editUploadArea','editUploadPreview','eImgData')">✕ Hapus Foto</button>
-      </div>
+        <button type="button" class="btn-remove-img" onclick="removeImg(event,'editUploadArea','editUploadPreview','eImgData')">✕ Hapus Foto</button>
+      </label>
       <input type="hidden" id="eImgData">
       <div style="text-align:center;font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin:6px 0;">— atau —</div>
       <label class="form-label">🔗 URL Foto (Google Drive, ImgBB, dll)</label>
