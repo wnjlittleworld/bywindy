@@ -627,6 +627,7 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
 .stats-fill{height:100%;background:linear-gradient(135deg,var(--lav-d),var(--pink-d));border-radius:8px;}
 .stats-num{font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:2px;}
 
+
 /* LAUNCHING POPUP */
 @keyframes floatUp{0%{transform:translateY(30px);opacity:0}100%{transform:translateY(0);opacity:1}}
 @keyframes shine{0%{left:-100%}100%{left:200%}}
@@ -650,6 +651,30 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
 .launching-cta{width:100%;padding:15px;background:linear-gradient(135deg,#a78edf,#f472b6);color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:800;cursor:pointer;font-family:'Fredoka One',cursive;letter-spacing:.5px;position:relative;overflow:hidden;}
 .launching-skip{display:block;text-align:center;margin-top:12px;font-size:.75rem;color:#bbb;cursor:pointer;font-family:'Nunito',sans-serif;}
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;z-index:10001;}
+
+/* WISHLIST */
+.wishlist-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:2;transition:transform .2s;}
+.wishlist-btn:active{transform:scale(.85);}
+.wishlist-btn.active{background:#fff0f5;}
+
+/* STOCK BADGE */
+.stock-badge{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:#fff;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:20px;font-family:'Nunito',sans-serif;z-index:2;animation:pulse 1.5s infinite;}
+
+/* PROMO CODE */
+.promo-section{background:linear-gradient(135deg,#f8f5ff,#fff5f8);border-radius:16px;padding:16px;margin:12px 0;border:2px dashed #a78edf;}
+.promo-input-wrap{display:flex;gap:8px;margin-top:8px;}
+.promo-input{flex:1;padding:10px 14px;border:2px solid #e8e0f5;border-radius:12px;font-size:.85rem;font-family:'Nunito',sans-serif;outline:none;}
+.promo-input:focus{border-color:#a78edf;}
+.promo-apply-btn{background:linear-gradient(135deg,#a78edf,#f472b6);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-weight:800;cursor:pointer;font-size:.8rem;white-space:nowrap;}
+.promo-result{font-size:.8rem;margin-top:6px;font-family:'Nunito',sans-serif;}
+
+/* WISHLIST PAGE */
+.wishlist-empty{text-align:center;padding:40px 20px;color:#aaa;}
+
+/* SHARE BTN */
+.share-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:4px;opacity:.7;}
+.share-btn:hover{opacity:1;}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>emailjs.init("JG9K7W4Ik2l3GvUT0");</script>
@@ -716,28 +741,28 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
     <span class="hero-emoji">🎓</span>
     <h2>Belajar Lebih Seru<br>Bareng WNJ! 🌈</h2>
     <p>Produk digital edukasi kreatif untuk si kecil yang cerdas ✨</p>
-    <a class="hero-cta" href="#products" onclick="scrollProd(event)">Belanja Sekarang →</a>
+    <a class="hero-cta" href="#products" onclick="scrollProd(event)"><span id="txtShopNow">Belanja Sekarang →</span></a>
   </div>
 
   <div class="section-header" id="products">
-    <span class="section-title">📚 Kategori</span>
+    <span class="section-title"><span id="txtCategories">📚 Kategori</span></span>
     <div class="section-line"></div>
   </div>
   <div class="categories" id="catList"></div>
 
   <!-- Sorting -->
   <div style="padding:0 12px 4px;display:flex;align-items:center;gap:8px;">
-    <span class="sort-label">Urutkan:</span>
+    <span class="sort-label"><span id="txtSortBy">Urutkan:</span>
     <div class="sort-wrap" style="padding:0;flex:1;">
-      <div class="sort-chip active" onclick="setSort('default',this)">Terbaru</div>
-      <div class="sort-chip" onclick="setSort('cheapest',this)">Termurah</div>
-      <div class="sort-chip" onclick="setSort('expensive',this)">Termahal</div>
+      <div class="sort-chip active" onclick="setSort('default',this)"><span id="txtSortNewest">Terbaru</span></div>
+      <div class="sort-chip" onclick="setSort('cheapest',this)"><span id="txtSortCheapest">Termurah</span></div>
+      <div class="sort-chip" onclick="setSort('expensive',this)"><span id="txtSortExpensive">Termahal</span></div>
       <div class="sort-chip" onclick="setSort('discount',this)">Diskon Terbesar</div>
     </div>
   </div>
 
   <div class="section-header">
-    <span class="section-title">⭐ Semua Produk</span>
+    <span class="section-title"><span id="txtAllProducts">⭐ Semua Produk</span></span>
     <div class="section-line"></div>
   </div>
   <div class="product-grid" id="productGrid"></div>
@@ -754,9 +779,9 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
   </div>
 
   <div class="promo-full">
-    <h3>🎉 Paket Bundling Hemat!</h3>
-    <p>Beli 3 produk, dapat 1 gratis! Yuk ajak si kecil belajar 💛</p>
-    <button onclick="showBundlingPopup()">Ambil Promo Ini!</button>
+    <h3 id="txtBundleTitle">🎉 Paket Bundling Hemat!</h3>
+    <p id="txtBundleDesc">Beli 3 produk, dapat 1 gratis! Yuk ajak si kecil belajar 💛</p>
+    <button onclick="showBundlingPopup()" id="txtBundleBtn">Ambil Promo Ini!</button>
   </div>
 
   <!-- Popup Bundling -->
@@ -792,7 +817,7 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
   </div>
 
   <div class="section-header">
-    <span class="section-title">🔥 Terlaris</span>
+    <span class="section-title"><span id="txtBestSellers">🔥 Terlaris</span></span>
     <div class="section-line"></div>
   </div>
   <div class="product-grid" id="bestGrid"></div>
@@ -936,11 +961,19 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
     <div class="cart-empty"><span class="cart-empty-icon">🛒</span><p>Keranjangnya masih kosong~<br>Yuk tambah produk!</p></div>
   </div>
   <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="promo-section">
+      <div style="font-weight:800;font-size:.82rem;color:#a78edf;font-family:'Nunito',sans-serif;" id="txtPromoTitle">🎁 Kode Promo</div>
+      <div class="promo-input-wrap">
+        <input class="promo-input" id="promoCodeInput" placeholder="Masukkan kode promo" style="text-transform:uppercase;">
+        <button class="promo-apply-btn" onclick="applyPromoCode()" id="txtPromoBtn">Pakai</button>
+      </div>
+      <div class="promo-result" id="promoResult"></div>
+    </div>
     <div class="cart-total-row">
-      <span class="cart-total-label">Total Belanja</span>
+      <span class="cart-total-label" id="txtTotalBelanja">Total Belanja</span>
       <span class="cart-total-price" id="cartTotal">Rp0</span>
     </div>
-    <button class="checkout-btn" onclick="openBuyerModal('cart')">🛒 Checkout via WhatsApp 💬</button>
+    <button class="checkout-btn" onclick="openBuyerModal('cart')"><span id="txtCheckoutBtn">🛒 Checkout via WhatsApp 💬</span></button>
   </div>
 </div>
 
@@ -1014,6 +1047,12 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
           <input class="form-input" id="bannerEmoji" type="text" placeholder="🎁" maxlength="4">
         </div>
       </div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px dashed #e0d8f0;">
+        <label class="form-label">🇬🇧 Banner Title (English)</label>
+        <input class="form-input" id="bannerTitleEN" type="text" placeholder="e.g. Welcome to WNJ Little World!">
+        <label class="form-label">🇬🇧 Banner Description (English)</label>
+        <input class="form-input" id="bannerDescEN" type="text" placeholder="e.g. Explore our fun educational products!">
+      </div>
       <button class="btn-add-product" style="margin-top:10px;" onclick="saveBanner()">💾 Simpan Banner</button>
     </div>
 
@@ -1033,6 +1072,10 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
       <div class="form-group full">
         <label class="form-label">Deskripsi Toko</label>
         <textarea class="form-textarea" id="aboutTextAdmin" placeholder="Ceritakan tentang toko WNJ Little World..."></textarea>
+      </div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px dashed #e0d8f0;">
+        <label class="form-label">🇬🇧 About (English)</label>
+        <textarea class="form-input" id="aboutTextEN" rows="3" placeholder="e.g. WNJ Little World is a digital education store..."></textarea>
       </div>
       <button class="btn-add-product" style="margin-top:10px;" onclick="saveAbout()">💾 Simpan</button>
     </div>
@@ -1106,11 +1149,16 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Harga Jual (Rp) *</label>
-          <input class="form-input" id="fPrice" type="number" placeholder="25000 atau 2.99" min="0" step="0.01">
+          <label class="form-label">Harga Jual * 
+            <span style="float:right;font-size:.75rem;">
+              <button type="button" onclick="toggleAdminCurrency('fCurrencyToggle','fPrice','fOrig')" id="fCurrencyToggle" 
+                style="background:var(--lav);color:#fff;border:none;border-radius:20px;padding:2px 10px;font-size:.7rem;cursor:pointer;">🇮🇩 Rp</button>
+            </span>
+          </label>
+          <input class="form-input" id="fPrice" type="number" placeholder="25000" min="0" step="0.01">
         </div>
         <div class="form-group">
-          <label class="form-label">Harga Coret (Rp)</label>
+          <label class="form-label">Harga Coret</label>
           <input class="form-input" id="fOrig" type="number" placeholder="Kosongkan jika tidak ada" min="0" step="0.01">
         </div>
         <div class="form-group">
@@ -1721,7 +1769,7 @@ function productCard(p,i){
       <div class="product-name">${p.name}</div>
       <div class="product-stars">${starStr(p.stars)}</div>
       <div class="product-bottom">
-        <div><div class="product-price">${fmtPrice(p.price)}</div>${p.orig?`<div class="product-orig">${fmtPrice(p.orig)}</div>`:''}</div>
+        <div><div class="product-price">${fmtPrice(p.price,p.cat)}</div>${p.orig?`<div class="product-orig">${fmtPrice(p.orig,p.cat)}</div>`:''}</div>
         <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
       </div>
     </div></div>`;
@@ -1747,6 +1795,7 @@ function scrollProd(e){e.preventDefault();document.getElementById('products').sc
 /* CART */
 function addToCart(id){
   const p=products.find(x=>x.id===id);if(!p)return;
+  currentDetailCat=p.cat||'';
   const ex=cart.find(c=>c.id===id);
   if(ex)ex.qty++;else cart.push({...p,qty:1});
   updateCart();
@@ -1852,7 +1901,9 @@ async function saveBanner(){
   const title=document.getElementById('bannerTitle').value.trim();
   const desc=document.getElementById('bannerDesc').value.trim();
   const emoji=document.getElementById('bannerEmoji').value.trim()||'🎁';
-  const val=JSON.stringify({title,desc,emoji});
+  const titleEN=document.getElementById('bannerTitleEN')?.value.trim()||'';
+  const descEN=document.getElementById('bannerDescEN')?.value.trim()||'';
+  const val=JSON.stringify({title,desc,emoji,titleEN,descEN});
   await dbSetSetting('banner',val);
   applyBanner(val);
   showToast('✅ Banner disimpan!');
@@ -1963,6 +2014,7 @@ function buyNowWA(id,qty){
 
 /* PRODUCT DETAIL */
 let detailQty=1;
+let currentDetailCat='';
 function openDetail(id){
   const p=products.find(x=>x.id===id);if(!p)return;
   detailQty=1;
@@ -1991,7 +2043,7 @@ function openDetail(id){
       <div class="detail-stars">${starStr(p.stars)}</div>
       ${descHtml}
       <div class="detail-price-row">
-        <div class="detail-price" id="detailPriceShow">${fmtPrice(p.price)}</div>
+        <div class="detail-price" id="detailPriceShow">${fmtPrice(p.price,p.cat)}</div>
         ${p.orig?`<div class="detail-orig">${fmtRp(p.orig)}</div>`:''}
       </div>
       <div class="detail-qty-row">
@@ -2016,7 +2068,7 @@ function openDetail(id){
 function changeDetailQty(id,d,price){
   detailQty=Math.max(1,detailQty+d);
   document.getElementById('detailQtyNum').textContent=detailQty;
-  document.getElementById('detailPriceShow').textContent=fmtPrice(price*detailQty);
+  document.getElementById('detailPriceShow').textContent=fmtPrice(price*detailQty,currentDetailCat);
 }
 function addToCartQty(id,qty){
   const p=products.find(x=>x.id===id);if(!p)return;
@@ -2356,6 +2408,7 @@ function secretClick(){
 
 
 
+
 /* LAUNCHING POPUP */
 function showLaunchingPopup(){
   const last=localStorage.getItem('wnj_launching_shown');
@@ -2382,6 +2435,131 @@ function spawnConfetti(){
   }
 }
 
+
+/* ===== ADMIN CURRENCY TOGGLE ===== */
+let adminCurrency = 'idr';
+function toggleAdminCurrency(btnId, priceId, origId){
+  adminCurrency = adminCurrency === 'idr' ? 'usd' : 'idr';
+  const btn = document.getElementById(btnId);
+  const priceInput = document.getElementById(priceId);
+  const origInput = document.getElementById(origId);
+  if(adminCurrency === 'usd'){
+    btn.textContent = '🇬🇧 $';
+    btn.style.background = '#4a90d9';
+    priceInput.placeholder = '2.99';
+    origInput.placeholder = 'Contoh: 5.99';
+  } else {
+    btn.textContent = '🇮🇩 Rp';
+    btn.style.background = 'var(--lav)';
+    priceInput.placeholder = '25000';
+    origInput.placeholder = 'Kosongkan jika tidak ada';
+  }
+}
+
+/* ===== WISHLIST ===== */
+function getWishlist(){try{return JSON.parse(localStorage.getItem('wnj_wishlist')||'[]');}catch(e){return[];}}
+function saveWishlist(list){try{localStorage.setItem('wnj_wishlist',JSON.stringify(list));}catch(e){}}
+function isWishlisted(id){return getWishlist().includes(id);}
+function toggleWishlist(e,id){
+  e.stopPropagation();
+  let list=getWishlist();
+  if(list.includes(id)){
+    list=list.filter(x=>x!==id);
+    showToast('💔 Dihapus dari favorit');
+  } else {
+    list.push(id);
+    showToast('❤️ Ditambahkan ke favorit!');
+  }
+  saveWishlist(list);
+  renderProducts();
+}
+
+/* ===== STOCK NOTIFICATION ===== */
+function checkStockAlert(p){
+  if(!p.stock||p.stock>5) return '';
+  return `<span class="stock-badge">🔥 Sisa ${p.stock}!</span>`;
+}
+
+/* ===== PROMO CODE ===== */
+const PROMO_CODES = {};
+let appliedPromo = null;
+
+function loadPromoCodes(){
+  try{const p=localStorage.getItem('wnj_promos');return p?JSON.parse(p):{};}catch(e){return{};}
+}
+function savePromoCodes(codes){
+  try{localStorage.setItem('wnj_promos',JSON.stringify(codes));}catch(e){}
+}
+function applyPromoCode(){
+  const code=document.getElementById('promoCodeInput')?.value.trim().toUpperCase();
+  const result=document.getElementById('promoResult');
+  if(!code){showToast('⚠️ Masukkan kode promo dulu!');return;}
+  const codes=loadPromoCodes();
+  if(codes[code]){
+    appliedPromo={code,discount:codes[code]};
+    if(result) result.innerHTML=`<span style="color:green;">✅ Kode <b>${code}</b> berhasil! Diskon ${codes[code]}%</span>`;
+    showToast(`🎁 Promo ${code} aktif! Diskon ${codes[code]}%`);
+    updateCartWithPromo();
+  } else {
+    appliedPromo=null;
+    if(result) result.innerHTML=`<span style="color:red;">❌ Kode promo tidak valid</span>`;
+  }
+}
+function updateCartWithPromo(){
+  renderCart();
+}
+function getDiscountedTotal(total){
+  if(!appliedPromo) return total;
+  return Math.round(total*(1-appliedPromo.discount/100));
+}
+
+/* ===== SHARE PRODUCT ===== */
+function shareProduct(e,id){
+  e.stopPropagation();
+  const p=products.find(x=>x.id===id);if(!p)return;
+  const url=window.location.href;
+  const text=`${p.name} - ${fmtPrice(p.price)}
+
+Cek di WNJ Little World: ${url}`;
+  if(navigator.share){
+    navigator.share({title:p.name,text,url}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>showToast('📋 Link disalin!')).catch(()=>showToast('📋 Copy link manual ya!'));
+  }
+}
+
+/* ===== ADMIN PROMO MANAGEMENT ===== */
+function saveAdminPromo(){
+  const code=document.getElementById('adminPromoCode')?.value.trim().toUpperCase();
+  const disc=Number(document.getElementById('adminPromoDisc')?.value);
+  if(!code||!disc||disc<1||disc>100){showToast('❌ Isi kode & diskon dengan benar!');return;}
+  const codes=loadPromoCodes();
+  codes[code]=disc;
+  savePromoCodes(codes);
+  renderAdminPromos();
+  showToast(`✅ Kode promo ${code} (${disc}%) disimpan!`);
+  document.getElementById('adminPromoCode').value='';
+  document.getElementById('adminPromoDisc').value='';
+}
+function deletePromo(code){
+  const codes=loadPromoCodes();
+  delete codes[code];
+  savePromoCodes(codes);
+  renderAdminPromos();
+  showToast(`🗑️ Kode ${code} dihapus`);
+}
+function renderAdminPromos(){
+  const el=document.getElementById('adminPromoList');if(!el)return;
+  const codes=loadPromoCodes();
+  const keys=Object.keys(codes);
+  if(!keys.length){el.innerHTML='<p style="color:#aaa;font-size:.8rem;font-family:Nunito,sans-serif;">Belum ada kode promo</p>';return;}
+  el.innerHTML=keys.map(k=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;background:#f8f5ff;border-radius:10px;padding:8px 12px;margin-bottom:6px;">
+      <span style="font-weight:800;font-family:Nunito,sans-serif;font-size:.85rem;">🎁 ${k} — Diskon ${codes[k]}%</span>
+      <button onclick="deletePromo('${k}')" style="background:#ffebee;color:#e53935;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:.75rem;">Hapus</button>
+    </div>`).join('');
+}
+
 /* BUNDLING POPUP */
 function showBundlingPopup(){
   const el=document.getElementById('bundlingOverlay');
@@ -2400,38 +2578,189 @@ function claimBundlingWA(){
 }
 
 
-/* LANGUAGE TOGGLE */
+
+/* ===== BILINGUAL SYSTEM ===== */
 let currentLang = localStorage.getItem('wnj_lang') || 'id';
-const USD_RATE = 16500; // 1 USD = Rp 16.500
+
+const TRANS = {
+  id: {
+    searchPlaceholder: 'Cari worksheet, flashcard, game edukasi...',
+    shopNow: 'Belanja Sekarang →',
+    categories: '📚 Kategori',
+    allProducts: '⭐ Semua Produk',
+    bestSellers: '🔥 Terlaris',
+    newArrivals: '✨ Produk Baru',
+    sortBy: 'Urutkan:',
+    sortNewest: 'Terbaru',
+    sortCheapest: 'Termurah',
+    sortExpensive: 'Termahal',
+    sortDiscount: 'Diskon Terbesar',
+    all: 'Semua',
+    storeOpen: '🟢 Toko Buka',
+    storeClosed: '🔴 Toko Tutup',
+    bundleTitle: '🎉 Paket Bundling Hemat!',
+    bundleDesc: 'Beli 3 produk, dapat 1 gratis! Yuk ajak si kecil belajar 💛',
+    bundleBtn: 'Ambil Promo Ini!',
+    bundlePopTitle: 'Paket Bundling Hemat!',
+    bundlePopSub: 'Spesial untuk si kecil yang cinta belajar 💛',
+    bundleBuy: 'Beli 3 Produk',
+    bundleBuySub: 'Pilih produk apapun sesukamu',
+    bundleFree: 'Dapat 1 GRATIS!',
+    bundleFreeSub: 'Produk harga terendah jadi gratis',
+    bundleDownload: 'Langsung Download',
+    bundleDownloadSub: 'Produk digital, kirim otomatis',
+    bundleTip: '💡 Pilih produkmu dulu, lalu hubungi kami untuk klaim bundling!',
+    bundleWA: '💬 Klaim via WhatsApp',
+    aboutTitle: '🌏 Tentang Toko',
+    testiTitle: '💬 Testimoni',
+    totalBelanja: 'Total Belanja',
+    checkoutBtn: '🛒 Checkout via WhatsApp 💬',
+    promoTitle: '🎁 Kode Promo',
+    promoPlaceholder: 'Masukkan kode promo',
+    promoBtn: 'Pakai',
+    addToCart: '+',
+    new: 'BARU',
+    hot: 'HOT',
+    sale: 'SALE',
+    stock: 'Sisa',
+    wishlistAdd: '❤️ Ditambahkan ke favorit!',
+    wishlistRemove: '💔 Dihapus dari favorit',
+    launchBadge: '🚀 GRAND LAUNCHING',
+    launchTitle: 'Promo Spesial Launching! 🎉',
+    launchSub: 'Hanya untuk pembelian pertamamu di WNJ!',
+    launchOff: 'DISKON OFF!',
+    launchShop: '🛍️ Belanja Sekarang!',
+    launchSkip: 'Lewati, lihat-lihat dulu',
+    launchPerk1: 'Diskon 30% Semua Produk',
+    launchPerk1s: 'Berlaku untuk semua kategori',
+    launchPerk2: 'Download Langsung',
+    launchPerk2s: 'Produk digital, kirim otomatis',
+    launchPerk3: 'Kualitas Premium',
+    launchPerk3s: 'Dibuat oleh tenaga ahli edukasi',
+  },
+  en: {
+    searchPlaceholder: 'Search worksheets, flashcards, educational games...',
+    shopNow: 'Shop Now →',
+    categories: '📚 Categories',
+    allProducts: '⭐ All Products',
+    bestSellers: '🔥 Best Sellers',
+    newArrivals: '✨ New Arrivals',
+    sortBy: 'Sort by:',
+    sortNewest: 'Newest',
+    sortCheapest: 'Cheapest',
+    sortExpensive: 'Most Expensive',
+    sortDiscount: 'Biggest Discount',
+    all: 'All',
+    storeOpen: '🟢 Store Open',
+    storeClosed: '🔴 Store Closed',
+    bundleTitle: '🎉 Bundle Package Deal!',
+    bundleDesc: 'Buy 3 products, get 1 free! Let your little one learn 💛',
+    bundleBtn: 'Get This Deal!',
+    bundlePopTitle: 'Bundle Package Deal!',
+    bundlePopSub: 'Special for little ones who love learning 💛',
+    bundleBuy: 'Buy 3 Products',
+    bundleBuySub: 'Choose any products you like',
+    bundleFree: 'Get 1 FREE!',
+    bundleFreeSub: 'Lowest priced product is free',
+    bundleDownload: 'Instant Download',
+    bundleDownloadSub: 'Digital products, sent automatically',
+    bundleTip: '💡 Choose your products first, then contact us to claim the bundle!',
+    bundleWA: '💬 Claim via WhatsApp',
+    aboutTitle: '🌏 About Us',
+    testiTitle: '💬 Reviews',
+    totalBelanja: 'Total',
+    checkoutBtn: '🛒 Checkout via WhatsApp 💬',
+    promoTitle: '🎁 Promo Code',
+    promoPlaceholder: 'Enter promo code',
+    promoBtn: 'Apply',
+    addToCart: '+',
+    new: 'NEW',
+    hot: 'HOT',
+    sale: 'SALE',
+    stock: 'Only',
+    wishlistAdd: '❤️ Added to favorites!',
+    wishlistRemove: '💔 Removed from favorites',
+    launchBadge: '🚀 GRAND LAUNCHING',
+    launchTitle: 'Special Launch Promo! 🎉',
+    launchSub: 'Only for your first purchase at WNJ!',
+    launchOff: 'DISCOUNT OFF!',
+    launchShop: '🛍️ Shop Now!',
+    launchSkip: 'Skip, just browsing',
+    launchPerk1: '30% Off All Products',
+    launchPerk1s: 'Valid for all categories',
+    launchPerk2: 'Instant Download',
+    launchPerk2s: 'Digital products, sent automatically',
+    launchPerk3: 'Premium Quality',
+    launchPerk3s: 'Created by educational experts',
+  }
+};
+
+function t(key){ return TRANS[currentLang][key] || TRANS.id[key] || key; }
 
 function toggleLang(){
   currentLang = currentLang === 'id' ? 'en' : 'id';
   localStorage.setItem('wnj_lang', currentLang);
-  document.getElementById('langToggle').textContent = currentLang === 'id' ? '🇮🇩' : '🇬🇧';
+  applyLang();
   renderProducts();
   renderCats();
-  updateSearchPlaceholder();
+  renderBanner();
+  renderTokoStatus();
+  renderAbout();
 }
 
 function initLang(){
   currentLang = localStorage.getItem('wnj_lang') || 'id';
-  document.getElementById('langToggle').textContent = currentLang === 'id' ? '🇮🇩' : '🇬🇧';
-  updateSearchPlaceholder();
+  applyLang();
 }
 
-function updateSearchPlaceholder(){
-  const el = document.getElementById('searchInput');
-  if(!el) return;
-  el.placeholder = currentLang === 'id' 
-    ? 'Cari worksheet, flashcard, game edukasi...' 
-    : 'Search worksheets, flashcards, educational games...';
+function applyLang(){
+  const isEN = currentLang === 'en';
+  const btn = document.getElementById('langToggle');
+  if(btn) btn.textContent = isEN ? '🇬🇧' : '🇮🇩';
+
+  // Search placeholder
+  const search = document.getElementById('searchInput');
+  if(search) search.placeholder = t('searchPlaceholder');
+
+  // Static text elements
+  const map = {
+    'txtShopNow': t('shopNow'),
+    'txtCategories': t('categories'),
+    'txtAllProducts': t('allProducts'),
+    'txtBestSellers': t('bestSellers'),
+    'txtNewArrivals': t('newArrivals'),
+    'txtSortBy': t('sortBy'),
+    'txtSortNewest': t('sortNewest'),
+    'txtSortCheapest': t('sortCheapest'),
+    'txtSortExpensive': t('sortExpensive'),
+    'txtSortDiscount': t('sortDiscount'),
+    'txtAboutTitle': t('aboutTitle'),
+    'txtTestiTitle': t('testiTitle'),
+    'txtTotalBelanja': t('totalBelanja'),
+    'txtCheckoutBtn': t('checkoutBtn'),
+    'txtPromoTitle': t('promoTitle'),
+    'txtPromoBtn': t('promoBtn'),
+    'txtBundleTitle': t('bundleTitle'),
+    'txtBundleDesc': t('bundleDesc'),
+    'txtBundleBtn': t('bundleBtn'),
+  };
+  Object.entries(map).forEach(([id,txt])=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=txt;
+  });
+
+  // Promo placeholder
+  const promoInp = document.getElementById('promoCodeInput');
+  if(promoInp) promoInp.placeholder = t('promoPlaceholder');
 }
 
-function fmtPrice(rp){
-  if(currentLang === 'en'){
-    const usd = (rp / USD_RATE).toFixed(2);
-    return '$' + usd;
+/* PRICE AUTO BY CATEGORY */
+function fmtPrice(rp, cat){
+  // If category is EN (🇬🇧), show in USD
+  if(cat && cat.includes('🇬🇧')){
+    return '$' + (rp / USD_RATE).toFixed(2);
   }
+  // If lang is EN but category is ID, still show Rp
   return fmtRp(rp);
 }
 
@@ -2454,7 +2783,7 @@ async function init(){
   if(settings.countdown) applyCountdown(settings.countdown);
 
   await renderTestis();
-  loadDark();loadTheme();initWaBubble();showLaunchingPopup();initLang();
+  loadDark();loadTheme();initWaBubble();showLaunchingPopup();initLang();renderAdminPromos();
   setTimeout(showNewProductPopup,3000);
 }
 
@@ -2462,9 +2791,10 @@ function applyBanner(raw){
   try{
     const b=JSON.parse(raw);
     const el=document.getElementById('promoBanner');if(!el)return;
+    const useEN=currentLang==='en'&&(b.titleEN||b.descEN);
     if(b&&b.title){
-      document.getElementById('promoBannerTitle').textContent=b.title;
-      document.getElementById('promoBannerDesc').textContent=b.desc||'';
+      document.getElementById('promoBannerTitle').textContent=useEN?(b.titleEN||b.title):b.title;
+      document.getElementById('promoBannerDesc').textContent=useEN?(b.descEN||b.desc||''):(b.desc||'');
       document.getElementById('promoBannerEmoji').textContent=b.emoji||'🎁';
       el.style.display='block';
     }
@@ -2519,14 +2849,14 @@ window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('load
   <div id="launchingOverlay" class="launching-overlay" style="display:none">
     <div class="launching-card">
       <div class="launching-header">
-        <div class="launching-badge">🚀 GRAND LAUNCHING</div>
-        <div class="launching-title">Promo Spesial<br>Launching! 🎉</div>
-        <div class="launching-sub">Hanya untuk pembelian pertamamu di WNJ!</div>
+        <div class="launching-badge" id="txtLaunchBadge">🚀 GRAND LAUNCHING</div>
+        <div class="launching-title" id="txtLaunchTitle">Promo Spesial<br>Launching! 🎉</div>
+        <div class="launching-sub" id="txtLaunchSub">Hanya untuk pembelian pertamamu di WNJ!</div>
       </div>
       <div class="launching-body">
         <div class="launching-discount">
           <div class="launching-pct">30%</div>
-          <div class="launching-off">DISKON OFF!</div>
+          <div class="launching-off" id="txtLaunchOff">DISKON OFF!</div>
         </div>
         <div class="launching-perks">
           <div class="launching-perk">
@@ -2542,8 +2872,8 @@ window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('load
             <div><div class="launching-perk-text">Kualitas Premium</div><div class="launching-perk-sub">Dibuat oleh tenaga ahli edukasi</div></div>
           </div>
         </div>
-        <button class="launching-cta" onclick="closeLaunchingPopup(true)">🛍️ Belanja Sekarang!</button>
-        <span class="launching-skip" onclick="closeLaunchingPopup(false)">Lewati, lihat-lihat dulu</span>
+        <button class="launching-cta" onclick="closeLaunchingPopup(true)"><span id="txtLaunchShop">🛍️ Belanja Sekarang!</span></button>
+        <span class="launching-skip" id="txtLaunchSkip" onclick="closeLaunchingPopup(false)">Lewati, lihat-lihat dulu</span>
       </div>
     </div>
   </div>
