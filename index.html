@@ -675,6 +675,7 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
       </div>
     </div>
     <div class="nav-actions">
+      <button class="dark-toggle" onclick="toggleLang()" id="langToggle" style="font-size:1.1rem;">🇮🇩</button>
       <button class="dark-toggle" onclick="toggleDark()" id="darkToggle">🌙</button>
       <button class="cart-btn" onclick="toggleCart()">🛒 <span id="cartCount" class="cart-count">0</span></button>
     </div>
@@ -1106,11 +1107,11 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
         </div>
         <div class="form-group">
           <label class="form-label">Harga Jual (Rp) *</label>
-          <input class="form-input" id="fPrice" type="number" placeholder="25000" min="0">
+          <input class="form-input" id="fPrice" type="number" placeholder="25000 atau 2.99" min="0" step="0.01">
         </div>
         <div class="form-group">
           <label class="form-label">Harga Coret (Rp)</label>
-          <input class="form-input" id="fOrig" type="number" placeholder="Kosongkan jika tidak ada" min="0">
+          <input class="form-input" id="fOrig" type="number" placeholder="Kosongkan jika tidak ada" min="0" step="0.01">
         </div>
         <div class="form-group">
           <label class="form-label">Rating Bintang</label>
@@ -1720,7 +1721,7 @@ function productCard(p,i){
       <div class="product-name">${p.name}</div>
       <div class="product-stars">${starStr(p.stars)}</div>
       <div class="product-bottom">
-        <div><div class="product-price">${fmtRp(p.price)}</div>${p.orig?`<div class="product-orig">${fmtRp(p.orig)}</div>`:''}</div>
+        <div><div class="product-price">${fmtPrice(p.price)}</div>${p.orig?`<div class="product-orig">${fmtPrice(p.orig)}</div>`:''}</div>
         <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
       </div>
     </div></div>`;
@@ -1990,7 +1991,7 @@ function openDetail(id){
       <div class="detail-stars">${starStr(p.stars)}</div>
       ${descHtml}
       <div class="detail-price-row">
-        <div class="detail-price" id="detailPriceShow">${fmtRp(p.price)}</div>
+        <div class="detail-price" id="detailPriceShow">${fmtPrice(p.price)}</div>
         ${p.orig?`<div class="detail-orig">${fmtRp(p.orig)}</div>`:''}
       </div>
       <div class="detail-qty-row">
@@ -2015,7 +2016,7 @@ function openDetail(id){
 function changeDetailQty(id,d,price){
   detailQty=Math.max(1,detailQty+d);
   document.getElementById('detailQtyNum').textContent=detailQty;
-  document.getElementById('detailPriceShow').textContent=fmtRp(price*detailQty);
+  document.getElementById('detailPriceShow').textContent=fmtPrice(price*detailQty);
 }
 function addToCartQty(id,qty){
   const p=products.find(x=>x.id===id);if(!p)return;
@@ -2174,8 +2175,11 @@ function getSelectedCat(selId, customId){
 async function addProduct(){
   const name=document.getElementById('fName').value.trim();
   const cat=getSelectedCat('fCat','fCatCustom');
-  const price=Number(document.getElementById('fPrice').value);
-  const orig=Number(document.getElementById('fOrig').value)||null;
+  let price=Number(document.getElementById('fPrice').value);
+  let orig=Number(document.getElementById('fOrig').value)||null;
+  // Auto convert: kalau kategori EN dan harga < 1000, anggap USD → convert ke Rp
+  const selCat=getSelectedCat('fCat','fCatCustom')||'';
+  if(selCat.includes('🇬🇧') && price < 1000){price=Math.round(price*USD_RATE); if(orig) orig=Math.round(orig*USD_RATE);}
   const emoji=document.getElementById('fEmoji').value||'📦';
   const badge=document.getElementById('fBadge').value||null;
   const stars=Number(document.getElementById('fStars').value);
@@ -2395,6 +2399,43 @@ function claimBundlingWA(){
   closeBundlingPopup();
 }
 
+
+/* LANGUAGE TOGGLE */
+let currentLang = localStorage.getItem('wnj_lang') || 'id';
+const USD_RATE = 16500; // 1 USD = Rp 16.500
+
+function toggleLang(){
+  currentLang = currentLang === 'id' ? 'en' : 'id';
+  localStorage.setItem('wnj_lang', currentLang);
+  document.getElementById('langToggle').textContent = currentLang === 'id' ? '🇮🇩' : '🇬🇧';
+  renderProducts();
+  renderCats();
+  updateSearchPlaceholder();
+}
+
+function initLang(){
+  currentLang = localStorage.getItem('wnj_lang') || 'id';
+  document.getElementById('langToggle').textContent = currentLang === 'id' ? '🇮🇩' : '🇬🇧';
+  updateSearchPlaceholder();
+}
+
+function updateSearchPlaceholder(){
+  const el = document.getElementById('searchInput');
+  if(!el) return;
+  el.placeholder = currentLang === 'id' 
+    ? 'Cari worksheet, flashcard, game edukasi...' 
+    : 'Search worksheets, flashcards, educational games...';
+}
+
+function fmtPrice(rp){
+  if(currentLang === 'en'){
+    const usd = (rp / USD_RATE).toFixed(2);
+    return '$' + usd;
+  }
+  return fmtRp(rp);
+}
+
+
 /* INIT */
 async function init(){
   showToast('⏳ Memuat...');
@@ -2413,7 +2454,7 @@ async function init(){
   if(settings.countdown) applyCountdown(settings.countdown);
 
   await renderTestis();
-  loadDark();loadTheme();initWaBubble();showLaunchingPopup();
+  loadDark();loadTheme();initWaBubble();showLaunchingPopup();initLang();
   setTimeout(showNewProductPopup,3000);
 }
 
