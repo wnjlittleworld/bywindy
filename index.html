@@ -1284,6 +1284,10 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
       </select>
     </div>
     <div class="form-group">
+      <label class="form-label">🔢 Stok (kosongkan = unlimited)</label>
+      <input class="form-input" id="eStock" type="number" placeholder="Kosongkan jika tidak terbatas" min="0">
+    </div>
+    <div class="form-group">
       <label class="form-label">Terlaris?</label>
       <select class="form-select" id="eBest">
         <option value="0">Tidak</option>
@@ -1770,10 +1774,9 @@ function productCard(p,i){
     :`${p.emoji}${p.badge?`<div class="product-badge ${badgeCls[p.badge]}">${p.badge.toUpperCase()}</div>`:''}${discBadge}`;
   const wishlisted=isWishlisted(p.id);
   const stockBadge=p.stock&&p.stock<=5?`<span class="stock-badge">🔥 Sisa ${p.stock}!</span>`:'';
-  return `<div class="product-card" style="animation-delay:${i*.07}s;position:relative;">
+  return `<div class="product-card" style="animation-delay:${i*.07}s;position:relative;cursor:pointer;" onclick="openDetail(${p.id})">
     <button class="wishlist-btn ${wishlisted?'active':''}" onclick="event.stopPropagation();toggleWishlist(event,${p.id})">${wishlisted?'❤️':'🤍'}</button>
     ${stockBadge}
-    <div style="cursor:pointer;" onclick="openDetail(${p.id})">
     <div class="product-thumb ${p.img?'':cc}">${thumbContent}</div>
     <div class="product-info">
       <div class="product-cat">${p.cat}</div>
@@ -1782,8 +1785,9 @@ function productCard(p,i){
       <div class="product-bottom">
         <div><div class="product-price">${fmtPrice(p.price,p.cat)}</div>${p.orig?`<div class="product-orig">${fmtPrice(p.orig,p.cat)}</div>`:''}</div>
         <button class="add-btn" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
+        <button class="share-btn" onclick="event.stopPropagation();shareProduct(event,${p.id})" title="Bagikan">📤</button>
       </div>
-    </div></div></div>`;
+    </div></div>`;
 }
 function renderProducts(){
   const grid=document.getElementById('productGrid');
@@ -1941,13 +1945,16 @@ async function loadBannerInput(){
     if(b.title) document.getElementById('bannerTitle').value=b.title;
     if(b.desc) document.getElementById('bannerDesc').value=b.desc;
     if(b.emoji) document.getElementById('bannerEmoji').value=b.emoji;
+    if(b.titleEN&&document.getElementById('bannerTitleEN')) document.getElementById('bannerTitleEN').value=b.titleEN;
+    if(b.descEN&&document.getElementById('bannerDescEN')) document.getElementById('bannerDescEN').value=b.descEN;
   }catch(e){}
 }
 
 /* ABOUT */
 async function saveAbout(){
   const text=document.getElementById('aboutTextAdmin').value.trim();
-  await dbSetSetting('about',text);
+  const textEN=document.getElementById('aboutTextEN')?.value.trim()||'';
+  await dbSetSetting('about',JSON.stringify({id:text,en:textEN}));
   renderAbout();showToast('✅ Deskripsi toko disimpan!');
 }
 async function renderAbout(){
@@ -2022,7 +2029,7 @@ async function renderTestiAdmin(){
 }
 
 /* SHARE */
-function shareProduct(p){
+function shareProductObj(p){
   const text=`${p.name}\n💰 ${fmtRp(p.price)}${p.orig?' (coret '+fmtRp(p.orig)+')':''}\n\n${p.desc||''}\n\nCek di: ${window.location.href}`;
   if(navigator.share){navigator.share({title:p.name,text});}
   else{navigator.clipboard.writeText(text).then(()=>showToast('📋 Link disalin!'));}
@@ -2082,7 +2089,7 @@ function openDetail(id){
         <button class="detail-btn-cart" onclick="addToCartQty(${p.id},detailQty);closeDetail()">🛒 Tambah ke Keranjang</button>
         <button class="detail-btn-wa" onclick="closeDetail();openBuyerModal('single',${p.id},detailQty)">💬 Beli Langsung via WA</button>
         ${linkHtml}
-        <button class="detail-share-btn" onclick="shareProduct(products.find(x=>x.id===${p.id}))">📤 Bagikan Produk</button>
+        <button class="detail-share-btn" onclick="shareProduct(null,${p.id})">📤 Bagikan Produk</button>
       </div>
     </div>
     ${relHtml}`;
@@ -2338,6 +2345,7 @@ function openEdit(id){
   document.getElementById('eStars').value=p.stars;
   document.getElementById('eDesc').value=p.desc||'';
   document.getElementById('eBest').value=p.best?'1':'0';
+  document.getElementById('eStock').value=p.stock||'';
   document.getElementById('eLink').value=p.link||'';
   // load image
   const eImgData=document.getElementById('eImgData');
@@ -2375,6 +2383,7 @@ async function saveEdit(){
   p.stars=Number(document.getElementById('eStars').value);
   p.desc=document.getElementById('eDesc').value.trim();
   p.best=document.getElementById('eBest').value==='1';
+  p.stock=document.getElementById('eStock').value?Number(document.getElementById('eStock').value):null;
   const newImg=document.getElementById('eImgData').value;
   p.img=newImg||null;
   p.link=document.getElementById('eLink').value.trim()||'';
@@ -2539,18 +2548,25 @@ function getDiscountedTotal(total){
 
 /* ===== SHARE PRODUCT ===== */
 function shareProduct(e,id){
-  e.stopPropagation();
+  if(e) e.stopPropagation();
   const p=products.find(x=>x.id===id);if(!p)return;
-  const url=window.location.href;
-  const text=`${p.name} - ${fmtPrice(p.price)}
-
-Cek di WNJ Little World: ${url}`;
+  const url='https://wnjlittleworld.github.io/bywindy/';
+  const text=p.emoji+' '+p.name+'\n\u{1F4B0} '+fmtPrice(p.price,p.cat)+'\n\n\u{1F6CD}\uFE0F Cek di WNJ Little World:\n'+url;
   if(navigator.share){
-    navigator.share({title:p.name,text,url}).catch(()=>{});
+    navigator.share({title:p.name,text,url})
+      .then(()=>showToast('\u2705 Berhasil dibagikan!'))
+      .catch(()=>{});
   } else {
-    navigator.clipboard.writeText(text).then(()=>showToast('📋 Link disalin!')).catch(()=>showToast('📋 Copy link manual ya!'));
+    const dummy=document.createElement('textarea');
+    dummy.value=text;
+    document.body.appendChild(dummy);
+    dummy.select();
+    try{document.execCommand('copy');}catch(err){}
+    document.body.removeChild(dummy);
+    showToast('\u{1F4CB} Link produk disalin!');
   }
 }
+
 
 /* ===== ADMIN PROMO MANAGEMENT ===== */
 function saveAdminPromo(){
