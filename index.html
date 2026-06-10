@@ -1006,6 +1006,18 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
       <div class="astat"><div class="astat-num" id="aDisc">0</div><div class="astat-label">Ada Diskon</div></div>
     </div>
 
+    <!-- Promo Code Admin -->
+    <div class="admin-card">
+      <h3 style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--lav-d);margin-bottom:6px;">🎁 Kelola Kode Promo</h3>
+      <p style="font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-bottom:12px;">Buat kode promo diskon untuk pelanggan</p>
+      <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+        <input class="form-input" id="adminPromoCode" placeholder="Kode (cth: LAUNCHING30)" style="flex:1;min-width:120px;text-transform:uppercase;">
+        <input class="form-input" id="adminPromoDisc" type="number" placeholder="Diskon %" min="1" max="100" style="width:80px;">
+        <button class="btn-add-product" onclick="saveAdminPromo()" style="padding:8px 14px;">+ Tambah</button>
+      </div>
+      <div id="adminPromoList"></div>
+    </div>
+
     <!-- Theme Picker -->
     <div class="admin-card">
       <h3 style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--lav-d);margin-bottom:10px;">🎨 Tema Warna Toko</h3>
@@ -1474,8 +1486,19 @@ function saveWaToStorage(n){
 
 let products=[];
 let cart=[];
-function saveCart(){try{localStorage.setItem('wnj_cart',JSON.stringify(cart));}catch(e){}}
-function loadCart(){try{const c=localStorage.getItem('wnj_cart');if(c)cart=JSON.parse(c);}catch(e){}}
+function saveCart(){
+  try{
+    // Save minimal data only (no img base64 to avoid localStorage overflow)
+    const slim=cart.map(c=>({id:c.id,name:c.name,price:c.price,orig:c.orig,cat:c.cat,emoji:c.emoji,qty:c.qty,badge:c.badge}));
+    localStorage.setItem('wnj_cart',JSON.stringify(slim));
+  }catch(e){}
+}
+function loadCart(){
+  try{
+    const c=localStorage.getItem('wnj_cart');
+    if(c) cart=JSON.parse(c);
+  }catch(e){}
+}
 let nextId=1;
 let waNumber=loadWaNumber()||'6289630486382';
 let deletingId=null;
