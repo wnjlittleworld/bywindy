@@ -1412,9 +1412,11 @@ async function dbAddProduct(p){
         emoji:p.emoji,badge:p.badge,stars:p.stars,best:p.best,
         description:p.desc,img:p.img,link:p.link})
     });
-    const data=await r.json();
+    const txt=await r.text();
+    if(!r.ok){showToast('❌ Error '+r.status+': '+txt.substring(0,80));return null;}
+    const data=JSON.parse(txt);
     return data[0]?{...p,id:data[0].id}:null;
-  }catch(e){return null;}
+  }catch(e){showToast('❌ '+e.message);return null;}
 }
 async function dbUpdateProduct(p){
   try{
@@ -2055,14 +2057,22 @@ async function renderTestis(){
   const el=document.getElementById('testiSection');if(!el)return;
   const arr=await dbGetTestis();
   if(!arr.length){el.innerHTML=`<div class="testi-empty">Belum ada testimoni. Jadilah yang pertama! ⭐</div>`;return;}
-  el.innerHTML=arr.map(t=>`
-    <div class="testi-card">
-      <div class="testi-text">"${t.text}"</div>
-      <div class="testi-bottom">
-        <div class="testi-name">— ${t.name}</div>
-        <div class="testi-stars">${'⭐'.repeat(t.stars)}</div>
+  const ACOLORS=['#a78edf','#f472b6','#4ade80','#60a5fa','#fbbf24','#fb923c'];
+  el.innerHTML=arr.map(t=>{
+    const initial=(t.name||'?')[0].toUpperCase();
+    const color=ACOLORS[(t.name||'').charCodeAt(0)%ACOLORS.length];
+    return `<div class="testi-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:800;font-family:'Fredoka One',cursive;flex-shrink:0;">${initial}</div>
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:.82rem;font-family:'Nunito',sans-serif;color:var(--text);">${t.name}</div>
+          <div style="font-size:.65rem;color:#4caf50;font-weight:700;font-family:'Nunito',sans-serif;">✅ Pembeli Terverifikasi</div>
+        </div>
+        <div style="font-size:.85rem;">${'⭐'.repeat(t.stars||5)}</div>
       </div>
-    </div>`).join('');
+      <div class="testi-text">"${t.text}"</div>
+    </div>`;
+  }).join('');
 }
 async function renderTestiAdmin(){
   const el=document.getElementById('testiAdminList');if(!el)return;
@@ -2340,6 +2350,13 @@ async function addProduct(){
   const newP={id:null,name,cat,price,orig,emoji,badge,stars,best,desc,img,link};
   const saved=await dbAddProduct(newP);
   if(saved){
+    // Save stock to localStorage (not in Supabase)
+    if(stock&&stock>0){
+      const stocks=JSON.parse(localStorage.getItem('wnj_stocks')||'{}');
+      stocks[saved.id]=stock;
+      localStorage.setItem('wnj_stocks',JSON.stringify(stocks));
+      saved.stock=stock;
+    }
     products.push(saved);
     clearAddForm();renderAdminStats();renderAdminList();
     showToast('✅ Produk berhasil ditambahkan!');
@@ -2910,7 +2927,9 @@ async function init(){
     dbGetProducts(),
     dbGetAllSettings()
   ]);
-  products = prods;
+  // Merge stock data from localStorage
+  const stocks=JSON.parse(localStorage.getItem('wnj_stocks')||'{}');
+  products = prods.map(p=>({...p,stock:stocks[p.id]||p.stock||null}));
   renderCats();renderProducts();
 
   // Apply settings
