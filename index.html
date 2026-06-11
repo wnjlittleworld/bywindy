@@ -652,6 +652,22 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
 .launching-skip{display:block;text-align:center;margin-top:12px;font-size:.75rem;color:#bbb;cursor:pointer;font-family:'Nunito',sans-serif;}
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;z-index:10001;}
 
+
+/* RECOMMENDATION */
+.recommend-title{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--lav-d);margin-bottom:10px;}
+.recommend-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.recommend-card{background:var(--card);border-radius:14px;padding:10px;cursor:pointer;transition:transform .2s;box-shadow:0 2px 8px var(--shadow);}
+.recommend-card:active{transform:scale(.97);}
+.recommend-thumb{width:100%;aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;overflow:hidden;}
+.recommend-name{font-size:.72rem;font-weight:700;color:var(--text);font-family:'Nunito',sans-serif;line-height:1.3;margin-bottom:3px;}
+.recommend-price{font-size:.7rem;color:var(--pink-d);font-weight:800;font-family:'Nunito',sans-serif;}
+
+/* ENHANCED REVIEW */
+.review-card{background:var(--card);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px var(--shadow);}
+.review-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.review-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--lav),var(--pink));display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:800;font-family:'Fredoka One',cursive;}
+.review-verified{font-size:.65rem;color:#4caf50;font-weight:700;font-family:'Nunito',sans-serif;}
+
 /* WISHLIST */
 .wishlist-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:2;transition:transform .2s;}
 .wishlist-btn:active{transform:scale(.85);}
@@ -1000,10 +1016,17 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
     </div>
   </nav>
   <div class="admin-body">
-    <div class="admin-stats">
+    <div class="admin-stats" style="grid-template-columns:repeat(3,1fr);">
       <div class="astat"><div class="astat-num" id="aTotal">0</div><div class="astat-label">Total Produk</div></div>
       <div class="astat"><div class="astat-num" id="aCats">0</div><div class="astat-label">Kategori</div></div>
       <div class="astat"><div class="astat-num" id="aDisc">0</div><div class="astat-label">Ada Diskon</div></div>
+      <div class="astat"><div class="astat-num" id="aBest">0</div><div class="astat-label">🔥 Terlaris</div></div>
+      <div class="astat"><div class="astat-num" id="aNew">0</div><div class="astat-label">✨ Produk Baru</div></div>
+      <div class="astat"><div class="astat-num" id="aWish">0</div><div class="astat-label">❤️ Difavoritkan</div></div>
+    </div>
+    <div style="background:linear-gradient(135deg,#f8f5ff,#fff5f8);border-radius:16px;padding:16px;margin-bottom:16px;">
+      <div style="font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--lav-d);margin-bottom:10px;">📊 Produk Terlaris</div>
+      <div id="topProductsList" style="font-family:'Nunito',sans-serif;font-size:.8rem;"></div>
     </div>
 
     <!-- Promo Code Admin -->
@@ -1834,6 +1857,7 @@ function scrollProd(e){e.preventDefault();document.getElementById('products').sc
 function addToCart(id){
   const p=products.find(x=>x.id===id);if(!p)return;
   currentDetailCat=p.cat||'';
+  setTimeout(()=>renderRecommendations(p),100);
   const ex=cart.find(c=>c.id===id);
   if(ex)ex.qty++;else cart.push({...p,qty:1});
   saveCart();updateCart();
@@ -2207,6 +2231,22 @@ function renderAdminStats(){
   document.getElementById('aTotal').textContent=products.length;
   document.getElementById('aCats').textContent=new Set(products.map(p=>p.cat)).size;
   document.getElementById('aDisc').textContent=products.filter(p=>p.orig).length;
+  document.getElementById('aBest').textContent=products.filter(p=>p.best).length;
+  document.getElementById('aNew').textContent=products.filter(p=>p.badge==='new'||p.badge==='NEW').length;
+  const wishlist=getWishlist();
+  document.getElementById('aWish').textContent=wishlist.length;
+  // Top products by best seller flag
+  const topEl=document.getElementById('topProductsList');
+  if(topEl){
+    const bestProds=products.filter(p=>p.best).slice(0,3);
+    topEl.innerHTML=bestProds.length
+      ?bestProds.map((p,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(167,142,223,.1);">
+        <span style="font-size:1.1rem;">${['🥇','🥈','🥉'][i]}</span>
+        <span style="flex:1;">${p.emoji} ${p.name}</span>
+        <span style="color:var(--lav-d);font-weight:700;">${fmtRp(p.price)}</span>
+      </div>`).join('')
+      :'<p style="color:#aaa;font-size:.75rem;">Tandai produk sebagai Terlaris di admin</p>';
+  }
   document.getElementById('prodCount').textContent=products.length;
 }
 
@@ -2621,6 +2661,40 @@ function renderAdminPromos(){
       <span style="font-weight:800;font-family:Nunito,sans-serif;font-size:.85rem;">🎁 ${k} — Diskon ${codes[k]}%</span>
       <button onclick="deletePromo('${k}')" style="background:#ffebee;color:#e53935;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:.75rem;">Hapus</button>
     </div>`).join('');
+}
+
+
+/* ===== PRODUCT RECOMMENDATIONS ===== */
+function renderRecommendations(currentProduct){
+  const el=document.getElementById('detailRecommend');
+  if(!el||!currentProduct) return;
+  
+  // Find similar products (same category or similar price range)
+  const similar=products.filter(p=>
+    p.id!==currentProduct.id && (
+      p.cat===currentProduct.cat ||
+      Math.abs(p.price-currentProduct.price)/currentProduct.price < 0.5
+    )
+  ).slice(0,4);
+  
+  if(!similar.length){el.innerHTML='';return;}
+  
+  const COLORS=['#fce4ec','#e8eaf6','#e0f2f1','#fff8e1','#f3e5f5'];
+  el.innerHTML=`
+    <div class="recommend-title">🎯 Produk yang Mungkin Kamu Suka</div>
+    <div class="recommend-grid">
+      ${similar.map(p=>{
+        const cc=COLORS[p.id%COLORS.length];
+        const thumb=p.img
+          ?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`
+          :`<span style="font-size:2rem;">${p.emoji||'📦'}</span>`;
+        return `<div class="recommend-card" onclick="closeDetail();setTimeout(()=>openDetail(${p.id}),100)">
+          <div class="recommend-thumb" style="background:${cc};">${thumb}</div>
+          <div class="recommend-name">${p.emoji||''} ${p.name}</div>
+          <div class="recommend-price">${fmtPrice(p.price,p.cat)}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
 }
 
 /* BUNDLING POPUP */
