@@ -2117,7 +2117,7 @@ function openDetail(id){
   const relHtml=related.length?`<div class="related-section"><div class="related-title">🛍️ Produk Serupa</div>
     <div class="related-grid">${related.map(r=>{
       const rDisc=r.orig&&r.orig>r.price?Math.round((1-r.price/r.orig)*100):0;
-      return`<div class="related-card" onclick="closeDetail();setTimeout(()=>openDetail(${r.id}),200)">
+      return`<div class="related-card" onclick="openDetailById(${r.id})">
         <div class="related-thumb ${r.img?'':COLORS[r.id%COLORS.length]}">${r.img?`<img src="${r.img}" style="width:100%;height:100%;object-fit:cover;">`:(r.emoji||'📦')}</div>
         <div class="related-info"><div class="related-name">${r.name}</div>
         <div class="related-price">${fmtRp(r.price)}${rDisc?` <span style="font-size:.5rem;background:#ff5555;color:#fff;border-radius:8px;padding:1px 5px;">-${rDisc}%</span>`:''}</div>
@@ -2170,6 +2170,11 @@ function addToCartQty(id,qty){
 function closeDetail(){
   document.getElementById('detailOverlay').classList.remove('open');
   document.getElementById('detailModal').classList.remove('open');
+}
+// Helper untuk buka produk dari related/recommend cards
+function openDetailById(id){
+  closeDetail();
+  setTimeout(()=>openDetail(id),220);
 }
 
 /* WA */
@@ -2229,7 +2234,10 @@ function doLogin(){
 }
 function openAdmin(){
   document.getElementById('adminPanel').classList.add('open');
-  renderAdminStats();renderAdminList();renderEmojiPicker();
+  // Re-render stats setelah panel terbuka (pastikan products sudah loaded)
+  renderAdminStats();
+  renderAdminList();
+  renderEmojiPicker();
   loadWaInput();loadJamInput();loadBannerInput();loadAboutInput();
   renderTestiAdmin();loadCountdownInput();
 }
@@ -2238,13 +2246,15 @@ function doLogout(){closeAdmin();showToast('👋 Logout berhasil!');}
 
 /* ADMIN STATS */
 function renderAdminStats(){
-  document.getElementById('aTotal').textContent=products.length;
+  const total=products.length;
+  document.getElementById('aTotal').textContent=total;
   document.getElementById('aCats').textContent=new Set(products.map(p=>p.cat)).size;
-  document.getElementById('aDisc').textContent=products.filter(p=>p.orig).length;
+  document.getElementById('aDisc').textContent=products.filter(p=>p.orig&&p.orig>p.price).length;
   document.getElementById('aBest').textContent=products.filter(p=>p.best).length;
   document.getElementById('aNew').textContent=products.filter(p=>p.badge==='new'||p.badge==='NEW').length;
   const wishlist=getWishlist();
   document.getElementById('aWish').textContent=wishlist.length;
+  document.getElementById('prodCount').textContent=total;
   // Top products by best seller flag
   const topEl=document.getElementById('topProductsList');
   if(topEl){
@@ -2257,7 +2267,6 @@ function renderAdminStats(){
       </div>`).join('')
       :'<p style="color:#aaa;font-size:.75rem;">Tandai produk sebagai Terlaris di admin</p>';
   }
-  document.getElementById('prodCount').textContent=products.length;
 }
 
 /* EMOJI PICKER */
@@ -2335,7 +2344,7 @@ async function addProduct(){
   let orig=Number(document.getElementById('fOrig').value)||null;
   // Auto convert: kalau kategori EN dan harga < 1000, anggap USD → convert ke Rp
   const selCat=getSelectedCat('fCat','fCatCustom')||'';
-  if(selCat.includes('🇬🇧') && price < 1000){price=Math.round(price*USD_RATE); if(orig) orig=Math.round(orig*USD_RATE);}
+  if(selCat.includes('🇬🇧') && price > 0 && price < 1000){price=Math.round(price*USD_RATE); if(orig) orig=Math.round(orig*USD_RATE);}
   const emoji=document.getElementById('fEmoji').value||'📦';
   const badge=document.getElementById('fBadge').value||null;
   const stars=Number(document.getElementById('fStars').value);
@@ -2343,8 +2352,10 @@ async function addProduct(){
   const desc=document.getElementById('fDesc').value.trim();
   const img=document.getElementById('fImgData').value||null;
   const link=document.getElementById('fLink').value.trim()||'';
+  const stockVal=document.getElementById('fStock').value;
+  const stock=stockVal&&Number(stockVal)>0?Number(stockVal):null;
   if(!name){showToast('❌ Nama produk wajib diisi!');return;}
-  if(!cat){showToast('❌ Pilih kategori dulu!');return;}
+  if(!cat||cat==='— Pilih Kategori —'){showToast('❌ Pilih kategori dulu!');return;}
   if(!price||price<=0){showToast('❌ Harga harus lebih dari 0!');return;}
   showToast('⏳ Menyimpan produk...');
   const newP={id:null,name,cat,price,orig,emoji,badge,stars,best,desc,img,link};
@@ -2358,6 +2369,7 @@ async function addProduct(){
       saved.stock=stock;
     }
     products.push(saved);
+    renderCats();renderProducts();
     clearAddForm();renderAdminStats();renderAdminList();
     showToast('✅ Produk berhasil ditambahkan!');
   } else {
@@ -2469,7 +2481,9 @@ async function saveEdit(){
   p.link=document.getElementById('eLink').value.trim()||'';
   showToast('⏳ Menyimpan...');
   await dbUpdateProduct(p);
-  closeEdit();renderAdminStats();renderAdminList();
+  closeEdit();
+  renderCats();renderProducts();
+  renderAdminStats();renderAdminList();
   showToast('✅ Produk berhasil diperbarui!');
 }
 
@@ -2705,7 +2719,7 @@ function renderRecommendations(currentProduct){
         const thumb=p.img
           ?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`
           :`<span style="font-size:2rem;">${p.emoji||'📦'}</span>`;
-        return `<div class="recommend-card" onclick="closeDetail();setTimeout(()=>openDetail(${p.id}),100)">
+        return `<div class="recommend-card" onclick="openDetailById(${p.id})">
           <div class="recommend-thumb" style="background:${cc};">${thumb}</div>
           <div class="recommend-name">${p.emoji||''} ${p.name}</div>
           <div class="recommend-price">${fmtPrice(p.price,p.cat)}</div>
@@ -2860,6 +2874,7 @@ function toggleLang(){
   renderBanner();
   renderTokoStatus();
   renderAbout();
+  showToast(currentLang === 'en' ? '🇬🇧 English mode' : '🇮🇩 Mode Indonesia');
 }
 
 function initLang(){
@@ -2941,19 +2956,20 @@ async function init(){
   await renderTestis();
   loadCart();updateCart();loadDark();loadTheme();initWaBubble();showLaunchingPopup();initLang();renderAdminPromos();
   setTimeout(showNewProductPopup,3000);
+  showToast('✅ Toko berhasil dimuat!');
 }
 
 function applyBanner(raw){
   try{
     const b=JSON.parse(raw);
     const el=document.getElementById('promoBanner');if(!el)return;
-    const useEN=currentLang==='en'&&(b.titleEN||b.descEN);
     if(b&&b.title){
-      document.getElementById('promoBannerTitle').textContent=useEN?(b.titleEN||b.title):b.title;
-      document.getElementById('promoBannerDesc').textContent=useEN?(b.descEN||b.desc||''):(b.desc||'');
+      const useEN=currentLang==='en';
+      document.getElementById('promoBannerTitle').textContent=(useEN&&b.titleEN)?b.titleEN:b.title;
+      document.getElementById('promoBannerDesc').textContent=(useEN&&b.descEN)?b.descEN:(b.desc||'');
       document.getElementById('promoBannerEmoji').textContent=b.emoji||'🎁';
       el.style.display='block';
-    }
+    } else { el.style.display='none'; }
   }catch(e){}
 }
 function applyJam(raw){
