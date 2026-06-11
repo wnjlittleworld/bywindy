@@ -211,7 +211,12 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
   box-shadow:0 6px 20px rgba(200,130,220,.4);transition:transform .4s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 
-/* ── ADMIN ── */
+.astat-tap{cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;}
+.astat-tap:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(167,142,223,.25);}
+.astat-tap:active{transform:scale(.96);}
+.astat-tap-hint{font-size:.5rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:2px;opacity:.6;}
+
+/* STAT DETAIL MODAL */
 .admin-overlay{position:fixed;inset:0;background:rgba(120,80,160,.45);backdrop-filter:blur(6px);
   z-index:700;opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;}
 .admin-overlay.open{opacity:1;visibility:visible;}
@@ -953,8 +958,15 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
   </div>
 </div>
 
-<!-- PRODUCT DETAIL -->
-<div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
+<!-- STAT DETAIL MODAL -->
+<div id="statDetailOverlay" onclick="closeStatDetail()" style="display:none;position:fixed;inset:0;background:rgba(80,50,120,.45);z-index:1200;backdrop-filter:blur(4px);"></div>
+<div id="statDetailModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:24px;width:min(380px,92vw);max-height:80vh;overflow-y:auto;z-index:1201;box-shadow:0 24px 64px rgba(180,130,200,.35);padding:0;">
+  <div style="background:linear-gradient(135deg,var(--pink-d),var(--lav-d));padding:18px 20px 14px;border-radius:24px 24px 0 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;">
+    <div id="statDetailTitle" style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fff;"></div>
+    <button onclick="closeStatDetail()" style="background:rgba(255,255,255,.3);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+  </div>
+  <div id="statDetailBody" style="padding:16px;font-family:'Nunito',sans-serif;font-size:.82rem;"></div>
+</div>
 <div class="detail-modal" id="detailModal">
   <button class="detail-close" onclick="closeDetail()">✕</button>
   <div id="detailContent"></div>
@@ -1017,12 +1029,12 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
   </nav>
   <div class="admin-body">
     <div class="admin-stats" style="grid-template-columns:repeat(3,1fr);">
-      <div class="astat"><div class="astat-num" id="aTotal">0</div><div class="astat-label">Total Produk</div></div>
-      <div class="astat"><div class="astat-num" id="aCats">0</div><div class="astat-label">Kategori</div></div>
-      <div class="astat"><div class="astat-num" id="aDisc">0</div><div class="astat-label">Ada Diskon</div></div>
-      <div class="astat"><div class="astat-num" id="aBest">0</div><div class="astat-label">🔥 Terlaris</div></div>
-      <div class="astat"><div class="astat-num" id="aNew">0</div><div class="astat-label">✨ Produk Baru</div></div>
-      <div class="astat"><div class="astat-num" id="aWish">0</div><div class="astat-label">❤️ Difavoritkan</div></div>
+      <div class="astat astat-tap" onclick="showStatDetail('total')"><div class="astat-num" id="aTotal">0</div><div class="astat-label">Total Produk</div><div class="astat-tap-hint">👆 tap</div></div>
+      <div class="astat astat-tap" onclick="showStatDetail('cats')"><div class="astat-num" id="aCats">0</div><div class="astat-label">Kategori</div><div class="astat-tap-hint">👆 tap</div></div>
+      <div class="astat astat-tap" onclick="showStatDetail('disc')"><div class="astat-num" id="aDisc">0</div><div class="astat-label">Ada Diskon</div><div class="astat-tap-hint">👆 tap</div></div>
+      <div class="astat astat-tap" onclick="showStatDetail('best')"><div class="astat-num" id="aBest">0</div><div class="astat-label">🔥 Terlaris</div><div class="astat-tap-hint">👆 tap</div></div>
+      <div class="astat astat-tap" onclick="showStatDetail('new')"><div class="astat-num" id="aNew">0</div><div class="astat-label">✨ Produk Baru</div><div class="astat-tap-hint">👆 tap</div></div>
+      <div class="astat astat-tap" onclick="showStatDetail('wish')"><div class="astat-num" id="aWish">0</div><div class="astat-label">❤️ Difavoritkan</div><div class="astat-tap-hint">👆 tap</div></div>
     </div>
     <div style="background:linear-gradient(135deg,#f8f5ff,#fff5f8);border-radius:16px;padding:16px;margin-bottom:16px;">
       <div style="font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--lav-d);margin-bottom:10px;">📊 Produk Terlaris</div>
@@ -2244,7 +2256,100 @@ function openAdmin(){
 function closeAdmin(){document.getElementById('adminPanel').classList.remove('open');renderProducts();renderCats();}
 function doLogout(){closeAdmin();showToast('👋 Logout berhasil!');}
 
-/* ADMIN STATS */
+/* STAT DETAIL MODAL */
+function showStatDetail(type){
+  const overlay=document.getElementById('statDetailOverlay');
+  const modal=document.getElementById('statDetailModal');
+  const title=document.getElementById('statDetailTitle');
+  const body=document.getElementById('statDetailBody');
+  const wishlist=getWishlist();
+  const wishProds=products.filter(p=>wishlist.includes(p.id));
+
+  const configs={
+    total:{
+      label:'📦 Semua Produk',
+      items:products,
+      render:p=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0eaf8;">
+        <span style="font-size:1.4rem;">${p.emoji||'📦'}</span>
+        <div style="flex:1;"><div style="font-weight:700;color:#333;">${p.name}</div>
+        <div style="color:var(--lav-d);font-size:.75rem;">${p.cat}</div></div>
+        <div style="font-weight:700;color:var(--pink-d);">${fmtRp(p.price)}</div></div>`
+    },
+    cats:{
+      label:'🗂️ Daftar Kategori',
+      custom:()=>{
+        const catMap={};
+        products.forEach(p=>{catMap[p.cat]=(catMap[p.cat]||0)+1;});
+        return Object.entries(catMap).map(([cat,count])=>
+          `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0eaf8;">
+            <span style="font-weight:700;color:#333;">${cat}</span>
+            <span style="background:var(--lav-l);color:var(--lav-d);padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:700;">${count} produk</span>
+          </div>`).join('');
+      }
+    },
+    disc:{
+      label:'🏷️ Produk Diskon',
+      items:products.filter(p=>p.orig&&p.orig>p.price),
+      render:p=>{
+        const pct=Math.round((1-p.price/p.orig)*100);
+        return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0eaf8;">
+          <span style="font-size:1.4rem;">${p.emoji||'📦'}</span>
+          <div style="flex:1;"><div style="font-weight:700;color:#333;">${p.name}</div>
+          <div style="color:#aaa;font-size:.72rem;text-decoration:line-through;">${fmtRp(p.orig)}</div></div>
+          <div style="text-align:right;"><div style="font-weight:700;color:var(--pink-d);">${fmtRp(p.price)}</div>
+          <div style="background:#ff5555;color:#fff;border-radius:8px;padding:1px 6px;font-size:.65rem;font-weight:700;">-${pct}%</div></div></div>`;
+      }
+    },
+    best:{
+      label:'🔥 Produk Terlaris',
+      items:products.filter(p=>p.best),
+      render:p=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0eaf8;">
+        <span style="font-size:1.4rem;">${p.emoji||'📦'}</span>
+        <div style="flex:1;"><div style="font-weight:700;color:#333;">${p.name}</div>
+        <div style="color:var(--lav-d);font-size:.75rem;">${p.cat}</div></div>
+        <div style="font-weight:700;color:var(--pink-d);">${fmtRp(p.price)}</div></div>`
+    },
+    new:{
+      label:'✨ Produk Baru',
+      items:products.filter(p=>p.badge==='new'||p.badge==='NEW'),
+      render:p=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0eaf8;">
+        <span style="font-size:1.4rem;">${p.emoji||'📦'}</span>
+        <div style="flex:1;"><div style="font-weight:700;color:#333;">${p.name}</div>
+        <div style="color:var(--lav-d);font-size:.75rem;">${p.cat}</div></div>
+        <div style="font-weight:700;color:var(--pink-d);">${fmtRp(p.price)}</div></div>`
+    },
+    wish:{
+      label:'❤️ Difavoritkan',
+      items:wishProds,
+      render:p=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0eaf8;">
+        <span style="font-size:1.4rem;">${p.emoji||'📦'}</span>
+        <div style="flex:1;"><div style="font-weight:700;color:#333;">${p.name}</div>
+        <div style="color:var(--lav-d);font-size:.75rem;">${p.cat}</div></div>
+        <div style="font-weight:700;color:#ff5577;">${fmtRp(p.price)}</div></div>`
+    }
+  };
+
+  const cfg=configs[type];
+  if(!cfg)return;
+  title.textContent=cfg.label;
+
+  if(cfg.custom){
+    body.innerHTML=cfg.custom();
+  } else if(!cfg.items||cfg.items.length===0){
+    body.innerHTML=`<div style="text-align:center;padding:30px;color:#bbb;">😢 Belum ada produk di sini</div>`;
+  } else {
+    body.innerHTML=cfg.items.map(cfg.render).join('');
+  }
+
+  overlay.style.display='block';
+  modal.style.display='block';
+  setTimeout(()=>{overlay.style.opacity='1';modal.style.opacity='1';},10);
+}
+
+function closeStatDetail(){
+  document.getElementById('statDetailOverlay').style.display='none';
+  document.getElementById('statDetailModal').style.display='none';
+}
 function renderAdminStats(){
   const total=products.length;
   document.getElementById('aTotal').textContent=total;
