@@ -1799,8 +1799,15 @@ function renderCats(){
   const cats=getCategories();
   document.getElementById('catList').innerHTML=cats.map(c=>{
     const count=c==='Semua'?products.length:products.filter(p=>p.cat===c).length;
-    return `<div class="cat-chip${c===activeFilter?' active':''}" onclick="filterCat('${c}',this)">${c}<span class="cat-count">${count}</span></div>`;
+    const safe=c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<div class="cat-chip${c===activeFilter?' active':''}" onclick="filterCat('${safe}',this)">${c}<span class="cat-count">${count}</span></div>`;
   }).join('');
+}
+function filterCat(cat,el){
+  activeFilter=cat;
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts();
 }
 function filteredProducts(){
   let list=activeFilter==='Semua'?products:products.filter(p=>p.cat===activeFilter);
@@ -1857,12 +1864,6 @@ function renderProducts(){
   const bg=document.getElementById('bestGrid');
   bg.innerHTML=bests.length?bests.map(productCard).join(''):`<div class="empty-state"><div class="em">🌟</div><p>Belum ada produk terlaris</p></div>`;
   renderDiscSection();
-}
-function filterCat(cat,el){
-  activeFilter=cat;
-  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  renderProducts();
 }
 function onSearch(){searchQ=document.getElementById('searchInput').value.toLowerCase().trim();renderProducts();}
 function scrollProd(e){e.preventDefault();document.getElementById('products').scrollIntoView({behavior:'smooth'});}
@@ -1989,13 +1990,7 @@ async function renderBanner(){
     const val=await dbGetSetting('banner');
     const el=document.getElementById('promoBanner');if(!el)return;
     if(!val){el.style.display='none';return;}
-    const b=JSON.parse(val);
-    if(b&&b.title){
-      document.getElementById('promoBannerTitle').textContent=b.title;
-      document.getElementById('promoBannerDesc').textContent=b.desc||'';
-      document.getElementById('promoBannerEmoji').textContent=b.emoji||'🎁';
-      el.style.display='block';
-    } else {el.style.display='none';}
+    applyBanner(val); // pakai applyBanner biar support bilingual
   }catch(e){console.error('renderBanner:',e);}
 }
 async function loadBannerInput(){
@@ -2021,12 +2016,8 @@ async function saveAbout(){
 async function renderAbout(){
   try{
     const raw=await dbGetSetting('about');
-    const el=document.getElementById('aboutText');
-    if(!el||!raw) return;
-    try{
-      const obj=JSON.parse(raw);
-      el.textContent=currentLang==='en'&&obj.en?obj.en:obj.id||raw;
-    }catch(e){ el.textContent=raw; }
+    if(!raw) return;
+    applyAbout(raw);
   }catch(e){}
 }
 async function loadAboutInput(){
@@ -3042,17 +3033,32 @@ function fmtPrice(rp, cat){
 /* INIT */
 async function init(){
   showToast('⏳ Memuat...');
-  // Load products dan settings sekaligus
+
+  // 1. Langsung apply settings dari localStorage dulu (biar gak hilang saat refresh)
+  ['banner','jam','about','countdown'].forEach(k=>{
+    try{
+      const v=localStorage.getItem('wnj_setting_'+k);
+      if(v){
+        if(k==='banner') applyBanner(v);
+        else if(k==='jam') applyJam(v);
+        else if(k==='about') applyAbout(v);
+        else if(k==='countdown') applyCountdown(v);
+      }
+    }catch(e){}
+  });
+
+  // 2. Load products dan settings dari Supabase
   const [prods, settings] = await Promise.all([
     dbGetProducts(),
     dbGetAllSettings()
   ]);
-  // Merge stock data from localStorage
+
+  // 3. Merge stock dari localStorage
   const stocks=JSON.parse(localStorage.getItem('wnj_stocks')||'{}');
   products = prods.map(p=>({...p,stock:stocks[p.id]||p.stock||null}));
   renderCats();renderProducts();
 
-  // Apply settings
+  // 4. Apply settings dari Supabase (override localStorage)
   if(settings.banner) applyBanner(settings.banner);
   if(settings.jam) applyJam(settings.jam);
   if(settings.about) applyAbout(settings.about);
@@ -3093,9 +3099,13 @@ function applyJam(raw){
     </div>`;
   }catch(e){}
 }
-function applyAbout(text){
+function applyAbout(raw){
   const el=document.getElementById('aboutText');
-  if(el&&text) el.textContent=text;
+  if(!el||!raw) return;
+  try{
+    const obj=JSON.parse(raw);
+    el.textContent=currentLang==='en'&&obj.en?obj.en:(obj.id||raw);
+  }catch(e){ el.textContent=raw; }
 }
 function applyCountdown(raw){
   try{
