@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WNJ Little W🌏rld — Digital Education Series</title>
+<!-- PWA Meta Tags -->
+<meta name="theme-color" content="#C9B8F0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="WNJ Little World">
+<meta name="description" content="Produk digital edukasi kreatif untuk si kecil yang cerdas ✨">
+<link rel="manifest" id="pwaManifest">
+<link rel="apple-touch-icon" id="appleTouchIcon">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -3230,5 +3239,138 @@ window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('load
       </div>
     </div>
   </div>
+
+<!-- PWA Setup -->
+<script>
+(function setupPWA(){
+  // Generate app icon via canvas
+  function makeIcon(size){
+    try{
+      const c=document.createElement('canvas');
+      c.width=c.height=size;
+      const ctx=c.getContext('2d');
+      // Background gradient lavender→pink
+      const g=ctx.createLinearGradient(0,0,size,size);
+      g.addColorStop(0,'#C9B8F0');g.addColorStop(1,'#FFB3C6');
+      ctx.fillStyle=g;
+      // Rounded rect
+      const r=size*.22;
+      ctx.beginPath();ctx.moveTo(r,0);ctx.lineTo(size-r,0);
+      ctx.quadraticCurveTo(size,0,size,r);ctx.lineTo(size,size-r);
+      ctx.quadraticCurveTo(size,size,size-r,size);ctx.lineTo(r,size);
+      ctx.quadraticCurveTo(0,size,0,size-r);ctx.lineTo(0,r);
+      ctx.quadraticCurveTo(0,0,r,0);ctx.closePath();ctx.fill();
+      // Globe emoji
+      ctx.font=`${size*.55}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('🌍',size/2,size*.52);
+      return c.toDataURL('image/png');
+    }catch(e){return '';}
+  }
+
+  window.addEventListener('load',function(){
+    const icon192=makeIcon(192);
+    const icon512=makeIcon(512);
+
+    // Set apple touch icon
+    const appleIcon=document.getElementById('appleTouchIcon');
+    if(appleIcon&&icon192) appleIcon.href=icon192;
+
+    // Create & attach manifest
+    const manifest={
+      name:'WNJ Little W🌍rld',
+      short_name:'WNJ Store',
+      description:'Produk digital edukasi kreatif untuk si kecil yang cerdas ✨',
+      start_url:'./',scope:'./',
+      display:'standalone',
+      background_color:'#f8f0ff',
+      theme_color:'#C9B8F0',
+      orientation:'portrait-primary',
+      icons:[
+        {src:icon192,sizes:'192x192',type:'image/png',purpose:'any maskable'},
+        {src:icon512,sizes:'512x512',type:'image/png',purpose:'any maskable'}
+      ]
+    };
+    const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+    const mLink=document.getElementById('pwaManifest');
+    if(mLink) mLink.href=URL.createObjectURL(blob);
+
+    // Register Service Worker (untuk offline & install prompt)
+    if('serviceWorker' in navigator){
+      const swCode=`
+        const CACHE_NAME='wnj-store-v1';
+        const urlsToCache=[self.location.href];
+        self.addEventListener('install',e=>{
+          self.skipWaiting();
+          e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(urlsToCache).catch(()=>{})));
+        });
+        self.addEventListener('activate',e=>{
+          e.waitUntil(
+            caches.keys().then(keys=>Promise.all(
+              keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k))
+            )).then(()=>self.clients.claim())
+          );
+        });
+        self.addEventListener('fetch',e=>{
+          e.respondWith(
+            fetch(e.request).then(res=>{
+              const clone=res.clone();
+              caches.open(CACHE_NAME).then(c=>c.put(e.request,clone));
+              return res;
+            }).catch(()=>caches.match(e.request))
+          );
+        });
+      `;
+      const swBlob=new Blob([swCode],{type:'application/javascript'});
+      const swUrl=URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl,{scope:'./'}).catch(()=>{});
+    }
+
+    // Show install banner
+    let deferredPrompt=null;
+    window.addEventListener('beforeinstallprompt',e=>{
+      e.preventDefault();
+      deferredPrompt=e;
+      const banner=document.getElementById('pwaInstallBanner');
+      if(banner) banner.style.display='flex';
+    });
+    window.pwaInstall=function(){
+      if(!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(()=>{
+        deferredPrompt=null;
+        const banner=document.getElementById('pwaInstallBanner');
+        if(banner) banner.style.display='none';
+      });
+    };
+    window.pwaDismiss=function(){
+      const banner=document.getElementById('pwaInstallBanner');
+      if(banner) banner.style.display='none';
+      try{localStorage.setItem('wnj_pwa_dismissed','1');}catch(e){}
+    };
+    // Don't show if already dismissed
+    try{if(localStorage.getItem('wnj_pwa_dismissed')) return;}catch(e){}
+  });
+})();
+</script>
+
+<!-- PWA Install Banner -->
+<div id="pwaInstallBanner" style="display:none;position:fixed;bottom:80px;left:12px;right:12px;
+  background:linear-gradient(135deg,#a78edf,#f472b6);color:#fff;border-radius:18px;
+  padding:14px 16px;z-index:9990;align-items:center;gap:12px;
+  box-shadow:0 8px 28px rgba(167,142,223,.45);animation:slideUp .4s ease;">
+  <div style="font-size:28px;">📲</div>
+  <div style="flex:1;">
+    <div style="font-family:'Fredoka One',cursive;font-size:.88rem;">Install WNJ Store!</div>
+    <div style="font-size:.65rem;opacity:.9;font-family:'Nunito',sans-serif;margin-top:1px;">Akses lebih cepat dari home screen</div>
+  </div>
+  <button onclick="window.pwaInstall()" style="background:#fff;color:#a78edf;border:none;border-radius:20px;
+    padding:7px 14px;font-size:.72rem;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;white-space:nowrap;">
+    Install ✨
+  </button>
+  <button onclick="window.pwaDismiss()" style="background:rgba(255,255,255,.2);border:none;border-radius:50%;
+    width:26px;height:26px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+    ✕
+  </button>
+</div>
 </body>
 </html>
