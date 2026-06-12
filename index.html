@@ -1846,6 +1846,10 @@ function sortedProducts(list){
 let currentSort='default';
 function setSort(type,el){
   currentSort=type;
+  activeFilter='Semua';
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  const semuaChip=document.querySelector('.cat-chip');
+  if(semuaChip) semuaChip.classList.add('active');
   document.querySelectorAll('.sort-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
   renderProducts();
