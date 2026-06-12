@@ -452,13 +452,28 @@ footer p{font-size:.63rem;color:rgba(255,255,255,.85);font-family:'Nunito',sans-
   border:2px solid rgba(255,133,161,.2);}
 
 /* Testimonial */
-.testi-section{margin:0 12px 18px;}
-.testi-card{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:0 4px 14px var(--shadow);
-  border-left:4px solid var(--pink-d);}
-.testi-text{font-size:.7rem;color:var(--text);font-family:'Quicksand',sans-serif;line-height:1.6;margin-bottom:8px;font-style:italic;}
-.testi-bottom{display:flex;align-items:center;justify-content:space-between;}
-.testi-name{font-size:.6rem;font-weight:700;color:var(--lav-d);font-family:'Nunito',sans-serif;}
-.testi-stars{font-size:.7rem;}
+.testi-section{margin:0 12px 18px;display:flex;flex-direction:column;gap:12px;}
+.testi-card{
+  background:#fff;border-radius:20px;padding:16px;
+  box-shadow:0 6px 24px rgba(167,142,223,.15);
+  border:1.5px solid rgba(167,142,223,.15);
+  position:relative;overflow:hidden;
+  transition:transform .2s,box-shadow .2s;}
+.testi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--pink-d),var(--lav-d),var(--mint-d));}
+.testi-card:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(167,142,223,.22);}
+.testi-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:17px;color:#fff;font-weight:800;font-family:'Fredoka One',cursive;flex-shrink:0;
+  box-shadow:0 3px 10px rgba(0,0,0,.15);}
+.testi-verified{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#e8f8f0,#d4f5e4);
+  color:#2d9e6b;font-size:.55rem;font-weight:800;font-family:'Nunito',sans-serif;
+  padding:2px 7px;border-radius:20px;border:1px solid rgba(45,158,107,.2);}
+.testi-quote{font-size:.72rem;color:var(--text);font-family:'Quicksand',sans-serif;
+  line-height:1.65;margin:10px 0 0;position:relative;padding-left:14px;}
+.testi-quote::before{content:'"';position:absolute;left:0;top:-4px;font-size:1.6rem;
+  color:var(--lav-d);font-family:Georgia,serif;line-height:1;opacity:.5;}
+.testi-stars-row{font-size:.75rem;letter-spacing:1px;}
 .testi-empty{text-align:center;padding:20px;color:var(--dim);font-size:.7rem;font-family:'Nunito',sans-serif;}
 
 /* About */
@@ -2082,20 +2097,32 @@ async function renderTestis(){
   const el=document.getElementById('testiSection');if(!el)return;
   const arr=await dbGetTestis();
   if(!arr.length){el.innerHTML=`<div class="testi-empty">Belum ada testimoni. Jadilah yang pertama! ⭐</div>`;return;}
-  const ACOLORS=['#a78edf','#f472b6','#4ade80','#60a5fa','#fbbf24','#fb923c'];
+  const AVATARCOLORS=[
+    'linear-gradient(135deg,#a78edf,#c084fc)',
+    'linear-gradient(135deg,#f472b6,#fb7185)',
+    'linear-gradient(135deg,#34d399,#6ee7b7)',
+    'linear-gradient(135deg,#60a5fa,#818cf8)',
+    'linear-gradient(135deg,#fbbf24,#f59e0b)',
+    'linear-gradient(135deg,#fb923c,#f87171)',
+    'linear-gradient(135deg,#e879f9,#a855f7)',
+    'linear-gradient(135deg,#2dd4bf,#34d399)',
+  ];
   el.innerHTML=arr.map(t=>{
     const initial=(t.name||'?')[0].toUpperCase();
-    const color=ACOLORS[(t.name||'').charCodeAt(0)%ACOLORS.length];
+    const grad=AVATARCOLORS[(t.name||'').charCodeAt(0)%AVATARCOLORS.length];
+    const stars=Math.min(5,Math.max(1,t.stars||5));
     return `<div class="testi-card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-        <div style="width:38px;height:38px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:800;font-family:'Fredoka One',cursive;flex-shrink:0;">${initial}</div>
-        <div style="flex:1;">
-          <div style="font-weight:800;font-size:.82rem;font-family:'Nunito',sans-serif;color:var(--text);">${t.name}</div>
-          <div style="font-size:.65rem;color:#4caf50;font-weight:700;font-family:'Nunito',sans-serif;">✅ Pembeli Terverifikasi</div>
+      <div style="display:flex;align-items:flex-start;gap:11px;">
+        <div class="testi-avatar" style="background:${grad};">${initial}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;">
+            <div style="font-weight:800;font-size:.83rem;font-family:'Nunito',sans-serif;color:var(--text);">${t.name}</div>
+            <div class="testi-stars-row">${'⭐'.repeat(stars)}</div>
+          </div>
+          <div style="margin-top:3px;"><span class="testi-verified">✅ Pembeli Terverifikasi</span></div>
         </div>
-        <div style="font-size:.85rem;">${'⭐'.repeat(t.stars||5)}</div>
       </div>
-      <div class="testi-text">"${t.text}"</div>
+      <div class="testi-quote">${t.text}</div>
     </div>`;
   }).join('');
 }
