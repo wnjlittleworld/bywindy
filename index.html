@@ -55,7 +55,7 @@ body{background:var(--off);color:var(--text);font-family:'Quicksand',sans-serif;
 .brand{display:flex;align-items:center;gap:9px;}
 .brand-badge{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,var(--pink),var(--lav));
   display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 4px 12px rgba(200,140,220,.3);flex-shrink:0;}
-.brand-text h1{font-family:'Fredoka One',cursive;font-size:clamp(.78rem,3vw,1rem);color:var(--lav-d);line-height:1.1;}
+.brand-text h1{font-family:'Fredoka One',cursive;font-size:clamp(.72rem,2.6vw,.92rem);color:var(--lav-d);line-height:1.1;white-space:nowrap;}
 .brand-text p{font-size:.48rem;color:var(--dim);letter-spacing:.06em;font-family:'Nunito',sans-serif;}
 .nav-actions{display:flex;align-items:center;gap:7px;}
 .btn-admin{background:linear-gradient(135deg,var(--lav-d),var(--lav-dd));border:none;border-radius:18px;padding:7px 13px;
@@ -3204,7 +3204,8 @@ function applyCountdown(raw){
 }
 
 init();
-window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('hidden'),2600);});
+// Loader selalu hilang setelah 2.6 detik, gak nunggu gambar selesai load
+setTimeout(()=>{const l=document.getElementById('loader');if(l)l.classList.add('hidden');},2600);
 </script>
 
   <!-- Launching Popup -->
