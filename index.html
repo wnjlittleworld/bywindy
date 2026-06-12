@@ -8,7 +8,7 @@
 <style>
 :root {
   --pink:#FFB3C6; --pink-d:#ff85a1; --pink-dd:#e05580;
-  --lav:#C9B8F0;  --lav-d:#a78edf;  --lav-dd:#7c5abf;
+  --lav:#C9B8F0;  --lav-d:#a78edf;  --lav-dd:#7c5abf; --lav-l:#ede8ff;
   --mint:#B5EAD7; --mint-d:#6dcfaa;
   --peach:#FFDAC1;--peach-d:#ffaa77;
   --yellow:#FFF3B0;--yellow-d:#ffd93d;
@@ -1396,6 +1396,7 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
 <script>
 const EMOJIS=['📚','📖','📝','✏️','🖍️','🎨','🔢','🔤','🔬','🧪','🌍','🌈','⭐','🎓','🧩','🎯','🃏','📋','📌','🗓️','🎁','🌸','🦁','🐧','🦊','🐸','🌟','💡','🏆','🎉','🖼️','🎪','🌺','🦋','🐣'];
 const COLORS=['c0','c1','c2','c3','c4','c5'];
+const USD_RATE=16000; // 1 USD ≈ Rp 16.000
 const ADMIN_USER='admin';
 const ADMIN_PASS='wnj2025';
 
@@ -1797,11 +1798,20 @@ promoLine+noteLine+
 function getCategories(){return['Semua',...new Set(products.map(p=>p.cat))];}
 function renderCats(){
   const cats=getCategories();
-  document.getElementById('catList').innerHTML=cats.map(c=>{
+  // Simpan mapping index → nama kategori (hindari escape emoji rusak)
+  window._catMap = cats;
+  document.getElementById('catList').innerHTML=cats.map((c,i)=>{
     const count=c==='Semua'?products.length:products.filter(p=>p.cat===c).length;
-    const safe=c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-    return `<div class="cat-chip${c===activeFilter?' active':''}" onclick="filterCat('${safe}',this)">${c}<span class="cat-count">${count}</span></div>`;
+    return `<div class="cat-chip${c===activeFilter?' active':''}" onclick="filterCatIdx(${i},this)">${c}<span class="cat-count">${count}</span></div>`;
   }).join('');
+}
+function filterCatIdx(idx,el){
+  const cat=window._catMap[idx];
+  if(!cat) return;
+  activeFilter=cat;
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts();
 }
 function filterCat(cat,el){
   activeFilter=cat;
@@ -1810,7 +1820,14 @@ function filterCat(cat,el){
   renderProducts();
 }
 function filteredProducts(){
-  let list=activeFilter==='Semua'?products:products.filter(p=>p.cat===activeFilter);
+  let list;
+  if(activeFilter==='Semua'){
+    list=products;
+  } else {
+    // Normalize comparison untuk handle emoji unicode
+    const af=activeFilter.normalize('NFC');
+    list=products.filter(p=>p.cat.normalize('NFC')===af);
+  }
   if(searchQ)list=list.filter(p=>p.name.toLowerCase().includes(searchQ)||p.cat.toLowerCase().includes(searchQ));
   return sortedProducts(list);
 }
@@ -2645,7 +2662,7 @@ function showLaunchingPopup(){
 function closeLaunchingPopup(shop){
   document.getElementById('launchingOverlay').style.display='none';
   localStorage.setItem('wnj_launching_shown', new Date().toDateString());
-  if(shop) document.getElementById('prodGrid')?.scrollIntoView({behavior:'smooth'});
+  if(shop) document.getElementById('products')?.scrollIntoView({behavior:'smooth'});
 }
 function spawnConfetti(){
   const colors=['#a78edf','#f472b6','#ff9a3c','#4ade80','#60a5fa','#fbbf24'];
@@ -2729,7 +2746,7 @@ function applyPromoCode(){
   }
 }
 function updateCartWithPromo(){
-  renderCart();
+  updateCart();
 }
 function getDiscountedTotal(total){
   if(!appliedPromo) return total;
