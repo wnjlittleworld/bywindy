@@ -3053,11 +3053,28 @@ function fmtPrice(rp, cat){
 }
 
 
+/* CACHE PRODUK — supaya gak ilang saat refresh */
+function saveProductsCache(prods){
+  try{localStorage.setItem('wnj_products_cache',JSON.stringify(prods));}catch(e){}
+}
+function loadProductsCache(){
+  try{const c=localStorage.getItem('wnj_products_cache');return c?JSON.parse(c):[];}catch(e){return[];}
+}
+
 /* INIT */
 async function init(){
-  showToast('⏳ Memuat...');
+  const stocks=JSON.parse(localStorage.getItem('wnj_stocks')||'{}');
 
-  // 1. Langsung apply settings dari localStorage dulu (biar gak hilang saat refresh)
+  // 1. Tampilkan dari cache dulu (INSTAN, gak nunggu Supabase)
+  const cached=loadProductsCache();
+  if(cached.length){
+    products=cached.map(p=>({...p,stock:stocks[p.id]||p.stock||null}));
+    renderCats();renderProducts();
+  } else {
+    showToast('⏳ Memuat...');
+  }
+
+  // 2. Apply settings dari localStorage
   ['banner','jam','about','countdown'].forEach(k=>{
     try{
       const v=localStorage.getItem('wnj_setting_'+k);
@@ -3070,27 +3087,26 @@ async function init(){
     }catch(e){}
   });
 
-  // 2. Load products dan settings dari Supabase
-  const [prods, settings] = await Promise.all([
-    dbGetProducts(),
-    dbGetAllSettings()
-  ]);
+  loadCart();updateCart();loadDark();loadTheme();initWaBubble();showLaunchingPopup();initLang();
 
-  // 3. Merge stock dari localStorage
-  const stocks=JSON.parse(localStorage.getItem('wnj_stocks')||'{}');
-  products = prods.map(p=>({...p,stock:stocks[p.id]||p.stock||null}));
-  renderCats();renderProducts();
-
-  // 4. Apply settings dari Supabase (override localStorage)
-  if(settings.banner) applyBanner(settings.banner);
-  if(settings.jam) applyJam(settings.jam);
-  if(settings.about) applyAbout(settings.about);
-  if(settings.countdown) applyCountdown(settings.countdown);
+  // 3. Fetch Supabase di background (tanpa blocking tampilan)
+  try{
+    const [prods, settings] = await Promise.all([dbGetProducts(), dbGetAllSettings()]);
+    if(prods && prods.length){
+      products=prods.map(p=>({...p,stock:stocks[p.id]||p.stock||null}));
+      saveProductsCache(products);
+      renderCats();renderProducts();
+    }
+    if(settings.banner) applyBanner(settings.banner);
+    if(settings.jam) applyJam(settings.jam);
+    if(settings.about) applyAbout(settings.about);
+    if(settings.countdown) applyCountdown(settings.countdown);
+  }catch(e){}
 
   await renderTestis();
-  loadCart();updateCart();loadDark();loadTheme();initWaBubble();showLaunchingPopup();initLang();renderAdminPromos();
+  renderAdminPromos();
   setTimeout(showNewProductPopup,3000);
-  showToast('✅ Toko berhasil dimuat!');
+  if(!cached.length) showToast('✅ Toko berhasil dimuat!');
 }
 
 function applyBanner(raw){
