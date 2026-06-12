@@ -2198,8 +2198,9 @@ function closeDetail(){
 }
 // Helper untuk buka produk dari related/recommend cards
 function openDetailById(id){
-  closeDetail();
-  setTimeout(()=>openDetail(id),220);
+  const modal=document.getElementById('detailModal');
+  if(modal) modal.scrollTop=0;
+  openDetail(id);
 }
 
 /* WA */
