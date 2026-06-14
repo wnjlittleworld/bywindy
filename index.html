@@ -2407,20 +2407,24 @@ function renderAdminStats(){
   document.getElementById('aDisc').textContent=products.filter(p=>p.orig&&p.orig>p.price).length;
   document.getElementById('aBest').textContent=products.filter(p=>p.best).length;
   document.getElementById('aNew').textContent=products.filter(p=>p.badge==='new'||p.badge==='NEW').length;
-  const wishlist=getWishlist();
-  document.getElementById('aWish').textContent=wishlist.length;
+  // Total wish dari Supabase (semua customer)
+  const totalWish=products.reduce((s,p)=>s+(p.wish_count||0),0);
+  document.getElementById('aWish').textContent=totalWish;
   document.getElementById('prodCount').textContent=total;
-  // Top products by best seller flag
+  // Top produk terfavorit customer (dari Supabase wish_count)
   const topEl=document.getElementById('topProductsList');
   if(topEl){
-    const bestProds=products.filter(p=>p.best).slice(0,3);
-    topEl.innerHTML=bestProds.length
-      ?bestProds.map((p,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(167,142,223,.1);">
-        <span style="font-size:1.1rem;">${['🥇','🥈','🥉'][i]}</span>
-        <span style="flex:1;">${p.emoji} ${p.name}</span>
-        <span style="color:var(--lav-d);font-weight:700;">${fmtRp(p.price)}</span>
+    const wished=[...products].filter(p=>p.wish_count>0).sort((a,b)=>(b.wish_count||0)-(a.wish_count||0)).slice(0,5);
+    topEl.innerHTML=wished.length
+      ?wished.map((p,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(167,142,223,.1);">
+        <span style="font-size:1.1rem;">${['🥇','🥈','🥉','4️⃣','5️⃣'][i]||'⭐'}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:.78rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.emoji} ${p.name}</div>
+          <div style="font-size:.65rem;color:var(--dim);">❤️ ${p.wish_count} customer suka</div>
+        </div>
+        <span style="color:var(--pink-d);font-weight:800;font-size:.75rem;">${fmtRp(p.price)}</span>
       </div>`).join('')
-      :'<p style="color:#aaa;font-size:.75rem;">Tandai produk sebagai Terlaris di admin</p>';
+      :'<p style="color:#aaa;font-size:.75rem;text-align:center;padding:10px 0;">Belum ada customer yang memfavoritkan produk</p>';
   }
 }
 
@@ -2742,15 +2746,33 @@ function toggleAdminCurrency(btnId, priceId, origId){
 function getWishlist(){try{return JSON.parse(localStorage.getItem('wnj_wishlist')||'[]');}catch(e){return[];}}
 function saveWishlist(list){try{localStorage.setItem('wnj_wishlist',JSON.stringify(list));}catch(e){}}
 function isWishlisted(id){return getWishlist().includes(id);}
+// Kirim wish_count ke Supabase
+async function dbUpdateWishCount(id, delta){
+  try{
+    const p=products.find(x=>x.id===id);
+    const cur=p&&p.wish_count?Number(p.wish_count):0;
+    const newCount=Math.max(0,cur+delta);
+    await fetch(SUPA_URL+'/rest/v1/products?id=eq.'+id,{
+      method:'PATCH',
+      headers:{...SUPA_HEADERS,'Content-Type':'application/json'},
+      body:JSON.stringify({wish_count:newCount})
+    });
+    if(p) p.wish_count=newCount; // update local
+  }catch(e){}
+}
+
 function toggleWishlist(e,id){
   e.stopPropagation();
   let list=getWishlist();
-  if(list.includes(id)){
+  const wasLiked=list.includes(id);
+  if(wasLiked){
     list=list.filter(x=>x!==id);
     showToast('💔 Dihapus dari favorit');
+    dbUpdateWishCount(id,-1); // kurangi di Supabase
   } else {
     list.push(id);
     showToast('❤️ Ditambahkan ke favorit!');
+    dbUpdateWishCount(id,+1); // tambah di Supabase
   }
   saveWishlist(list);
   renderProducts();
@@ -3206,6 +3228,21 @@ function applyCountdown(raw){
 init();
 // Loader selalu hilang setelah 2.6 detik, gak nunggu gambar selesai load
 setTimeout(()=>{const l=document.getElementById('loader');if(l)l.classList.add('hidden');},2600);
+
+// Simpan cart & wishlist sebelum browser ditutup/refresh
+window.addEventListener('beforeunload',()=>{saveCart();});
+
+// Test apakah localStorage berfungsi
+(function testStorage(){
+  try{
+    localStorage.setItem('wnj_test','1');
+    if(localStorage.getItem('wnj_test')!=='1') throw new Error();
+    localStorage.removeItem('wnj_test');
+  }catch(e){
+    // localStorage gak support (file lokal / mode incognito)
+    console.warn('[WNJ] localStorage tidak tersedia. Data keranjang & favorit tidak akan tersimpan. Akses via URL Netlify untuk fitur lengkap.');
+  }
+})();
 </script>
 
   <!-- Launching Popup -->
