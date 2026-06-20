@@ -1035,12 +1035,12 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
 <div class="login-modal" id="loginModal">
   <h2>🔐 Admin Login</h2>
   <p class="sub">Masuk ke panel admin WNJ Little W🌏rld</p>
-  <label class="field-label">Username</label>
-  <input class="field-input" id="loginUser" type="text" placeholder="Username" autocomplete="off">
+  <label class="field-label">Email</label>
+  <input class="field-input" id="loginUser" type="email" placeholder="Email admin" autocomplete="off">
   <label class="field-label">Password</label>
   <input class="field-input" id="loginPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
-  <div class="login-err" id="loginErr">❌ Username atau password salah!</div>
-  <button class="login-btn" onclick="doLogin()">Masuk →</button>
+  <div class="login-err" id="loginErr">❌ Email atau password salah!</div>
+  <button class="login-btn" id="loginBtn" onclick="doLogin()">Masuk →</button>
 </div>
 
 <!-- ADMIN PANEL -->
@@ -1422,13 +1422,29 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
 const EMOJIS=['📚','📖','📝','✏️','🖍️','🎨','🔢','🔤','🔬','🧪','🌍','🌈','⭐','🎓','🧩','🎯','🃏','📋','📌','🗓️','🎁','🌸','🦁','🐧','🦊','🐸','🌟','💡','🏆','🎉','🖼️','🎪','🌺','🦋','🐣'];
 const COLORS=['c0','c1','c2','c3','c4','c5'];
 const USD_RATE=16000; // 1 USD ≈ Rp 16.000
-const ADMIN_USER='admin';
-const ADMIN_PASS='wnj2025';
-
 /* SUPABASE CONFIG */
 const SUPA_URL='https://qoanlvyctussscpawsoh.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFvYW5sdnljdHVzc3NjcGF3c29oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4OTYxOTAsImV4cCI6MjA5NTQ3MjE5MH0.pEiEeDh4tG2QgRay4gf-lfy1wtwH744aR6J3raqGHMo';
 const SUPA_HEADERS={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
+
+/* ADMIN AUTH — real Supabase login, no hardcoded password anymore */
+let ADMIN_TOKEN=null; // diisi setelah login Supabase berhasil
+try{ADMIN_TOKEN=sessionStorage.getItem('wnj_admin_token')||null;}catch(e){}
+function writeHeaders(){
+  return {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+(ADMIN_TOKEN||SUPA_KEY)};
+}
+async function supabaseSignIn(email,password){
+  try{
+    const r=await fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY},
+      body:JSON.stringify({email,password})
+    });
+    if(!r.ok) return null;
+    const data=await r.json();
+    return data.access_token||null;
+  }catch(e){return null;}
+}
 
 async function dbGetProducts(){
   try{
@@ -1445,7 +1461,7 @@ async function dbGetProducts(){
 async function dbAddProduct(p){
   try{
     const r=await fetch(SUPA_URL+'/rest/v1/products',{
-      method:'POST',headers:{...SUPA_HEADERS,'Prefer':'return=representation'},
+      method:'POST',headers:{...writeHeaders(),'Prefer':'return=representation'},
       body:JSON.stringify({name:p.name,cat:p.cat,price:p.price,orig:p.orig,
         emoji:p.emoji,badge:p.badge,stars:p.stars,best:p.best,
         description:p.desc,img:p.img,link:p.link})
@@ -1465,7 +1481,7 @@ async function dbUpdateProduct(p){
       description:p.desc||null,img:p.img||null,link:p.link||null
     };
     await fetch(SUPA_URL+'/rest/v1/products?id=eq.'+p.id,{
-      method:'PATCH',headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
+      method:'PATCH',headers:{...writeHeaders(),'Prefer':'return=minimal'},
       body:JSON.stringify(body)
     });
   }catch(e){}
@@ -1473,7 +1489,7 @@ async function dbUpdateProduct(p){
 async function dbDeleteProduct(id){
   try{
     await fetch(SUPA_URL+'/rest/v1/products?id=eq.'+id,{
-      method:'DELETE',headers:SUPA_HEADERS
+      method:'DELETE',headers:writeHeaders()
     });
   }catch(e){}
 }
@@ -2288,10 +2304,19 @@ function closeAdminLogin(){
   document.getElementById('adminOverlay').classList.remove('open');
   document.getElementById('loginModal').classList.remove('open');
 }
-function doLogin(){
+async function doLogin(){
   const u=document.getElementById('loginUser').value.trim();
   const p=document.getElementById('loginPass').value;
-  if(u===ADMIN_USER&&p===ADMIN_PASS){closeAdminLogin();openAdmin();}
+  const btn=document.getElementById('loginBtn');
+  if(!u||!p){document.getElementById('loginErr').classList.add('show');return;}
+  if(btn){btn.disabled=true;btn.textContent='Memeriksa...';}
+  const token=await supabaseSignIn(u,p);
+  if(btn){btn.disabled=false;btn.textContent='Masuk →';}
+  if(token){
+    ADMIN_TOKEN=token;
+    try{sessionStorage.setItem('wnj_admin_token',token);}catch(e){}
+    closeAdminLogin();openAdmin();
+  }
   else{document.getElementById('loginErr').classList.add('show');document.getElementById('loginPass').value='';document.getElementById('loginPass').focus();}
 }
 function openAdmin(){
@@ -2304,7 +2329,11 @@ function openAdmin(){
   renderTestiAdmin();loadCountdownInput();
 }
 function closeAdmin(){document.getElementById('adminPanel').classList.remove('open');renderProducts();renderCats();}
-function doLogout(){closeAdmin();showToast('👋 Logout berhasil!');}
+function doLogout(){
+  ADMIN_TOKEN=null;
+  try{sessionStorage.removeItem('wnj_admin_token');}catch(e){}
+  closeAdmin();showToast('👋 Logout berhasil!');
+}
 
 /* STAT DETAIL MODAL */
 function showStatDetail(type){
