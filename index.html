@@ -1000,6 +1000,24 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
   <div id="detailContent"></div>
 </div>
 
+<!-- DOWNLOAD SUCCESS MODAL -->
+<div id="downloadOverlay" onclick="closeDownloadModal()" style="display:none;position:fixed;inset:0;background:rgba(80,50,120,.55);z-index:1500;backdrop-filter:blur(4px);"></div>
+<div id="downloadModal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:24px;width:min(400px,92vw);max-height:85vh;overflow-y:auto;z-index:1501;box-shadow:0 24px 64px rgba(180,130,200,.4);">
+  <div style="background:linear-gradient(135deg,#6dcfaa,#60b8f0);padding:24px 20px;border-radius:24px 24px 0 0;text-align:center;">
+    <div style="font-size:2.6rem;">🎉</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:1.15rem;color:#fff;margin-top:6px;">Pembayaran Berhasil!</div>
+    <div style="font-size:.75rem;color:rgba(255,255,255,.9);font-family:'Nunito',sans-serif;margin-top:3px;">Terima kasih sudah belanja di WNJ Little World 💕</div>
+  </div>
+  <div style="padding:18px 20px;">
+    <div style="font-weight:800;font-size:.85rem;color:var(--text);font-family:'Nunito',sans-serif;margin-bottom:10px;">📥 Download produk kamu:</div>
+    <div id="downloadLinksList"></div>
+    <div style="margin-top:14px;padding:10px 12px;background:#f8f5ff;border-radius:12px;font-size:.68rem;color:var(--dim);font-family:'Nunito',sans-serif;">
+      💡 Link ini juga udah tersimpan, kamu bisa cek riwayat pesanan kapan aja. Kalau ada link belum muncul, chat admin via WA ya.
+    </div>
+    <button onclick="closeDownloadModal()" style="width:100%;margin-top:14px;background:linear-gradient(135deg,var(--pink-d),var(--lav-d));color:#fff;border:none;border-radius:14px;padding:13px;font-weight:800;font-size:.85rem;font-family:'Nunito',sans-serif;cursor:pointer;">Selesai ✨</button>
+  </div>
+</div>
+
 <!-- WA FLOAT BUTTON -->
 <div class="wa-bubble-msg" id="waBubbleMsg">Halo! Ada yang bisa kami bantu? 😊</div>
 <button class="wa-float" id="waFloat" onclick="openWaChat()">
@@ -1292,6 +1310,12 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
         <div class="form-group full">
           <label class="form-label">🔗 Link Produk (Google Drive, Shopee, dll)</label>
           <input class="form-input" id="fLink" type="url" placeholder="https://drive.google.com/...">
+          <div style="font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:4px;">💡 Ini link PREVIEW, kelihatan oleh semua orang (belum bayar pun bisa lihat)</div>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">🔒 Link File Asli (dikirim otomatis setelah bayar)</label>
+          <input class="form-input" id="fDownloadLink" type="url" placeholder="https://drive.google.com/file/d/.../view">
+          <div style="font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:4px;">🔐 Link RAHASIA — cuma muncul ke customer setelah pembayaran sukses</div>
         </div>
       </div>
       <button class="btn-add-product" onclick="addProduct()">✨ Tambah Produk</button>
@@ -1403,6 +1427,12 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
   <div class="form-group full" style="margin-top:11px;">
     <label class="form-label">🔗 Link Produk (Google Drive, Shopee, dll)</label>
     <input class="form-input" id="eLink" type="url" placeholder="https://...">
+    <div style="font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:4px;">💡 Ini link PREVIEW, kelihatan oleh semua orang</div>
+  </div>
+  <div class="form-group full" style="margin-top:11px;">
+    <label class="form-label">🔒 Link File Asli (dikirim otomatis setelah bayar)</label>
+    <input class="form-input" id="eDownloadLink" type="url" placeholder="https://drive.google.com/file/d/.../view">
+    <div style="font-size:.55rem;color:var(--dim);font-family:'Nunito',sans-serif;margin-top:4px;">🔐 Link RAHASIA — cuma muncul setelah pembayaran sukses</div>
   </div>
   <button class="btn-save" onclick="saveEdit()">💾 Simpan Perubahan</button>
 </div>
@@ -1441,7 +1471,8 @@ async function dbGetProducts(){
       id:p.id,name:p.name,cat:p.cat,price:p.price,orig:p.orig,
       emoji:p.emoji||'📦',badge:p.badge,
       stars:p.stars===null||p.stars===undefined?5:Number(p.stars),
-      best:p.best||false,desc:p.description,img:p.img,link:p.link||''
+      best:p.best||false,desc:p.description,img:p.img,link:p.link||'',
+      download_link:p.download_link||'',wish_count:p.wish_count||0
     }));
   }catch(e){return [];}
 }
@@ -1451,7 +1482,7 @@ async function dbAddProduct(p){
       method:'POST',headers:{...SUPA_HEADERS,'Prefer':'return=representation'},
       body:JSON.stringify({name:p.name,cat:p.cat,price:p.price,orig:p.orig,
         emoji:p.emoji,badge:p.badge,stars:p.stars,best:p.best,
-        description:p.desc,img:p.img,link:p.link})
+        description:p.desc,img:p.img,link:p.link,download_link:p.download_link||null})
     });
     const txt=await r.text();
     if(!r.ok){showToast('❌ Error '+r.status+': '+txt.substring(0,80));return null;}
@@ -1465,7 +1496,8 @@ async function dbUpdateProduct(p){
       name:p.name,cat:p.cat,price:p.price,
       orig:p.orig||null,emoji:p.emoji,badge:p.badge||null,
       stars:Number(p.stars),best:p.best,
-      description:p.desc||null,img:p.img||null,link:p.link||null
+      description:p.desc||null,img:p.img||null,link:p.link||null,
+      download_link:p.download_link||null
     };
     await fetch(SUPA_URL+'/rest/v1/products?id=eq.'+p.id,{
       method:'PATCH',headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
@@ -1792,6 +1824,31 @@ async function dbUpdateOrderStatus(orderId,status){
   }catch(e){}
 }
 
+// Modal sukses bayar + link download
+function showDownloadModal(purchasedItems){
+  const list=document.getElementById('downloadLinksList');
+  list.innerHTML=purchasedItems.map(it=>{
+    if(it.download_link){
+      return `<a href="${it.download_link}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;background:#f0fbf6;border:1.5px solid rgba(109,207,170,.3);border-radius:14px;padding:12px;margin-bottom:8px;text-decoration:none;">
+        <span style="font-size:1.4rem;">📥</span>
+        <span style="flex:1;font-weight:700;font-size:.78rem;color:var(--text);font-family:'Nunito',sans-serif;">${it.name}</span>
+        <span style="background:var(--mint-d);color:#fff;font-size:.65rem;font-weight:800;padding:5px 10px;border-radius:20px;font-family:'Nunito',sans-serif;">Download</span>
+      </a>`;
+    } else {
+      return `<div style="display:flex;align-items:center;gap:10px;background:#fff8f0;border:1.5px solid rgba(255,170,119,.3);border-radius:14px;padding:12px;margin-bottom:8px;">
+        <span style="font-size:1.4rem;">⏳</span>
+        <span style="flex:1;font-size:.75rem;color:var(--dim);font-family:'Nunito',sans-serif;"><b>${it.name}</b><br>Link sedang disiapkan admin, ditunggu ya~</span>
+      </div>`;
+    }
+  }).join('');
+  document.getElementById('downloadOverlay').style.display='block';
+  document.getElementById('downloadModal').style.display='block';
+}
+function closeDownloadModal(){
+  document.getElementById('downloadOverlay').style.display='none';
+  document.getElementById('downloadModal').style.display='none';
+}
+
 // Bayar via Midtrans Snap
 async function payViaMidtrans(){
   const name=document.getElementById('buyerNameInput').value.trim();
@@ -1836,11 +1893,26 @@ async function payViaMidtrans(){
 
     closeBuyerModal();
 
+    // Simpan info produk yang dibeli (untuk ditampilkan link download-nya)
+    const purchasedItems=items.map(it=>{
+      const prod=products.find(x=>String(x.id)===String(it.id));
+      return {name:prod?prod.name:it.name,download_link:prod?prod.download_link:''};
+    });
+
     window.snap.pay(data.token,{
       onSuccess:function(result){
         dbUpdateOrderStatus(orderId,'paid');
         if(checkoutMode==='cart'){cart=[];saveCart();updateCart();}
         showToast('✅ Pembayaran berhasil! Terima kasih 💕');
+        showDownloadModal(purchasedItems);
+        // Kirim juga via email kalau diisi
+        if(email){
+          emailjs.send('service_pd4awao','template_72eveyc',{
+            buyer_name:name,email:email,buyer_email:email,
+            product_name:purchasedItems.map(p=>p.name).join(', '),
+            total_price:fmtRp(total),payment_method:'Midtrans (Online)'
+          }).catch(()=>{});
+        }
       },
       onPending:function(result){
         dbUpdateOrderStatus(orderId,'pending');
@@ -2615,13 +2687,14 @@ async function addProduct(){
   const desc=document.getElementById('fDesc').value.trim();
   const img=document.getElementById('fImgData').value||null;
   const link=document.getElementById('fLink').value.trim()||'';
+  const downloadLink=document.getElementById('fDownloadLink').value.trim()||'';
   const stockVal=document.getElementById('fStock').value;
   const stock=stockVal&&Number(stockVal)>0?Number(stockVal):null;
   if(!name){showToast('❌ Nama produk wajib diisi!');return;}
   if(!cat||cat==='— Pilih Kategori —'){showToast('❌ Pilih kategori dulu!');return;}
   if(!price||price<=0){showToast('❌ Harga harus lebih dari 0!');return;}
   showToast('⏳ Menyimpan produk...');
-  const newP={id:null,name,cat,price,orig,emoji,badge,stars,best,desc,img,link};
+  const newP={id:null,name,cat,price,orig,emoji,badge,stars,best,desc,img,link,download_link:downloadLink};
   const saved=await dbAddProduct(newP);
   if(saved){
     // Save stock to localStorage (not in Supabase)
@@ -2640,7 +2713,7 @@ async function addProduct(){
   }
 }
 function clearAddForm(){
-  ['fName','fPrice','fOrig','fDesc','fLink','fCatCustom','fImgUrl'].forEach(id=>document.getElementById(id).value='');
+  ['fName','fPrice','fOrig','fDesc','fLink','fDownloadLink','fCatCustom','fImgUrl'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('fCatCustom').style.display='none';
   document.getElementById('fCat').value='';
   document.getElementById('fBadge').value='';
@@ -2702,6 +2775,7 @@ function openEdit(id){
   document.getElementById('eBest').value=p.best?'1':'0';
   document.getElementById('eStock').value=p.stock||'';
   document.getElementById('eLink').value=p.link||'';
+  document.getElementById('eDownloadLink').value=p.download_link||'';
   // load image
   const eImgData=document.getElementById('eImgData');
   const eImgUrl=document.getElementById('eImgUrl');
@@ -2742,6 +2816,7 @@ async function saveEdit(){
   const newImg=document.getElementById('eImgData').value;
   p.img=newImg||null;
   p.link=document.getElementById('eLink').value.trim()||'';
+  p.download_link=document.getElementById('eDownloadLink').value.trim()||'';
   showToast('⏳ Menyimpan...');
   await dbUpdateProduct(p);
   closeEdit();
