@@ -1907,11 +1907,14 @@ async function payViaMidtrans(){
         showDownloadModal(purchasedItems);
         // Kirim juga via email kalau diisi
         if(email){
+          const linksText=purchasedItems.map(p=>p.download_link?`📥 ${p.name}: ${p.download_link}`:`⏳ ${p.name}: (link sedang disiapkan, hubungi admin)`).join('\n');
           emailjs.send('service_pd4awao','template_72eveyc',{
             buyer_name:name,email:email,buyer_email:email,
             product_name:purchasedItems.map(p=>p.name).join(', '),
-            total_price:fmtRp(total),payment_method:'Midtrans (Online)'
-          }).catch(()=>{});
+            total_price:fmtRp(total),payment_method:'Midtrans (Online)',
+            download_links:linksText
+          }).then(()=>showToast('📧 Email konfirmasi terkirim!'))
+            .catch(e=>showToast('⚠️ Email gagal: '+(e.text||e.message||'unknown')));
         }
       },
       onPending:function(result){
