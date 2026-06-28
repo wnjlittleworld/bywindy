@@ -1047,7 +1047,7 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
       <span class="cart-total-label" id="txtTotalBelanja">Total Belanja</span>
       <span class="cart-total-price" id="cartTotal">Rp0</span>
     </div>
-    <button class="checkout-btn" onclick="openBuyerModal('cart')"><span id="txtCheckoutBtn">🛒 Checkout via WhatsApp 💬</span></button>
+    <button class="checkout-btn" onclick="openBuyerModal('cart')"><span id="txtCheckoutBtn">🛒 Lanjut ke Pembayaran</span></button>
   </div>
 </div>
 
@@ -2384,7 +2384,7 @@ function openDetail(id){
       </div>
       <div class="detail-btns">
         <button class="detail-btn-cart" onclick="addToCartQty(${p.id},detailQty);closeDetail()">🛒 Tambah ke Keranjang</button>
-        <button class="detail-btn-wa" onclick="closeDetail();openBuyerModal('single',${p.id},detailQty)">💬 Beli Langsung via WA</button>
+        <button class="detail-btn-wa" onclick="closeDetail();openBuyerModal('single',${p.id},detailQty)">🛍️ Beli Sekarang</button>
         ${linkHtml}
         <button class="detail-share-btn" onclick="shareProduct(null,${p.id})">📤 Bagikan Produk</button>
       </div>
@@ -3141,7 +3141,7 @@ const TRANS = {
     aboutTitle: '🌏 Tentang Toko',
     testiTitle: '💬 Testimoni',
     totalBelanja: 'Total Belanja',
-    checkoutBtn: '🛒 Checkout via WhatsApp 💬',
+    checkoutBtn: '🛒 Lanjut ke Pembayaran',
     promoTitle: '🎁 Kode Promo',
     promoPlaceholder: 'Masukkan kode promo',
     promoBtn: 'Pakai',
@@ -3196,7 +3196,7 @@ const TRANS = {
     aboutTitle: '🌏 About Us',
     testiTitle: '💬 Reviews',
     totalBelanja: 'Total',
-    checkoutBtn: '🛒 Checkout via WhatsApp 💬',
+    checkoutBtn: '🛒 Proceed to Payment',
     promoTitle: '🎁 Promo Code',
     promoPlaceholder: 'Enter promo code',
     promoBtn: 'Apply',
