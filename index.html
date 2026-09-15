@@ -1282,7 +1282,7 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
             <span class="upload-icon">🖼️</span>
             <div class="upload-label">Klik untuk upload foto</div>
             <div class="upload-hint">JPG, PNG, WebP — maks 5MB</div>
-            <button type="button" class="btn-remove-img" onclick="removeImg(event,'uploadArea','uploadPreview','fImgData')">✕ Hapus Foto</button>
+            <button type="button" class="btn-remove-img" onclick="removeImg(event,'uploadArea','uploadPreview','fImgData','fImgUrl')">✕ Hapus Foto</button>
           </label>
           <input type="hidden" id="fImgData">
           <div style="text-align:center;font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin:6px 0;">— atau —</div>
@@ -1415,7 +1415,7 @@ body.theme-sunset{--pink:#FFE0B2;--pink-d:#ffa726;--lav:#FFCCBC;--lav-d:#ff7043;
         <span class="upload-icon">🖼️</span>
         <div class="upload-label">Klik untuk upload / ganti foto</div>
         <div class="upload-hint">JPG, PNG, WebP — maks 5MB</div>
-        <button type="button" class="btn-remove-img" onclick="removeImg(event,'editUploadArea','editUploadPreview','eImgData')">✕ Hapus Foto</button>
+        <button type="button" class="btn-remove-img" onclick="removeImg(event,'editUploadArea','editUploadPreview','eImgData','eImgUrl')">✕ Hapus Foto</button>
       </label>
       <input type="hidden" id="eImgData">
       <div style="text-align:center;font-size:.6rem;color:var(--dim);font-family:'Nunito',sans-serif;margin:6px 0;">— atau —</div>
@@ -1499,11 +1499,20 @@ async function dbUpdateProduct(p){
       description:p.desc||null,img:p.img||null,link:p.link||null,
       download_link:p.download_link||null
     };
-    await fetch(SUPA_URL+'/rest/v1/products?id=eq.'+p.id,{
+    const r=await fetch(SUPA_URL+'/rest/v1/products?id=eq.'+p.id,{
       method:'PATCH',headers:{...SUPA_HEADERS,'Prefer':'return=minimal'},
       body:JSON.stringify(body)
     });
-  }catch(e){}
+    if(!r.ok){
+      const txt=await r.text();
+      showToast('❌ Gagal simpan ke server: '+r.status+' '+txt.substring(0,60));
+      return false;
+    }
+    return true;
+  }catch(e){
+    showToast('❌ Gagal simpan: '+e.message);
+    return false;
+  }
 }
 async function dbDeleteProduct(id){
   try{
@@ -2650,7 +2659,7 @@ function previewImgUrl(inputId, areaId, previewId, dataId){
   area.querySelector('.btn-remove-img').style.display='block';
   data.value=url;
 }
-function removeImg(e, areaId, previewId, dataId){
+function removeImg(e, areaId, previewId, dataId, urlId){
   e.stopPropagation();
   document.getElementById(dataId).value='';
   const prev=document.getElementById(previewId);
@@ -2659,6 +2668,11 @@ function removeImg(e, areaId, previewId, dataId){
   // reset file input
   const inputs=document.getElementById(areaId).querySelectorAll('input[type=file]');
   inputs.forEach(i=>i.value='');
+  // reset kolom URL foto juga, biar link lama nggak nyangkut & bikin foto "muncul lagi"
+  if(urlId){
+    const urlInp=document.getElementById(urlId);
+    if(urlInp) urlInp.value='';
+  }
 }
 
 /* ADD PRODUCT */
@@ -2708,6 +2722,7 @@ async function addProduct(){
       saved.stock=stock;
     }
     products.push(saved);
+    saveProductsCache(products);
     renderCats();renderProducts();
     clearAddForm();renderAdminStats();renderAdminList();
     showToast('✅ Produk berhasil ditambahkan!');
@@ -2821,7 +2836,9 @@ async function saveEdit(){
   p.link=document.getElementById('eLink').value.trim()||'';
   p.download_link=document.getElementById('eDownloadLink').value.trim()||'';
   showToast('⏳ Menyimpan...');
-  await dbUpdateProduct(p);
+  const ok=await dbUpdateProduct(p);
+  if(!ok) return; // gagal simpan ke server — jangan tutup modal & jangan bilang sukses
+  saveProductsCache(products); // sinkronkan cache lokal biar foto/data lama nggak muncul lagi
   closeEdit();
   renderCats();renderProducts();
   renderAdminStats();renderAdminList();
@@ -2846,7 +2863,9 @@ async function confirmDelete(){
   await dbDeleteProduct(deletingId);
   products=products.filter(p=>p.id!==deletingId);
   cart=cart.filter(c=>c.id!==deletingId);
+  saveProductsCache(products);
   updateCart();closeConfirm();renderAdminStats();renderAdminList();
+  renderCats();renderProducts();
   showToast('🗑️ Produk berhasil dihapus!');
   deletingId=null;
 }
@@ -3284,11 +3303,9 @@ function applyLang(){
 
 /* PRICE AUTO BY CATEGORY */
 function fmtPrice(rp, cat){
-  // If category is EN (🇬🇧), show in USD
-  if(cat && cat.includes('🇬🇧')){
-    return '$' + (rp / USD_RATE).toFixed(2);
-  }
-  // If lang is EN but category is ID, still show Rp
+  // Selalu tampilkan Rupiah supaya konsisten dengan harga yang dicharge Midtrans (IDR only).
+  // Kategori 🇬🇧 tetap boleh dipakai sebagai label produk berbahasa Inggris, cuma nggak lagi
+  // mengubah tampilan harga jadi $.
   return fmtRp(rp);
 }
 
